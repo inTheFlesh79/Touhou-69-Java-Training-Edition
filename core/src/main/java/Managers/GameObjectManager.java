@@ -298,5 +298,4 @@ public class GameObjectManager {
  		        currentNumFairiesManaged = true;  // Set to true once fairies are managed
  			}
  			*/
->>>>>>> b94cc5f6d158e69faa214bb3722921922989b41f
 }
