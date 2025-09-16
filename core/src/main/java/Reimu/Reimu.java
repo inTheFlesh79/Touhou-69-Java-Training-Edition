@@ -105,27 +105,27 @@ public class Reimu {
 
             float slowSpeed = speed * 0.4f; // Define the slow speed as half of the original speed
 
-	         // Movement logic
-			 if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+         // Movement logic
+			 if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
 				 currentFrame = animationLeft.getKeyFrame(animationTime, false); // Loop animation
 		         spr.setRegion(currentFrame);
 			     float moveSpeed = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) ? slowSpeed : speed; // Use slowSpeed if shift is held
 			     spr.setX(spr.getX() - moveSpeed * deltaTime); // Move left
 			 }
 			
-			 if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+			 if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
 				 currentFrame = animationRight.getKeyFrame(animationTime, false); // Loop animation
 		         spr.setRegion(currentFrame);
 			     float moveSpeed = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) ? slowSpeed : speed; // Use slowSpeed if shift is held
 			     spr.setX(spr.getX() + moveSpeed * deltaTime); // Move right
 			 }
 			
-			 if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+			 if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
 			     float moveSpeed = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) ? slowSpeed : speed; // Use slowSpeed if shift is held
 			     spr.setY(spr.getY() + moveSpeed * deltaTime); // Move up
 			 }
 			
-			 if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+			 if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
 			     float moveSpeed = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) ? slowSpeed : speed; // Use slowSpeed if shift is held
 			     spr.setY(spr.getY() - moveSpeed * deltaTime); // Move down
 			 }

@@ -45,6 +45,9 @@ public class GameObjectManager {
 	private FairyManager fairyManager = new FairyManager();
 	private Random random = new Random();
 	
+	// ESTADO PARA CONTROLAR PANTALLA PREGUNTAS
+	private boolean exerciseDone = false;
+	
 	public GameObjectManager(SpriteBatch batch, int ronda, int vidas, int score, int cantFairies, PantallaJuego juego) {
 		this.batch = batch;
 		//this.juego = juego;
@@ -271,6 +274,14 @@ public class GameObjectManager {
     	return true;
     }
     public boolean isReimuDead() {return reimu.estaDestruido();}
+    
+    public boolean readyToExercise() {
+    	return !AreFairiesAlive() && !exerciseDone;
+    }
+    
+    public void setExerciseDone(boolean s) {
+    	this.exerciseDone = s;
+    }
     
     //IN CONSTRUCTION
     public void changeLevel() {
