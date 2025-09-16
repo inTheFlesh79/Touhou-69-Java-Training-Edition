@@ -1,6 +1,7 @@
 package puppy.code;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -89,8 +90,26 @@ public class PantallaJuego implements Screen {
 			Screen ss = new PantallaJuego(nivel+1, gameMng.getReimuVidas(), gameMng.getScore(), cantFairies + 2);
 			ss.resize(1200, 800);
 			game.setScreen(ss);
-			
 	    }
+		
+		// verificar si se presionó la tecla de pausa (ESC)
+		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+			game.setScreen(new PantallaPausa(game, this));
+		}
+		
+		// OPCION DE DESARROLLADOR (se elimina)
+		// verificar si se presionó la tecla de ejercicios (P)
+		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+			game.setScreen(new PantallaEjercicios(game, this));
+		}
+		
+		// VERIFICAR SI ESTA LISTO PARA EJERCITAR
+		if (gameMng.readyToExercise()) {
+			game.setScreen(new PantallaEjercicios(game, this));
+			
+			// ANTES DE SALIR CAMBIAR ESTADO DE CONTROL PARA NO REPETIR PANTALLA
+			gameMng.setExerciseDone(true);
+		}
 	}
     
     

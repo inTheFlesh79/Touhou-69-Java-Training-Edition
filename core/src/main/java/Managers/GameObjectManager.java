@@ -42,6 +42,8 @@ public class GameObjectManager {
 	// Managers de Personajes con comportamientos dinamicos (en este caso: Fairy)
 	private FairyManager fairyManager = new FairyManager();
 	private Random random = new Random();
+	// ESTADO PARA CONTROLAR PANTALLA PREGUNTAS
+	private boolean exerciseDone = false;
 	
 	public GameObjectManager(SpriteBatch batch, int nivel, int vidas, int score, int cantFairies, PantallaJuego juego) {
 		this.batch = batch;
@@ -264,4 +266,37 @@ public class GameObjectManager {
     
     public boolean isReimuDead() {return reimu.estaDestruido();}
     public int getReimuDamage() {return reimu.getDamageBala();}
+    
+    public boolean readyToExercise() {
+    	return !AreFairiesAlive() && !exerciseDone;
+    }
+    
+    public void setExerciseDone(boolean s) {
+    	this.exerciseDone = s;
+    }
+    
+    
+ // Check if we need to select and manage a new set of fairies
+	
+ 			/* SUJETO A CAMBIO: LOGICA DE CUANDO, CUANTAS Y COMO SALEN LAS FAIRIES POR NIVEL (STAGEPHASER, SPAWNPOSITIONER, CHANGES IN INITIAL MOVEMENT)
+ 			if (currentNumFairies < 0 || !currentNumFairiesManaged) {
+ 				currentNumFairies = random.nextInt(fairies.size());  // Select a random number of fairies
+
+ 		        // Set up BHP, speed, and health for the fairies
+ 		        int bhpChoice = random.nextInt(fairyManager.getBhpTypeSize());
+ 		        int speedChoice = random.nextInt(fairyManager.getCantSpeedOptions());
+ 		        int healthChoice = random.nextInt(fairyManager.getCantHealthOptions());
+ 		        
+ 		        // Manage the fairies that were selected
+ 		        for (int i = 0; i <= currentNumFairies; i++) {  // Include index 0 as valid
+ 		        	fairies.get(i).setSpeedChoice(speedChoice);
+ 		            fairyManager.manageBHPType(fairies.get(i), bhpChoice);
+ 		            fairyManager.manageSpeed(fairies.get(i), fairies.get(i).getSpeedChoice());
+ 		            fairyManager.manageHealth(fairies.get(i), healthChoice);
+ 		        }
+
+ 		        currentNumFairiesManaged = true;  // Set to true once fairies are managed
+ 			}
+ 			*/
+>>>>>>> b94cc5f6d158e69faa214bb3722921922989b41f
 }
