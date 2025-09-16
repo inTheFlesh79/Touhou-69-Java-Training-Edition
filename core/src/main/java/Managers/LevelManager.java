@@ -4,7 +4,6 @@ import Enemies.FairySpawn;
 import Levels.*;
 
 public class LevelManager {
-	
 	private Level currentLvl;
 	private int currentLvlWave = 0; // valores entre 0 a cantidad maxima - 1 de oleadas de un nivel
 	private boolean areWavesOver;
@@ -26,8 +25,14 @@ public class LevelManager {
 				areWavesOver = false;
 				break;
 			case 3:
+				System.out.println("ElegiLevelThree");
+				currentLvl = new LevelThree();
+				areWavesOver = false;
 				break;
 			case 4:
+				System.out.println("ElegiLevelFour");
+				currentLvl = new LevelFour();
+				areWavesOver = false;
 				break;
 		}
 	}
@@ -50,11 +55,13 @@ public class LevelManager {
 	
 	public boolean getFairyIsShooting() {return currentLvl.getShootsFirstCurrrentWave(currentLvlWave);}
 	
+	public int getLvlId() {return currentLvl.getLvlId();}
 	public int getLvlFairies() {return currentLvl.getCantFairies();}
 	public int getLvlWaves() {return currentLvl.getCantWaves();}
 	public int getFairiesCurrentWave() {return currentLvl.getCantFairiesSpecificWave(currentLvlWave);}
 	public int getCurrentLvlWave() {return currentLvlWave;}
-	public boolean getAreWavesOverState() {return areWavesOver;} 
+	public boolean getAreWavesOverState() {return areWavesOver;}
+	
 	public void whatLevelIsIt() {
 		if (currentLvl instanceof LevelOne) {
 		    System.out.println("Level 1");

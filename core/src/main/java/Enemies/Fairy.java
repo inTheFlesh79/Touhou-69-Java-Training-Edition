@@ -54,8 +54,8 @@ public class Fairy extends Enemy implements EnemyTools{
 	}
 	
 	public void update() {
-		System.out.println("Fairy Speed = "+this.getSpeed());
-		System.out.println("Fairy Health = "+this.getHealth());
+		//System.out.println("Fairy Speed = "+this.getSpeed());
+		//System.out.println("Fairy Health = "+this.getHealth());
 		enemyMovement();
 		shootBulletHellPattern();
 	}
@@ -174,7 +174,6 @@ public class Fairy extends Enemy implements EnemyTools{
 		}
 		else {
 			if (!inTrack) {
-				System.out.println();
 				idleTime += deltaTime;
 			}
             

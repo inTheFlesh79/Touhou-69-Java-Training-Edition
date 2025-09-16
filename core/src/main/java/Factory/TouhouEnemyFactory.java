@@ -24,8 +24,8 @@ public class TouhouEnemyFactory implements EnemyFactory{
 	}
 
 	@Override
-	public Boss craftBoss() {
-		Boss newBoss = new Boss((Gdx.graphics.getWidth()/2) - 16, 932, gameMng);
+	public Boss craftBoss(int bossTx) {
+		Boss newBoss = new Boss((Gdx.graphics.getWidth()/2) - 16, 932, gameMng, bossTx);
 		return newBoss;
 	}
 }

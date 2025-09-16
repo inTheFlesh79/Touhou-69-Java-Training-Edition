@@ -39,8 +39,6 @@ public class SceneManager {
     	allBackgrounds.add(bg);
     	Texture bg1 = new Texture("darkRidgeBg.png");
     	allBackgrounds.add(bg1);
-    	Texture bg2 = new Texture("cherryBlossomBg.png");
-    	allBackgrounds.add(bg2);
     	Texture bg3 = new Texture("pinkForestBg.png");
     	allBackgrounds.add(bg3);
     	Texture bg4 = new Texture("redMarbleBg.png");

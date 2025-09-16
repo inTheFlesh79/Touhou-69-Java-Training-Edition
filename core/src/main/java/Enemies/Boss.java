@@ -24,11 +24,10 @@ public class Boss extends Enemy implements EnemyTools{
 	private BossManager bossMng = new BossManager();
 	private ArrayList<BulletHellPattern> bossBHPlist = new ArrayList<>();
 	
-	public Boss (float initialPosX, float initialPosY, GameObjectManager gameMng) {
+	public Boss (float initialPosX, float initialPosY, GameObjectManager gameMng, int bossChoice) {
 		spriteSheet = new Texture(Gdx.files.internal("allBossesSpriteSheet.png"));
 		spriteRegions = TextureRegion.split(spriteSheet, 64, 78);
 		
-		int bossChoice = random.nextInt(4);
 		bossSelectionAndAnimation(bossChoice);
 		
 		speedChoice = random.nextInt(bossMng.getCantSpeedOptions());
@@ -50,46 +49,46 @@ public class Boss extends Enemy implements EnemyTools{
 	
 	public void bossSelectionAndAnimation(int bossChoice) {
 		switch (bossChoice) {
-		case 0:
-			//Elige Keime
-			TextureRegion[] animationFrames0 = new TextureRegion[4];
-	    	for (int i = 0; i < 4; i++) {
-	    		TextureRegion currentSprite = spriteRegions[0][i];
-	            animationFrames0[i] = currentSprite;
-	        }
-	    	animation = new Animation<TextureRegion>(0.1f, animationFrames0);
-	    	spr = new Sprite(animationFrames0[0]);
-			break;
-		case 1:
-			//Elige Reisen
-			TextureRegion[] animationFrames1 = new TextureRegion[4];
-	    	for (int i = 0; i < 4; i++) {
-	    		TextureRegion currentSprite = spriteRegions[3][i];
-	            animationFrames1[i] = currentSprite;
-	        }
-	    	animation = new Animation<TextureRegion>(0.1f, animationFrames1);
-	    	spr = new Sprite(animationFrames1[0]);
-			break;
-		case 2:
-			//Elige Mokou
-			TextureRegion[] animationFrames2 = new TextureRegion[4];
-	    	for (int i = 0; i < 4; i++) {
-	    		TextureRegion currentSprite = spriteRegions[5][i];
-	            animationFrames2[i] = currentSprite;
-	        }
-	    	animation = new Animation<TextureRegion>(0.1f, animationFrames2);
-	    	spr = new Sprite(animationFrames2[0]);
-			break;
-		case 3:
-			//Elige Sakuya
-			TextureRegion[] animationFrames3 = new TextureRegion[4];
-	    	for (int i = 0; i < 4; i++) {
-	    		TextureRegion currentSprite = spriteRegions[8][i];
-	            animationFrames3[i] = currentSprite;
-	        }
-	    	animation = new Animation<TextureRegion>(0.1f, animationFrames3);
-	    	spr = new Sprite(animationFrames3[0]);
-			break;
+			case 0:
+				//Elige Keime
+				TextureRegion[] animationFrames0 = new TextureRegion[4];
+		    	for (int i = 0; i < 4; i++) {
+		    		TextureRegion currentSprite = spriteRegions[0][i];
+		            animationFrames0[i] = currentSprite;
+		        }
+		    	animation = new Animation<TextureRegion>(0.1f, animationFrames0);
+		    	spr = new Sprite(animationFrames0[0]);
+				break;
+			case 1:
+				//Elige Reisen
+				TextureRegion[] animationFrames1 = new TextureRegion[4];
+		    	for (int i = 0; i < 4; i++) {
+		    		TextureRegion currentSprite = spriteRegions[3][i];
+		            animationFrames1[i] = currentSprite;
+		        }
+		    	animation = new Animation<TextureRegion>(0.1f, animationFrames1);
+		    	spr = new Sprite(animationFrames1[0]);
+				break;
+			case 2:
+				//Elige Mokou
+				TextureRegion[] animationFrames2 = new TextureRegion[4];
+		    	for (int i = 0; i < 4; i++) {
+		    		TextureRegion currentSprite = spriteRegions[5][i];
+		            animationFrames2[i] = currentSprite;
+		        }
+		    	animation = new Animation<TextureRegion>(0.1f, animationFrames2);
+		    	spr = new Sprite(animationFrames2[0]);
+				break;
+			case 3:
+				//Elige Sakuya
+				TextureRegion[] animationFrames3 = new TextureRegion[4];
+		    	for (int i = 0; i < 4; i++) {
+		    		TextureRegion currentSprite = spriteRegions[8][i];
+		            animationFrames3[i] = currentSprite;
+		        }
+		    	animation = new Animation<TextureRegion>(0.1f, animationFrames3);
+		    	spr = new Sprite(animationFrames3[0]);
+				break;
 		}
 	}
 
@@ -105,7 +104,7 @@ public class Boss extends Enemy implements EnemyTools{
 
 	@Override
 	public void update() {
-		System.out.println("Boss Speed = "+this.getSpeed());
+		//System.out.println("Boss Speed = "+this.getSpeed());
 		enemyMovement();
 		shootBulletHellPattern();
 	}
@@ -131,7 +130,6 @@ public class Boss extends Enemy implements EnemyTools{
 		}
 		else {
 			if (!inTrack) {
-				System.out.println();
 				idleTime += deltaTime;
 			}
             

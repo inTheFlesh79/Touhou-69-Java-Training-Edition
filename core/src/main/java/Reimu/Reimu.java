@@ -34,7 +34,6 @@ public class Reimu {
     private float bulletGenInterval = 0.1f;
     private float bulletGenTimer = 0f;
     
-    private SpriteBatch batch;
     private Texture spriteSheet;
     private TextureRegion[][] spriteRegions;
     //private TextureRegion lastSprite;

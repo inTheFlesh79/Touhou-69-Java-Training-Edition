@@ -6,12 +6,11 @@ import BulletHellPatterns.DynamicSpiralPattern;
 import BulletHellPatterns.ForkPattern;
 import BulletHellPatterns.SpiralPattern;
 import Enemies.Enemy;
-import Enemies.Fairy;
 
 public class FairyManager extends EnemyManager{
 	private int[] spawnSpeedOptions = {1600, 1700};
 	private int[] speedOptions = {600,650};
-	private int[] healthOptions = {40, 50, 60};
+	private int[] healthOptions = {2, 10, 18};
 	
 	public FairyManager() {
 		// loads up all the potential patterns a Fairy can pick from

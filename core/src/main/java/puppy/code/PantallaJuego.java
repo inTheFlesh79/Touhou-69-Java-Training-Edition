@@ -14,7 +14,7 @@ public class PantallaJuego implements Screen {
 	private Touhou game;
 	private OrthographicCamera camera;	
 	private SpriteBatch batch;//batch
-	private int ronda;
+	private int nivel;
 	private int cantFairies;
 	
 	// Manager de Personajes con comportamientos dinamicos
@@ -24,13 +24,13 @@ public class PantallaJuego implements Screen {
     // Manager para controlar la imagen de fondo del juego
     private SceneManager sceneMng;
     
-	public PantallaJuego(int ronda, int vidas, int score, int cantFairies) {
+	public PantallaJuego(int nivel, int vidas, int score, int cantFairies) {
 		game = Touhou.getInstance();
 		batch = game.getBatch();
-		gameMng = new GameObjectManager(batch, ronda, vidas, score, cantFairies, this);
+		gameMng = new GameObjectManager(batch, nivel, vidas, score, cantFairies, this);
 		sceneMng = new SceneManager(batch);
 		
-		this.ronda = ronda;
+		this.nivel = nivel;
 		gameMng.setScore(score);
 		this.cantFairies = cantFairies;
 		
@@ -39,16 +39,17 @@ public class PantallaJuego implements Screen {
 	}
     
 	public void dibujaHUD() {
-		CharSequence str = "Lives: "+ gameMng.getReimuVidas() +" Round: "+ronda;
+		CharSequence str = "Lives: "+ gameMng.getReimuVidas() +" Level: "+nivel;
 		game.getFont().getData().setScale(2f);		
 		game.getFont().draw(batch, str, 10, 30);
-		game.getFont().draw(batch, "Score:"+ gameMng.getScore(), Gdx.graphics.getWidth()-150, 30);
-		game.getFont().draw(batch, "HighScore:"+game.getHighScore(), Gdx.graphics.getWidth()/2-100, 30);
+		game.getFont().draw(batch, "Score:"+ gameMng.getScore(), Gdx.graphics.getWidth()-250, 30);
+		game.getFont().draw(batch, "HighScore:"+game.getHighScore(), Gdx.graphics.getWidth()/2+70, 30);
+		game.getFont().draw(batch, "Power:"+gameMng.getReimuDamage(), Gdx.graphics.getWidth()/2-225, 30);
 	}
 	
 	@Override
 	public void render(float delta) {
-		System.out.println("FPS: " + Gdx.graphics.getFramesPerSecond());
+		//System.out.println("FPS: " + Gdx.graphics.getFramesPerSecond());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		
@@ -84,11 +85,10 @@ public class PantallaJuego implements Screen {
 	//SUJETO A CAMBIO: MANEJA LOS NIVELES Y DEBE DEFINIR BIEN EN QUE NIVEL VA Y MANTENER ORDEN DE SPRITES
 	public void levelManagement() {
 		if (!gameMng.isBossAlive()) {
-			gameMng.changeLevel();
 			musicMng.stopBossMusic();
-			//Screen ss = new PantallaJuego(ronda+1, gameMng.getReimuVidas(), gameMng.getScore(), cantFairies + 2);
-			//ss.resize(1200, 800);
-			//game.setScreen(ss);
+			Screen ss = new PantallaJuego(nivel+1, gameMng.getReimuVidas(), gameMng.getScore(), cantFairies + 2);
+			ss.resize(1200, 800);
+			game.setScreen(ss);
 			
 	    }
 	}

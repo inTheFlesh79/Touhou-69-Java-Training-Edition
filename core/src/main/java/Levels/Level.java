@@ -3,6 +3,8 @@ package Levels;
 import Enemies.FairySpawn;
 
 public class Level implements LevelFeatures {
+	protected int levelId;
+	protected int bossChoice;
 	protected int cantWaves;
 	protected int cantFairies;
 	protected int[] fairiesByWave;
@@ -20,4 +22,5 @@ public class Level implements LevelFeatures {
 	public int getCantFairies() {return cantFairies;}
 	public int getCantWaves() {return cantWaves;}
 	public int getCantFairiesSpecificWave(int wave) {return fairiesByWave[wave];}
+	public int getLvlId() {return levelId;}
 }

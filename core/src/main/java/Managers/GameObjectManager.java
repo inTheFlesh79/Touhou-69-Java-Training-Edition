@@ -16,13 +16,11 @@ import Factory.EnemyFactory;
 import Factory.TouhouEnemyFactory;
 import Reimu.Bullet;
 import Reimu.Reimu;
-import Managers.LevelManager;
 import puppy.code.PantallaJuego;
 
 public class GameObjectManager {
 	// Variables para controlar musica y nivel
     private int score;
-    private int currentLevel;
     private Sound explosionSound;
 	
 	// Valores para el manejo dinamico de la cantidad total de personajes tipo Fairy
@@ -45,11 +43,10 @@ public class GameObjectManager {
 	private FairyManager fairyManager = new FairyManager();
 	private Random random = new Random();
 	
-	public GameObjectManager(SpriteBatch batch, int ronda, int vidas, int score, int cantFairies, PantallaJuego juego) {
+	public GameObjectManager(SpriteBatch batch, int nivel, int vidas, int score, int cantFairies, PantallaJuego juego) {
 		this.batch = batch;
 		//this.juego = juego;
-		currentLevel = 1;
-		levelMng.setCurrentLevel(currentLevel);
+		levelMng.setCurrentLevel(nivel);
 		
 		//inicializar assets; musica de fondo y efectos de sonido
 		explosionSound = Gdx.audio.newSound(Gdx.files.internal("ATTACK3.mp3"));
@@ -77,20 +74,18 @@ public class GameObjectManager {
 			enemyBulletsCollisionManager();
 		}
 		reimu.draw(batch, this);
-		System.out.println("Current Wave: "+levelMng.getCurrentLvlWave());
-		levelMng.whatLevelIsIt();
 		//System.out.println("Are Fairy Waves Over = "+levelMng.areWavesOver());
 	}
 	
 	public void gameSetup() {
-        
-		
+		levelMng.whatLevelIsIt();
+		System.out.println("Current Wave: "+levelMng.getCurrentLvlWave());
 		//crear Fairies
 	    fairySetup();
         
         //crear boss
-        boss = eFactory.craftBoss();
-        System.out.println("Boss = "+isBossAlive());
+        boss = eFactory.craftBoss(levelMng.getLvlId());
+        //System.out.println("Boss = "+isBossAlive());
 	}
 	
 	/*
@@ -104,7 +99,7 @@ public class GameObjectManager {
 		for (int i = 0; i < reimuBullets.size(); i ++) {
 			 Bullet b = reimuBullets.get(i); 
 			 if (b.isDestroyed()) {
-				 System.out.println(b.isDestroyed());
+				 //System.out.println(b.isDestroyed());
 				 reimuBullets.remove(b);
 				 i--;
 				 
@@ -120,7 +115,7 @@ public class GameObjectManager {
 			bullet.update();
 			
 			if (bullet.checkCollision(boss)) {
-			    System.out.println("Boss Health: "+boss.getHealth());
+			    //System.out.println("Boss Health: "+boss.getHealth());
 				if (boss.getHealth() <= 0) {
 					explosionSound.play();
 					boss = null;
@@ -169,7 +164,7 @@ public class GameObjectManager {
 		for (int i = 0; i < enemyBullets.size(); i ++) {
 			 EnemyBullet eb = enemyBullets.get(i); 
 			 if (eb.isDestroyed()) {
-				 System.out.println(eb.isDestroyed());
+				 //System.out.println(eb.isDestroyed());
 				 eb.dispose();
 				 enemyBullets.remove(eb);
 				 i--;
@@ -199,6 +194,7 @@ public class GameObjectManager {
 	        }
 		}
 		else if (fairies.isEmpty() && !levelMng.areWavesOver()){
+			System.out.println("Current Wave: "+levelMng.getCurrentLvlWave());
 			fairySetup();
 		}
 		else if (fairies.isEmpty() && levelMng.areWavesOver()) {
@@ -246,18 +242,13 @@ public class GameObjectManager {
 	 * 
 	 * */
 	
-    public boolean agregarReimuBullets(Bullet bb) {
-    	return reimuBullets.add(bb);
-    }
-    
-    public void agregarEnemyBullets(EnemyBullet eb) {
-    	enemyBullets.add(eb);
-    }
+    public boolean agregarReimuBullets(Bullet bb) {return reimuBullets.add(bb);}
+    public void agregarEnemyBullets(EnemyBullet eb) {enemyBullets.add(eb);}
     
     public void setScore(int score) {this.score = score;}
-    
     public int getReimuVidas() {return reimu.getVidas();}
     public int getScore() {return score;}
+    
     public boolean isBossAlive() {
     	if (boss == null) {
     		return false;
@@ -270,34 +261,7 @@ public class GameObjectManager {
     	}
     	return true;
     }
+    
     public boolean isReimuDead() {return reimu.estaDestruido();}
-    
-    //IN CONSTRUCTION
-    public void changeLevel() {
-    	gameSetup();
-    	levelMng.setCurrentLevel(currentLevel++);
-    }
-    
- // Check if we need to select and manage a new set of fairies
-	
- 			/* SUJETO A CAMBIO: LOGICA DE CUANDO, CUANTAS Y COMO SALEN LAS FAIRIES POR NIVEL (STAGEPHASER, SPAWNPOSITIONER, CHANGES IN INITIAL MOVEMENT)
- 			if (currentNumFairies < 0 || !currentNumFairiesManaged) {
- 				currentNumFairies = random.nextInt(fairies.size());  // Select a random number of fairies
-
- 		        // Set up BHP, speed, and health for the fairies
- 		        int bhpChoice = random.nextInt(fairyManager.getBhpTypeSize());
- 		        int speedChoice = random.nextInt(fairyManager.getCantSpeedOptions());
- 		        int healthChoice = random.nextInt(fairyManager.getCantHealthOptions());
- 		        
- 		        // Manage the fairies that were selected
- 		        for (int i = 0; i <= currentNumFairies; i++) {  // Include index 0 as valid
- 		        	fairies.get(i).setSpeedChoice(speedChoice);
- 		            fairyManager.manageBHPType(fairies.get(i), bhpChoice);
- 		            fairyManager.manageSpeed(fairies.get(i), fairies.get(i).getSpeedChoice());
- 		            fairyManager.manageHealth(fairies.get(i), healthChoice);
- 		        }
-
- 		        currentNumFairiesManaged = true;  // Set to true once fairies are managed
- 			}
- 			*/
+    public int getReimuDamage() {return reimu.getDamageBala();}
 }

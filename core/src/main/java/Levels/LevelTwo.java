@@ -4,13 +4,13 @@ import com.badlogic.gdx.Gdx;
 
 import Enemies.FairySpawn;
 
-public class LevelTwo extends Level{
+public class LevelTwo extends Level {
 	
 	private int[] spawnPointWave1 = {(Gdx.graphics.getWidth()) - 200, 932};
 	private int[] firstTarXYWave1 = {48, 600};
 	private boolean shootsFirstW1 = false;
 	
-	private int[] spawnPointWave2 = {150, -932};
+	private int[] spawnPointWave2 = {150, 932};
 	private int[] firstTarXYWave2 = {1000,600};
 	private boolean shootsFirstW2 = false;
 	
@@ -23,6 +23,8 @@ public class LevelTwo extends Level{
 	private boolean shootsFirstW4 = true;
 	
 	public LevelTwo() {
+		this.levelId = 1;
+		this.bossChoice = 1;
 		this.cantFairies = 10;
 		this.cantWaves = 4;
 		this.fairiesByWave = new int [] {2,3,3,2};

@@ -10,7 +10,7 @@ public class SpiralPattern extends BulletHellPattern{
 	public EnemyBullet generateBulletInPattern(float x, float y) {
         float bulletVelocityX = (float) Math.cos(angle) * speed;
         float bulletVelocityY = (float) Math.sin(angle) * speed;
-        System.out.println("Angle: " + angle + ", VelocityX: " + bulletVelocityX + ", VelocityY: " + bulletVelocityY);
+        //System.out.println("Angle: " + angle + ", VelocityX: " + bulletVelocityX + ", VelocityY: " + bulletVelocityY);
         EnemyBullet bullet = new EnemyBullet(x, y, bulletVelocityX, bulletVelocityY);
         angle += angleTilt;
         maxShootingTime = 3.0f;
