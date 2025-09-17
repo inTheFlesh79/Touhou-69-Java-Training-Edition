@@ -19,11 +19,12 @@ import Factory.TouhouEnemyFactory;
 import Reimu.Bullet;
 import Reimu.Drop;
 import Reimu.Reimu;
+import Reimu.Shield;
 import puppy.code.PantallaJuego;
 
 public class GameObjectManager {
     private int score;
-    private float deltaTime;
+    private float deltaTime = Gdx.graphics.getDeltaTime();;
     private Sound explosionSound;
 	
 	// Valores para el manejo dinamico de la cantidad total de personajes tipo Fairy
@@ -33,6 +34,7 @@ public class GameObjectManager {
 	// Personajes y Objetos de Personaje
 	private SpriteBatch batch;
 	private Reimu reimu;
+	private Shield reimuSh;
 	private Boss boss;
 	private EnemyFactory eFactory = new TouhouEnemyFactory();
 	
@@ -78,6 +80,15 @@ public class GameObjectManager {
 		fairiesAndBossDrawerUpdater();
 		enemyDropsDrawer();
 		enemyDropsCollisionManager();
+		
+		if (reimuSh != null && !reimuSh.isExpired()) {
+			shieldDrawer();
+		}
+		else {
+			reimu.setShielded(false);
+			reimuSh = null;
+		}
+		
 		//SUJETO A CAMBIO (UX): ELIMINAR BALAS Y RESPAWN
 		if (!reimu.estaHerido()) {
 			reimuBulletsCollisionManager();
@@ -181,10 +192,21 @@ public class GameObjectManager {
 		    EnemyBullet eb = enemyBullets.get(i);
 		    // System.out.println("");
 		    eb.update();
-		    if (reimu.checkCollision(eb)) {
+		    if (reimu.checkCollision(eb) && !reimu.isShielded()) {
 		        enemyBullets.remove(i);
 		    }
+		    
+		    if (reimuSh != null && reimuSh.checkCollision(eb.getHitbox())) {
+		    	enemyBullets.remove(i);
+		    }
+		    
 		}
+	}
+	
+	// Drawer for Shield object
+	public void shieldDrawer() {
+		reimuSh.draw(batch);
+		reimuSh.update();
 	}
 	
 	// Drawer and Collission manager for Drop vs Reimu objects
@@ -205,16 +227,30 @@ public class GameObjectManager {
 			Drop d = enemyDrops.get(i);
 			d.update();
 			if (reimu.checkCollision(d)) {
-				if (dropMng.isScoreDrop(d)) {
-					score+=500;
-				}
-				else {
-					score+=100;
+				switch (dropMng.dropBehavior(d)) {
+					case 1: // ScoreDrop
+						score += 500;
+						break;
+					case 2: // ShieldDrop
+						reimuSh = new Shield(reimu.getSpr().getX(), reimu.getSpr().getY(), reimu.getSpr());
+						reimu.setShielded(true);
+						score += 100;
+						break;
+					case 3: // OneUpDrop
+						reimu.oneUp();
+						score += 100;
+						break;
+					case 4: // PowerDrop
+						reimu.addDamage(10);
+						score += 100;
+						break;
+					default:
+						score += 500;
+						break;
 				}
 				enemyDrops.remove(i);
 			}
 		}
-			
 	}
 	
 	// Drawer for Enemy objects
@@ -292,7 +328,11 @@ public class GameObjectManager {
     
     public int getReimuVidas() {return reimu.getVidas();}
     public int getScore() {return score;}
+    public int getReimuDamage() {return reimu.getDamageBala();}
+    
+    public boolean isReimuDead() {return reimu.estaDestruido();}
     public boolean areWeFightingBoss() {return fightBoss;}
+    public boolean areWavesOver() {return levelMng.areWavesOver();}
     
     public boolean isBossAlive() {
     	if (boss == null) {
@@ -307,11 +347,6 @@ public class GameObjectManager {
     	}
     	return true;
     }
-    
-    public boolean areWavesOver() {return levelMng.areWavesOver();}
-    
-    public boolean isReimuDead() {return reimu.estaDestruido();}
-    public int getReimuDamage() {return reimu.getDamageBala();}
     
     public boolean readyToExercise() {return (!AreFairiesAlive() && levelMng.areWavesOver());}
     

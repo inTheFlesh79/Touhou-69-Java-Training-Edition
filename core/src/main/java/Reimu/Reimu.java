@@ -18,7 +18,7 @@ import Enemies.EnemyBullet;
 import Managers.GameObjectManager;
 
 public class Reimu {
-	
+	private boolean isShielded = false;
 	private boolean destruida = false;
     private int vidas;
     
@@ -28,7 +28,7 @@ public class Reimu {
     
     //private Sound soundBala;
     private Texture txBala;
-    private int damageBala = 300;
+    private int damageBala = 50;
     
     private Sound sonidoHerido;
     private boolean herido = false;
@@ -168,7 +168,7 @@ public class Reimu {
     
     //Collision with Enemy Bullets
     public boolean checkCollision(EnemyBullet eb) {
-        if(!herido && eb.getHitbox().overlaps(sprHitbox)){
+        if(!herido && eb.getHitbox().overlaps(sprHitbox) && !isShielded){
             vidas--;
             herido = true;
   		    tiempoHerido=tiempoHeridoMax;
@@ -179,7 +179,7 @@ public class Reimu {
         }
         return false;
     }
-    
+
     // Collision with Drops
     public boolean checkCollision(Drop d) {return (d.getHitbox().overlaps(sprDropHitbox));}
     
@@ -198,18 +198,20 @@ public class Reimu {
 		if (spr.getY() + spr.getHeight() > Gdx.graphics.getHeight()) spr.setY(Gdx.graphics.getHeight() - spr.getHeight());
     }
     
-    public boolean estaDestruido() {
-       return !herido && destruida;
-    }
-    public boolean estaHerido() {
- 	   return herido;
-    }
+    public boolean estaDestruido() {return !herido && destruida;}
+    public boolean estaHerido() {return herido;}
+    public boolean isShielded() {return isShielded;}
     
     public int getDamageBala() {return damageBala;}
     public Circle getSprHitbox() {return sprHitbox;}
     public int getVidas() {return vidas;}
     public int getX() {return (int) spr.getX();}
     public int getY() {return (int) spr.getY();}
+    public Sprite getSpr() {return spr;}
     
-	public void setVidas(int vidas2) {vidas = vidas2;}
+	public void setVidas(int vidas) {this.vidas = vidas;}
+	public void setShielded (boolean b) {isShielded = b;}
+	
+	public void oneUp() {this.vidas += 1;}
+	public void addDamage (int d) {this.damageBala += d;}
 }

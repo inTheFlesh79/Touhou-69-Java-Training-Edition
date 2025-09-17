@@ -14,7 +14,7 @@ import Managers.GameObjectManager;
 import java.util.Random;
 
 public class Fairy extends Enemy implements EnemyTools{
-	
+	private float deltaTime = Gdx.graphics.getDeltaTime();
 	private static final Random random = new Random();
 	private float targetX, targetY; 
 	private GameObjectManager gameMng;
@@ -46,7 +46,6 @@ public class Fairy extends Enemy implements EnemyTools{
 	
 	@Override
 	public void draw(SpriteBatch batch) {
-		float deltaTime = Gdx.graphics.getDeltaTime();
 		animationTime += deltaTime;
         TextureRegion currentFrame = animation.getKeyFrame(animationTime, true); // Loop animation
         spr.setRegion(currentFrame);

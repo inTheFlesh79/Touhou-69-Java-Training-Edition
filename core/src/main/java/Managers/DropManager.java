@@ -38,13 +38,13 @@ public class DropManager {
 	
 	public Drop addExtraDrop(float x, float y) {
 		float chance = MathUtils.random();
-		if (chance < 0.3) { // ScoreDrop
+		if (chance < 0.25) { // ScoreDrop
         	return craftDrop(x, y+15, 1);
         }
-        else if (chance < 0.5) { // PowerDrop
+        else if (chance < 0.3) { // PowerDrop
         	return craftDrop(x, y+15, 2);
         }
-        else if (chance < 0.6){ // OneUpDrop
+        else if (chance < 0.35){ // OneUpDrop
         	return craftDrop(x, y+15, 3);
         }
         else {
@@ -52,7 +52,24 @@ public class DropManager {
         }
 	}
 	
-	
+	public int dropBehavior(Drop d) {
+		if (d instanceof ScoreDrop) {
+			return 1;
+		}
+		else if (d instanceof ShieldDrop) {
+			return 2;
+		}
+		else if (d instanceof OneUpDrop) {
+			return 3;
+		}
+		else if (d instanceof PowerDrop) {
+			return 4;
+		}
+		else {
+			return 1;
+		}
+	}
 	
 	public boolean isScoreDrop(Drop d) {return d instanceof ScoreDrop;}
+	public boolean isShieldDrop(Drop d) {return d instanceof ShieldDrop;}
 }
