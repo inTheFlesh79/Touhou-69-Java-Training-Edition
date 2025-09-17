@@ -22,7 +22,6 @@ import Reimu.Reimu;
 import puppy.code.PantallaJuego;
 
 public class GameObjectManager {
-	// Variables para controlar musica y nivel
     private int score;
     private float deltaTime;
     private Sound explosionSound;
@@ -35,8 +34,10 @@ public class GameObjectManager {
 	private SpriteBatch batch;
 	private Reimu reimu;
 	private Boss boss;
-	
 	private EnemyFactory eFactory = new TouhouEnemyFactory();
+	
+	// Managers de Personajes con comportamientos dinamicos (en este caso: Fairy)
+	private FairyManager fairyManager = new FairyManager();
 	private LevelManager levelMng = new LevelManager();
 	private DropManager dropMng = new DropManager();
 	
@@ -45,8 +46,7 @@ public class GameObjectManager {
 	private ArrayList<EnemyBullet> enemyBullets = new ArrayList<>();
 	private ArrayList<Drop> enemyDrops = new ArrayList<>();
 	
-	// Managers de Personajes con comportamientos dinamicos (en este caso: Fairy)
-	private FairyManager fairyManager = new FairyManager();
+	
 	private Random random = new Random();
 	// ESTADO PARA CONTROLAR PANTALLA PREGUNTAS
 	private boolean exerciseDone = false;
@@ -205,8 +205,13 @@ public class GameObjectManager {
 			Drop d = enemyDrops.get(i);
 			d.update();
 			if (reimu.checkCollision(d)) {
+				if (dropMng.isScoreDrop(d)) {
+					score+=500;
+				}
+				else {
+					score+=100;
+				}
 				enemyDrops.remove(i);
-				score+=500;
 			}
 		}
 			

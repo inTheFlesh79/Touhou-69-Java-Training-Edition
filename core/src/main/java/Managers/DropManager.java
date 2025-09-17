@@ -41,11 +41,18 @@ public class DropManager {
 		if (chance < 0.3) { // ScoreDrop
         	return craftDrop(x, y+15, 1);
         }
-        else if (chance < 0.6) { // PowerDrop
+        else if (chance < 0.5) { // PowerDrop
         	return craftDrop(x, y+15, 2);
         }
-        else { // OneUpDrop
+        else if (chance < 0.6){ // OneUpDrop
         	return craftDrop(x, y+15, 3);
         }
+        else {
+        	return craftDrop(x, y+15, 4);
+        }
 	}
+	
+	
+	
+	public boolean isScoreDrop(Drop d) {return d instanceof ScoreDrop;}
 }

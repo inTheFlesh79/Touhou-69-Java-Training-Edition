@@ -39,7 +39,6 @@ public class Reimu {
     
     private Texture spriteSheet;
     private TextureRegion[][] spriteRegions;
-    //private TextureRegion lastSprite;
     
     private Animation<TextureRegion> animation;
     private Animation<TextureRegion> animationLeft;
