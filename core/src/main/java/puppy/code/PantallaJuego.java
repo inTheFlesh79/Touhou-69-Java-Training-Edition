@@ -17,6 +17,7 @@ public class PantallaJuego implements Screen {
 	private SpriteBatch batch;//batch
 	private int nivel;
 	private int cantFairies;
+	private boolean deltaSet = false;
 	
 	// Manager de Personajes con comportamientos dinamicos
 	private GameObjectManager gameMng;
@@ -28,7 +29,7 @@ public class PantallaJuego implements Screen {
 	public PantallaJuego(int nivel, int vidas, int score, int cantFairies) {
 		game = Touhou.getInstance();
 		batch = game.getBatch();
-		gameMng = new GameObjectManager(batch, nivel, vidas, score, cantFairies, this);
+		gameMng = new GameObjectManager(batch, nivel, vidas, score, this);
 		sceneMng = new SceneManager(batch);
 		
 		this.nivel = nivel;
@@ -53,6 +54,11 @@ public class PantallaJuego implements Screen {
 		//System.out.println("FPS: " + Gdx.graphics.getFramesPerSecond());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
+		
+		if (deltaSet == false) {
+			gameMng.setDeltaTime(delta);
+			deltaSet = true;
+		}
 		
 		sceneMng.drawBg();
 		dibujaHUD();

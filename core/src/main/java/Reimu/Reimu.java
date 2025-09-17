@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
+
 import Enemies.EnemyBullet;
 import Managers.GameObjectManager;
 
@@ -22,6 +24,7 @@ public class Reimu {
     
     private Sprite spr;
     private Circle sprHitbox;
+    private Rectangle sprDropHitbox;
     
     //private Sound soundBala;
     private Texture txBala;
@@ -58,6 +61,7 @@ public class Reimu {
     	//spr.setOriginCenter();
     	spr.setBounds(x, y, 32, 48);
     	sprHitbox = new Circle(spr.getX() + spr.getWidth() / 2, spr.getY() + spr.getHeight()/ 2, 5f);
+    	sprDropHitbox = spr.getBoundingRectangle();
     }
     
     public void reimuAnimation() {
@@ -88,6 +92,7 @@ public class Reimu {
     public void draw(SpriteBatch batch, GameObjectManager gameMng) {
         reimuAnimationAndMovement(batch);
         reimuShooting(gameMng);
+        sprDropHitbox.setPosition(spr.getX(), spr.getY());
     }
     
     public void reimuAnimationAndMovement(SpriteBatch batch) {
@@ -162,6 +167,7 @@ public class Reimu {
         }
     }
     
+    //Collision with Enemy Bullets
     public boolean checkCollision(EnemyBullet eb) {
         if(!herido && eb.getHitbox().overlaps(sprHitbox)){
             vidas--;
@@ -174,6 +180,9 @@ public class Reimu {
         }
         return false;
     }
+    
+    // Collision with Drops
+    public boolean checkCollision(Drop d) {return (d.getHitbox().overlaps(sprDropHitbox));}
     
     public void heridoState(SpriteBatch batch) {
     	spr.setX(spr.getX() + MathUtils.random(-2, 2));

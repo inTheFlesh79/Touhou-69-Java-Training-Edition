@@ -15,12 +15,14 @@ import Enemies.FairySpawn;
 import Factory.EnemyFactory;
 import Factory.TouhouEnemyFactory;
 import Reimu.Bullet;
+import Reimu.Drop;
 import Reimu.Reimu;
 import puppy.code.PantallaJuego;
 
 public class GameObjectManager {
 	// Variables para controlar musica y nivel
     private int score;
+    private float deltaTime;
     private Sound explosionSound;
 	
 	// Valores para el manejo dinamico de la cantidad total de personajes tipo Fairy
@@ -38,6 +40,7 @@ public class GameObjectManager {
 	private ArrayList<Fairy> fairies = new ArrayList<>();
 	private ArrayList<Bullet> reimuBullets = new ArrayList<>();
 	private ArrayList<EnemyBullet> enemyBullets = new ArrayList<>();
+	private ArrayList<Drop> enemyDrops = new ArrayList<>();
 	
 	// Managers de Personajes con comportamientos dinamicos (en este caso: Fairy)
 	private FairyManager fairyManager = new FairyManager();
@@ -46,7 +49,7 @@ public class GameObjectManager {
 	private boolean exerciseDone = false;
 	private boolean fightBoss = false;
 	
-	public GameObjectManager(SpriteBatch batch, int nivel, int vidas, int score, int cantFairies, PantallaJuego juego) {
+	public GameObjectManager(SpriteBatch batch, int nivel, int vidas, int score, PantallaJuego juego) {
 		this.batch = batch;
 		//this.juego = juego;
 		levelMng.setCurrentLevel(nivel);
@@ -70,6 +73,8 @@ public class GameObjectManager {
 		reimuBulletsDrawer();
 		enemyBulletsDrawer();
 		fairiesAndBossDrawerUpdater();
+		enemyDropsDrawer();
+		enemyDropsCollisionManager();
 		//SUJETO A CAMBIO (UX): ELIMINAR BALAS Y RESPAWN
 		if (!reimu.estaHerido()) {
 			reimuBulletsCollisionManager();
@@ -136,6 +141,8 @@ public class GameObjectManager {
 			        // If the fairy's health reaches zero, remove it and play sound
 			        if (fairies.get(j).getHealth() <= 0) {
 			            explosionSound.play();
+			            Drop d = eFactory.generateDrop(fairies.get(j).getSpr().getX(), fairies.get(j).getSpr().getY());
+			            agregarEnemyDrops(d);
 			            fairies.remove(j);
 			            currentNumFairies--;  // Decrement the current number of fairies
 			            j--;  // Adjust the index after removing a fairy
@@ -188,6 +195,32 @@ public class GameObjectManager {
 		}
 	}
 	
+	// Drawer and Collission manager for Drop vs Reimu objects
+	public void enemyDropsDrawer() {
+		for (int i = 0; i < enemyDrops.size(); i++) {
+			Drop d = enemyDrops.get(i);
+			if (d.isDestroyed()) {
+				d.dispose();
+				enemyDrops.remove(i);
+				i--;
+			}
+			d.draw(batch);
+		}
+	}
+	
+	public void enemyDropsCollisionManager() {
+		for (int i = 0; i < enemyDrops.size(); i++) {
+			Drop d = enemyDrops.get(i);
+			d.update();
+			if (reimu.checkCollision(d)) {
+				enemyDrops.remove(i);
+				score+=500;
+			}
+		}
+			
+	}
+	
+	// Drawer for Enemy objects
 	public void fairiesAndBossDrawerUpdater() {
 		if (!fairies.isEmpty()) {
 		    // Draw and update all fairies that have been managed
@@ -246,9 +279,11 @@ public class GameObjectManager {
 	
     public boolean agregarReimuBullets(Bullet bb) {return reimuBullets.add(bb);}
     public void agregarEnemyBullets(EnemyBullet eb) {enemyBullets.add(eb);}
+    public void agregarEnemyDrops(Drop d) {enemyDrops.add(d);}
     
     public void setScore(int score) {this.score = score;}
     public void setFightBoss(boolean b) {this.fightBoss = b;}
+    public void setDeltaTime(float dt) {this.deltaTime = dt;}
     
     public int getReimuVidas() {return reimu.getVidas();}
     public int getScore() {return score;}
