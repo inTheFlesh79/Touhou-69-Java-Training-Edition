@@ -32,12 +32,13 @@ public class QuestionManager {
                 if (!linea.trim().isEmpty()) {
                     String[] partes = linea.split(",");
 
-                    if (partes.length == 6) {
-                        String enunciado = partes[0].trim();
-                        String[] respuestas = Arrays.copyOfRange(partes, 1, 5); // 4 opciones
-                        int indiceCorrecto = Integer.parseInt(partes[5].trim()) - 1; // Ajustar a base 0
+                    if (partes.length >= 7) {
+                    	String id = partes[0].trim();
+                    	String enunciado = partes[1].trim();
+                        String[] respuestas = Arrays.copyOfRange(partes, 2, 6); // 4 opciones
+                        int indiceCorrecto = Integer.parseInt(partes[6].trim()) - 1; // Ajustar a base 0
 
-                        preguntas.add(new Pregunta(enunciado, respuestas, indiceCorrecto));
+                        preguntas.add(new Pregunta(id, enunciado, respuestas, indiceCorrecto));
                     }
                 }
             }

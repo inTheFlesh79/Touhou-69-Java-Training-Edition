@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -105,6 +107,16 @@ public class PantallaEjercicios implements Screen {
                 }
             });
             stage.addActor(areaClick);
+        }
+        // verificar si tiene imagen para mostrarla
+        if (preguntaActual.tieneImagen()) {
+            Texture texturaPregunta = new Texture(Gdx.files.internal(preguntaActual.getRuta()));
+            texturaPregunta.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear); // mejora calidad
+
+            Image imgPregunta = new Image(texturaPregunta);
+            imgPregunta.setPosition(400, 320); // la colocas en pantalla
+            // NO usamos setSize, mantiene el tamaño original
+            stage.addActor(imgPregunta);
         }
 	}
 
