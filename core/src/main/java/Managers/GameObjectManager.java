@@ -44,6 +44,7 @@ public class GameObjectManager {
 	private Random random = new Random();
 	// ESTADO PARA CONTROLAR PANTALLA PREGUNTAS
 	private boolean exerciseDone = false;
+	private boolean fightBoss = false;
 	
 	public GameObjectManager(SpriteBatch batch, int nivel, int vidas, int score, int cantFairies, PantallaJuego juego) {
 		this.batch = batch;
@@ -62,7 +63,6 @@ public class GameObjectManager {
         reimu.setVidas(vidas);
         
         eFactory.setCurrentObjectManager(this);
-        
         gameSetup();
 	}
 	
@@ -201,7 +201,7 @@ public class GameObjectManager {
 		}
 		else if (fairies.isEmpty() && levelMng.areWavesOver()) {
 			// SUJETO A CAMBIO IMPORTANTISIMO: AGREGAR PANTALLA CON PREGUNTAS Y PAUSAR EL JUEGO MOMENTANEAMENTE
-			
+			System.out.println("Boss vivo? "+isBossAlive());
 		 	//UNLEASH THE BOSS
 			boss.enemyRoutine(batch);
 		}
@@ -248,8 +248,11 @@ public class GameObjectManager {
     public void agregarEnemyBullets(EnemyBullet eb) {enemyBullets.add(eb);}
     
     public void setScore(int score) {this.score = score;}
+    public void setFightBoss(boolean b) {this.fightBoss = b;}
+    
     public int getReimuVidas() {return reimu.getVidas();}
     public int getScore() {return score;}
+    public boolean areWeFightingBoss() {return fightBoss;}
     
     public boolean isBossAlive() {
     	if (boss == null) {
@@ -257,6 +260,7 @@ public class GameObjectManager {
     	}
     	return true;
     }
+    
     public boolean AreFairiesAlive() {
     	if (fairies.isEmpty()) {
     		return false;
@@ -264,38 +268,14 @@ public class GameObjectManager {
     	return true;
     }
     
+    public boolean areWavesOver() {return levelMng.areWavesOver();}
+    
     public boolean isReimuDead() {return reimu.estaDestruido();}
     public int getReimuDamage() {return reimu.getDamageBala();}
     
-    public boolean readyToExercise() {
-    	return !AreFairiesAlive() && !exerciseDone;
-    }
+    public boolean readyToExercise() {return (!AreFairiesAlive() && levelMng.areWavesOver());}
     
     public void setExerciseDone(boolean s) {
     	this.exerciseDone = s;
     }
-    
-    
- // Check if we need to select and manage a new set of fairies
-	
- 			/* SUJETO A CAMBIO: LOGICA DE CUANDO, CUANTAS Y COMO SALEN LAS FAIRIES POR NIVEL (STAGEPHASER, SPAWNPOSITIONER, CHANGES IN INITIAL MOVEMENT)
- 			if (currentNumFairies < 0 || !currentNumFairiesManaged) {
- 				currentNumFairies = random.nextInt(fairies.size());  // Select a random number of fairies
-
- 		        // Set up BHP, speed, and health for the fairies
- 		        int bhpChoice = random.nextInt(fairyManager.getBhpTypeSize());
- 		        int speedChoice = random.nextInt(fairyManager.getCantSpeedOptions());
- 		        int healthChoice = random.nextInt(fairyManager.getCantHealthOptions());
- 		        
- 		        // Manage the fairies that were selected
- 		        for (int i = 0; i <= currentNumFairies; i++) {  // Include index 0 as valid
- 		        	fairies.get(i).setSpeedChoice(speedChoice);
- 		            fairyManager.manageBHPType(fairies.get(i), bhpChoice);
- 		            fairyManager.manageSpeed(fairies.get(i), fairies.get(i).getSpeedChoice());
- 		            fairyManager.manageHealth(fairies.get(i), healthChoice);
- 		        }
-
- 		        currentNumFairiesManaged = true;  // Set to true once fairies are managed
- 			}
- 			*/
 }

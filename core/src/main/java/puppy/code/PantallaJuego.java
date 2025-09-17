@@ -58,11 +58,11 @@ public class PantallaJuego implements Screen {
 		dibujaHUD();
 		gameMng.update();// Maneja los objetos actuales en Pantalla
 		
-		if (gameMng.AreFairiesAlive() && !musicMng.isPlayingFairyTheme()) {
+		if (!gameMng.areWavesOver() && !musicMng.isPlayingFairyTheme()) {
 			musicMng.playFairiesMusic();
 		}
-		//SUJETO A CAMBIO: ORDEN DE CANCIONES POR NUEVA SCREEN DE APRENDIZAJEf
-		else if (!gameMng.AreFairiesAlive() && !musicMng.isPlayingBossTheme()){
+		//SUJETO A CAMBIO: ORDEN DE CANCIONES POR NUEVA SCREEN DE APRENDIZAJE
+		else if (!gameMng.AreFairiesAlive() && gameMng.areWavesOver() && !musicMng.isPlayingBossTheme()){
 			musicMng.playBossMusic();
 		}
 		
@@ -104,10 +104,12 @@ public class PantallaJuego implements Screen {
 		}
 		
 		// VERIFICAR SI ESTA LISTO PARA EJERCITAR
-		if (gameMng.readyToExercise()) {
+		if (gameMng.readyToExercise() && !gameMng.areWeFightingBoss()) {
 			game.setScreen(new PantallaEjercicios(game, this));
-			
+			System.out.println("cangri");
+			gameMng.setFightBoss(true);
 			// ANTES DE SALIR CAMBIAR ESTADO DE CONTROL PARA NO REPETIR PANTALLA
+			
 			gameMng.setExerciseDone(true);
 		}
 	}
