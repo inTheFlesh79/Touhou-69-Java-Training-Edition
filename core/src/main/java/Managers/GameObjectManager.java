@@ -7,8 +7,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 
 import Enemies.Boss;
+import Enemies.Enemy;
 import Enemies.EnemyBullet;
 import Enemies.Fairy;
 import Enemies.FairySpawn;
@@ -36,6 +38,7 @@ public class GameObjectManager {
 	
 	private EnemyFactory eFactory = new TouhouEnemyFactory();
 	private LevelManager levelMng = new LevelManager();
+	private DropManager dropMng = new DropManager();
 	
 	private ArrayList<Fairy> fairies = new ArrayList<>();
 	private ArrayList<Bullet> reimuBullets = new ArrayList<>();
@@ -98,8 +101,7 @@ public class GameObjectManager {
 	/*
 	 * FUNCIONES DE DRAW, UPDATE Y MANEJO DE OBJETOS EN PANTALLAJUEGO
 	 * 
-	 * 
-	 * */
+	 */
 	
 	public void reimuBulletsDrawer() {
 		//dibujar balas
@@ -141,21 +143,11 @@ public class GameObjectManager {
 			        // If the fairy's health reaches zero, remove it and play sound
 			        if (fairies.get(j).getHealth() <= 0) {
 			            explosionSound.play();
-			            Drop d = eFactory.generateDrop(fairies.get(j).getSpr().getX(), fairies.get(j).getSpr().getY());
-			            agregarEnemyDrops(d);
+			            agregarEnemyDrops(fairies.get(j));
 			            fairies.remove(j);
 			            currentNumFairies--;  // Decrement the current number of fairies
 			            j--;  // Adjust the index after removing a fairy
-			            
-			            //SUJETO A CAMBIO: AGREGAR NUEVAS INSTANCIAS DE SCORE 
 			            score += 100;  // Increment the score
-	
-			            // If currentNumFairies is now invalid (less than 0), reset management
-			            /*
-			            if (currentNumFairies < 0) {
-			                currentNumFairiesManaged = false;  // Prepare for next round
-			            }
-			            */
 			        }
 			    }
 			    
@@ -274,12 +266,20 @@ public class GameObjectManager {
 	
 	/*
 	 * FUNCIONES QUE RECIBEN OBJETO EnemyBullet O Bullet PARA AGREGARLOS AL ARRAYLIST QUE MANEJA SU EXISTENCIA EN PANTALLAJUEGO 
-	 * 
-	 * */
+	 */
 	
     public boolean agregarReimuBullets(Bullet bb) {return reimuBullets.add(bb);}
     public void agregarEnemyBullets(EnemyBullet eb) {enemyBullets.add(eb);}
-    public void agregarEnemyDrops(Drop d) {enemyDrops.add(d);}
+    
+    // ARREGLAR CHANCES
+    public void agregarEnemyDrops(Enemy fairy) {
+        //float chance = MathUtils.random();
+        Drop d = new Drop();
+        d = dropMng.addDrop(fairy.getSpr().getX(), fairy.getSpr().getY());
+        enemyDrops.add(d);
+        d = dropMng.addExtraDrop(fairy.getSpr().getX(), fairy.getSpr().getY());
+        enemyDrops.add(d);
+    }
     
     public void setScore(int score) {this.score = score;}
     public void setFightBoss(boolean b) {this.fightBoss = b;}

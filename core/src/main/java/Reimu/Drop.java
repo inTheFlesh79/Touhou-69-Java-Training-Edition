@@ -13,7 +13,7 @@ public class Drop {
     protected boolean isDestroyed = false;
     protected float yVelocity;     // current vertical velocity
     protected float gravity = -200f; // gravity force (negative = down)
-    protected float maxFallSpeed = -300f; // maximum downward velocity
+    protected float maxFallSpeed = -500f; // maximum downward velocity
     protected Texture spriteSheet;
     protected TextureRegion[][] spriteRegions;
     protected Rectangle hitbox;
@@ -26,10 +26,12 @@ public class Drop {
         
         spr.setBounds(spawnX, spawnY, 22, 24);
         // initial upward velocity (state 1: goes up before falling)
-        yVelocity = 150f; // tweak this to control how high the item rises
+        yVelocity = 250f; // tweak this to control how high the item rises
     }
 
-    public void draw(SpriteBatch batch) {
+    public Drop() {}
+
+	public void draw(SpriteBatch batch) {
         spr.draw(batch);
     }
 

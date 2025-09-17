@@ -1,12 +1,16 @@
 package Factory;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 
 import Enemies.Boss;
 import Enemies.Fairy;
 import Managers.GameObjectManager;
 import Reimu.Drop;
+import Reimu.OneUpDrop;
+import Reimu.PowerDrop;
 import Reimu.ScoreDrop;
+import Reimu.ShieldDrop;
 
 public class TouhouEnemyFactory implements EnemyFactory{
 	private GameObjectManager gameMng;
@@ -31,16 +35,4 @@ public class TouhouEnemyFactory implements EnemyFactory{
 		return newBoss;
 	}
 	
-	public Drop generateDrop(float x, float y) {
-        //float chance = MathUtils.random(); // returns float between 0 and 1
-
-        //if (chance < 0.05f) {
-            return new ScoreDrop(x,y); // 60% chance
-        //}// else if (chance < 0.85f) {
-            //return new OneUpDrop(x, y); // 25% chance
-        //} else {
-            //return new BombDrop(x, y); // 15% chance
-        //}
-        //return null;
-    }
 }
