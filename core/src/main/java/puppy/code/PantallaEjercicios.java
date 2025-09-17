@@ -114,9 +114,21 @@ public class PantallaEjercicios implements Screen {
             texturaPregunta.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear); // mejora calidad
 
             Image imgPregunta = new Image(texturaPregunta);
-            imgPregunta.setPosition(400, 320); // la colocas en pantalla
-            // NO usamos setSize, mantiene el tamaño original
-            stage.addActor(imgPregunta);
+            // se extraen dimensiones de la imagen
+            float imgWidth = texturaPregunta.getWidth();
+            float imgHeight = texturaPregunta.getHeight();
+
+            // espacio disponible para display la imagen
+            float rectX = 0;
+            float rectY = 292;
+            float rectWidth = 1200;
+            float rectHeight = 412;
+
+            // posición centrada
+            float posX = rectX + (rectWidth - imgWidth) / 2f;
+            float posY = rectY + (rectHeight - imgHeight) / 2f;
+            imgPregunta.setPosition(posX, posY);
+            stage.addActor(imgPregunta); // se muestra en pantalla
         }
 	}
 
