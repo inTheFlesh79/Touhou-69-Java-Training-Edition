@@ -1,5 +1,7 @@
 package puppy.code;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -35,9 +37,12 @@ public class PantallaEjercicios implements Screen {
     private QuestionManager questions = new QuestionManager();
     private ShapeRenderer shapeRenderer;
     private final float[] rectY = {250, 180, 110, 40};
+    private ArrayList<Pregunta> preguntasRonda;
+    private int indicePregunta = 0;
+    private int correctas = 0;
 
 	public PantallaEjercicios (Touhou game, Screen pantallaAnterior) {
-		Touhou.getInstance();
+		game = Touhou.getInstance();
         this.batch = game.getBatch();
         // camera
 		camera = new OrthographicCamera();
@@ -64,72 +69,90 @@ public class PantallaEjercicios implements Screen {
         buttonStyle.fontColor = Color.BLACK;
         skin.add("default", buttonStyle);
         
-        shapeRenderer = new ShapeRenderer();
+        // CATEGORÍA actual (rotativa)
+        int categoria = Touhou.getSiguienteCategoria();
 
+        // Obtener 6 preguntas de esa categoría
+        preguntasRonda = questions.getPreguntasAleatoriasPorCategoria(categoria, 6);
 
-        // Elegir una pregunta random
-        Pregunta preguntaActual = questions.getPreguntaAleatoria();
-        // se obtiene enunciado
-        Label lblPregunta = new Label(preguntaActual.getEnunciado(), skin);
-        // se fija posicion del enunciado, con ancho máximo y salto de linea
-        lblPregunta.setPosition(60, 740);
-        lblPregunta.setWrap(true);
-        lblPregunta.setWidth(1100);
-
-        // se agrega en la pantalla el enunciado
-        stage.addActor(lblPregunta);
-        TextButton[] botones = new TextButton[4];
+        // Mostrar primera pregunta
+        mostrarPregunta(indicePregunta, game, pantallaAnterior);
         
-        for (int i = 0; i < 4; i++) {
-        	// misma logica para obtener las 4 alternativas
-            botones[i] = new TextButton(preguntaActual.getRespuestas()[i], skin);
-            botones[i].setPosition(60, rectY[i]+10);
-            // se agregan en la pantalla las alternativas
-            stage.addActor(botones[i]);
-            // caja invisible para click
-            Actor areaClick = new Actor();
-            areaClick.setBounds(50, rectY[i], 1100, 40);
-            areaClick.setTouchable(Touchable.enabled);
-            final int index = i;
-            areaClick.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                	// CONDICION EN CASO DE QUE EL USUARIO RESPONDA CORRECTAMENTE
-                	// POSIBLEMENTE SE PUEDE MANEJAR LA LÓGICA DE BUFFEOS AQUI
-                    if (index == preguntaActual.getIndiceCorrecto()) {
-                        System.out.println("¡Correcto!");
-                        game.setScreen(pantallaAnterior);
-        				dispose();
-        			// CONDICION EN CASO DE QUE EL USUARIO RESPONDA incorrectamente
-                    } else {
-                        System.out.println("Incorrecto");
-                    }
-                }
-            });
-            stage.addActor(areaClick);
-        }
-        // verificar si tiene imagen para mostrarla
-        if (preguntaActual.tieneImagen()) {
-            Texture texturaPregunta = new Texture(Gdx.files.internal(preguntaActual.getRuta()));
-            texturaPregunta.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear); // mejora calidad
+	}
+	
+	private void mostrarPregunta(int index, Touhou game, Screen pantallaAnterior) {
+		stage.clear(); // limpiar stage
+		shapeRenderer = new ShapeRenderer();
+		// limpiar stage
 
-            Image imgPregunta = new Image(texturaPregunta);
-            // se extraen dimensiones de la imagen
-            float imgWidth = texturaPregunta.getWidth();
-            float imgHeight = texturaPregunta.getHeight();
+	    Pregunta preguntaActual = preguntasRonda.get(index);
 
-            // espacio disponible para display la imagen
-            float rectX = 0;
-            float rectY = 292;
-            float rectWidth = 1200;
-            float rectHeight = 412;
+	    // Label enunciado
+	    Label lblPregunta = new Label(preguntaActual.getEnunciado(), skin);
+	    lblPregunta.setPosition(60, 740);
+	    lblPregunta.setWrap(true);
+	    lblPregunta.setWidth(1100);
+	    stage.addActor(lblPregunta);
 
-            // posición centrada
-            float posX = rectX + (rectWidth - imgWidth) / 2f;
-            float posY = rectY + (rectHeight - imgHeight) / 2f;
-            imgPregunta.setPosition(posX, posY);
-            stage.addActor(imgPregunta); // se muestra en pantalla
-        }
+	    // Botones y click
+	    TextButton[] botones = new TextButton[4];
+	    for (int i = 0; i < 4; i++) {
+	        botones[i] = new TextButton(preguntaActual.getRespuestas()[i], skin);
+	        botones[i].setPosition(60, rectY[i] + 10);
+	        stage.addActor(botones[i]);
+
+	        Actor areaClick = new Actor();
+	        areaClick.setBounds(50, rectY[i], 1100, 40);
+	        areaClick.setTouchable(Touchable.enabled);
+	        final int opcion = i;
+
+	        areaClick.addListener(new ClickListener() {
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+	                if (opcion == preguntaActual.getIndiceCorrecto()) {
+	                	System.out.println("¡Correcto!");
+	                    correctas++;
+	                    System.out.println("correctas+1");
+	                } else {
+	                    System.out.println("Incorrecto");
+	                }
+
+	                // Siguiente pregunta
+	                indicePregunta++;
+	                if (indicePregunta < preguntasRonda.size()) {
+	                	mostrarPregunta(indicePregunta, game, pantallaAnterior);
+	                } else {
+	                    System.out.println("Ronda finalizada. Correctas: " + correctas);
+	                    game.setScreen(pantallaAnterior);
+	                    dispose();
+	                }
+	            }
+	        });
+
+	        stage.addActor(areaClick);
+	    }
+
+	    // Imagen si existe
+	    if (preguntaActual.tieneImagen()) {
+	        Texture texturaPregunta = new Texture(Gdx.files.internal(preguntaActual.getRuta()));
+	        texturaPregunta.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
+	        Image imgPregunta = new Image(texturaPregunta);
+	        float imgWidth = texturaPregunta.getWidth();
+	        float imgHeight = texturaPregunta.getHeight();
+
+	        // Rectángulo centrado
+	        float rectX = 0;
+	        float rectY = 292;
+	        float rectWidth = 1200;
+	        float rectHeight = 412;
+
+	        float posX = rectX + (rectWidth - imgWidth) / 2f;
+	        float posY = rectY + (rectHeight - imgHeight) / 2f;
+
+	        imgPregunta.setPosition(posX, posY);
+	        stage.addActor(imgPregunta);
+	    }
 	}
 
 	@Override

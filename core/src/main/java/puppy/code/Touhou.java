@@ -10,6 +10,8 @@ public class Touhou extends Game {
     private SpriteBatch batch;
     private BitmapFont font;
     private int highScore;
+    // para manejar rotacion de categorias en TODO el juego
+    private static int categoriaActual = 1;
 
     private Touhou() {
     }
@@ -56,5 +58,12 @@ public class Touhou extends Game {
 
     public void setHighScore(int highScore) {
         this.highScore = highScore;
+    }
+    
+    public static int getSiguienteCategoria() {
+        int cat = categoriaActual;
+        categoriaActual++;
+        if (categoriaActual > 3) categoriaActual = 1;
+        return cat;
     }
 }
