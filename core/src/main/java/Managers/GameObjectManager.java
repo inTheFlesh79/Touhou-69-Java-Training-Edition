@@ -56,7 +56,6 @@ public class GameObjectManager {
 	
 	public GameObjectManager(SpriteBatch batch, int nivel, int vidas, int score, PantallaJuego juego) {
 		this.batch = batch;
-		//this.juego = juego;
 		levelMng.setCurrentLevel(nivel);
 		
 		//inicializar assets; musica de fondo y efectos de sonido

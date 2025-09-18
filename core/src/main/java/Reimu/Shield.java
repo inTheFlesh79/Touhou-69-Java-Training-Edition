@@ -14,7 +14,7 @@ public class Shield {
 
     private Circle hitbox;
     private float rotation;
-    private float maxDuration = 10f;
+    private float maxDuration = 20f;
     private float elapsed;
 
     private float initialRadius;
