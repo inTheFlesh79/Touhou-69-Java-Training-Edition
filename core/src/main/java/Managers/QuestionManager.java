@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -15,11 +14,9 @@ import Enemies.Pregunta;
 
 public class QuestionManager {
 	private ArrayList<Pregunta> preguntas;
-    private Random random;
 
     public QuestionManager() {
         preguntas = new ArrayList<>();
-        random = new Random();
         cargarPreguntas();
     }
 
@@ -50,29 +47,28 @@ public class QuestionManager {
             Gdx.app.error("QuestionManager", "Error al leer preguntas.csv", e);
         }
     }
-
-    public Pregunta getPreguntaAleatoria() {
-        if (preguntas.isEmpty()) {
-            throw new IllegalStateException("No hay preguntas cargadas");
-        }
-        return preguntas.get(random.nextInt(preguntas.size()));
-    }
     
-    public ArrayList<Pregunta> getPreguntasAleatoriasPorCategoria(int categoria, int cantidad) {
+    public ArrayList<Pregunta> getPreguntasPorCategoria(int categoria) {
+    	// se crea un arraylist para almacenar preguntas de una categoria específica
         ArrayList<Pregunta> preguntasCat = new ArrayList<>();
         for (Pregunta p : preguntas) {
+        	// se extraen todas las preguntas de cierta categoria
             if (p.getCategoria() == categoria) {
+            	// se añaden al arraylist
                 preguntasCat.add(p);
             }
         }
-
-        if (preguntasCat.size() < cantidad) {
+        
+        // deben existir al menos 6 preguntas para que se pueda ejecutar una ronda de preguntas
+        if (preguntasCat.size() < 6) {
             throw new IllegalStateException("No hay suficientes preguntas en la categoría " + categoria);
         }
-
-        Collections.shuffle(preguntasCat); // mezclar
+        
+        // se mezclan las preguntas obtenidas y almacenadas en el arraylist
+        Collections.shuffle(preguntasCat);
         ArrayList<Pregunta> seleccion = new ArrayList<>();
-        for (int i = 0; i < cantidad; i++) {
+        for (int i = 0; i < 6; i++) {
+        	// se crea otro arraylist para almacenar solo 6 preguntas aleatorias de la categoria
             seleccion.add(preguntasCat.get(i));
         }
         return seleccion;

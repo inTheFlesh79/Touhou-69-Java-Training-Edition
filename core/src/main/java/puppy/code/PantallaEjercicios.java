@@ -69,13 +69,13 @@ public class PantallaEjercicios implements Screen {
         buttonStyle.fontColor = Color.BLACK;
         skin.add("default", buttonStyle);
         
-        // CATEGORÍA actual (rotativa)
-        int categoria = Touhou.getSiguienteCategoria();
+        // se obtiene categoria actual
+        int categoria = Touhou.getCategoria();
 
-        // Obtener 6 preguntas de esa categoría
-        preguntasRonda = questions.getPreguntasAleatoriasPorCategoria(categoria, 6);
+        // obtener 6 preguntas de una categoria
+        preguntasRonda = questions.getPreguntasPorCategoria(categoria);
 
-        // Mostrar primera pregunta
+        // mostrar preguntas
         mostrarPregunta(indicePregunta, game, pantallaAnterior);
         
 	}
@@ -113,8 +113,10 @@ public class PantallaEjercicios implements Screen {
 	                	System.out.println("¡Correcto!");
 	                    correctas++;
 	                    System.out.println("correctas+1");
+	                    preguntaActual.setRespondidaCorrecta(true);
 	                } else {
 	                    System.out.println("Incorrecto");
+	                    preguntaActual.setRespondidaCorrecta(false);
 	                }
 
 	                // Siguiente pregunta
@@ -123,7 +125,7 @@ public class PantallaEjercicios implements Screen {
 	                	mostrarPregunta(indicePregunta, game, pantallaAnterior);
 	                } else {
 	                    System.out.println("Ronda finalizada. Correctas: " + correctas);
-	                    game.setScreen(pantallaAnterior);
+	                    game.setScreen(new PantallaResultados(preguntasRonda, 1, pantallaAnterior));
 	                    dispose();
 	                }
 	            }
@@ -132,7 +134,7 @@ public class PantallaEjercicios implements Screen {
 	        stage.addActor(areaClick);
 	    }
 
-	    // Imagen si existe
+	    // en caso de que la pregunta tenga imagen se displayea en la pantalla
 	    if (preguntaActual.tieneImagen()) {
 	        Texture texturaPregunta = new Texture(Gdx.files.internal(preguntaActual.getRuta()));
 	        texturaPregunta.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -141,15 +143,15 @@ public class PantallaEjercicios implements Screen {
 	        float imgWidth = texturaPregunta.getWidth();
 	        float imgHeight = texturaPregunta.getHeight();
 
-	        // Rectángulo centrado
+	        // variables para crear el area apta para mostrar imagen
 	        float rectX = 0;
 	        float rectY = 292;
 	        float rectWidth = 1200;
 	        float rectHeight = 412;
-
 	        float posX = rectX + (rectWidth - imgWidth) / 2f;
 	        float posY = rectY + (rectHeight - imgHeight) / 2f;
 
+	        // se setea posicion de imagen en el centro del area disponible
 	        imgPregunta.setPosition(posX, posY);
 	        stage.addActor(imgPregunta);
 	    }
@@ -157,7 +159,7 @@ public class PantallaEjercicios implements Screen {
 
 	@Override
 	public void render(float delta) {
-		// limpia la pantalla con color verde oscuro
+		// limpia la pantalla con color rojo 
 		ScreenUtils.clear(0.25f, 0.0f, 0.08f, 1f);
 		// actualizar matrices de la cámara
 		camera.update();
@@ -231,7 +233,10 @@ public class PantallaEjercicios implements Screen {
 	public void hide() {}
 
 	@Override
-	public void dispose() {ScreenUtils.clear(0, 0, 0.2f, 1);}
+	public void dispose() {
+		ScreenUtils.clear(0, 0, 0.2f, 1);
+		stage.clear(); // limpiar stage
+	}
 
 }
 

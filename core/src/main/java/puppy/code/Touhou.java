@@ -60,7 +60,7 @@ public class Touhou extends Game {
         this.highScore = highScore;
     }
     
-    public static int getSiguienteCategoria() {
+    public static int getCategoria() {
         int cat = categoriaActual;
         categoriaActual++;
         if (categoriaActual > 3) categoriaActual = 1;
