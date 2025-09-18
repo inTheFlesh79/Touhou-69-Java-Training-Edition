@@ -96,9 +96,16 @@ public class PantallaJuego implements Screen {
 	public void levelManagement() {
 		if (!gameMng.isBossAlive()) {
 			musicMng.stopBossMusic();
-			Screen ss = new PantallaJuego(nivel+1, gameMng.getReimuVidas(), gameMng.getScore(), gameMng.getReimuDamage());
-			ss.resize(1200, 800);
-			game.setScreen(ss);
+			if ((nivel+1) < 5) {
+				Screen ss = new PantallaJuego(nivel+1, gameMng.getReimuVidas(), gameMng.getScore(), gameMng.getReimuDamage());
+				ss.resize(1200, 800);
+				game.setScreen(ss);
+			}
+			else {
+				Screen ss = new PantallaFinal();
+				ss.resize(1200, 800);
+				game.setScreen(ss);
+			}
 	    }
 		
 		// verificar si se presionó la tecla de pausa (ESC)
