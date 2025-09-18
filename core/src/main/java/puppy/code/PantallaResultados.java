@@ -24,7 +24,7 @@ import Enemies.Pregunta;
 public class PantallaResultados implements Screen {
 
 	private Touhou game;
-	private Screen pantallaAnterior;
+	private PantallaJuego pantallaAnterior;
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 	
@@ -33,7 +33,7 @@ public class PantallaResultados implements Screen {
     private ShapeRenderer shapeRenderer;
     private int correctas;
 
-    public PantallaResultados(ArrayList<Pregunta> preguntasRonda, int ronda, Screen pantallaAnterior) {
+    public PantallaResultados(ArrayList<Pregunta> preguntasRonda, int ronda, PantallaJuego pantallaAnterior) {
         game = Touhou.getInstance();
         this.pantallaAnterior = pantallaAnterior;
         this.batch = game.getBatch();
@@ -230,6 +230,7 @@ public class PantallaResultados implements Screen {
             shapeRenderer.end();
 
             if (Gdx.input.isTouched()) {
+            	pantallaAnterior.setCorrectas(correctas);
                 game.setScreen(pantallaAnterior);
                 dispose();
             }

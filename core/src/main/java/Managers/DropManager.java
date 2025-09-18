@@ -38,16 +38,16 @@ public class DropManager {
 	
 	public Drop addExtraDrop(float x, float y) {
 		float chance = MathUtils.random();
-		if (chance < 0.25) { // ScoreDrop
+		if (chance < 0.6) { // ScoreDrop
         	return craftDrop(x, y+15, 1);
         }
-        else if (chance < 0.3) { // PowerDrop
+        else if (chance < 0.85) { // PowerDrop
         	return craftDrop(x, y+15, 2);
         }
-        else if (chance < 0.35){ // OneUpDrop
+        else if (chance < 0.9){ // OneUpDrop
         	return craftDrop(x, y+15, 3);
         }
-        else {
+        else { // ShieldDrop
         	return craftDrop(x, y+15, 4);
         }
 	}

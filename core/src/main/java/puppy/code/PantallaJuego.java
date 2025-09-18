@@ -16,8 +16,9 @@ public class PantallaJuego implements Screen {
 	private OrthographicCamera camera;	
 	private SpriteBatch batch;//batch
 	private int nivel;
-	private int cantFairies;
-	private boolean deltaSet = false;
+	private int power;
+	private int cantCorrectas = -1;
+	private boolean correctasSet = false;
 	
 	// Manager de Personajes con comportamientos dinamicos
 	private GameObjectManager gameMng;
@@ -26,15 +27,14 @@ public class PantallaJuego implements Screen {
     // Manager para controlar la imagen de fondo del juego
     private SceneManager sceneMng;
     
-	public PantallaJuego(int nivel, int vidas, int score, int cantFairies) {
+	public PantallaJuego(int nivel, int vidas, int score, int power) {
 		game = Touhou.getInstance();
 		batch = game.getBatch();
-		gameMng = new GameObjectManager(batch, nivel, vidas, score, this);
+		gameMng = new GameObjectManager(batch, nivel, vidas, score, power);
 		sceneMng = new SceneManager(batch);
 		
 		this.nivel = nivel;
 		gameMng.setScore(score);
-		this.cantFairies = cantFairies;
 		
 		camera = new OrthographicCamera();	
 		camera.setToOrtho(false, 1200, 800);
@@ -55,9 +55,10 @@ public class PantallaJuego implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		
-		if (deltaSet == false) {
-			gameMng.setDeltaTime(delta);
-			deltaSet = true;
+		if (correctasSet == false && cantCorrectas > -1) {
+			gameMng.setCorrectas(cantCorrectas);
+			System.out.println("correctas = "+cantCorrectas);
+			correctasSet = true;
 		}
 		
 		sceneMng.drawBg();
@@ -85,6 +86,8 @@ public class PantallaJuego implements Screen {
 		}
 		batch.end();
 		
+		//System.out.println("correctas en Pantalla Juego? = "+cantCorrectas);
+		
 		//checkear si debemos pasar al siguiente nivel
 	    levelManagement();
 	}
@@ -93,7 +96,7 @@ public class PantallaJuego implements Screen {
 	public void levelManagement() {
 		if (!gameMng.isBossAlive()) {
 			musicMng.stopBossMusic();
-			Screen ss = new PantallaJuego(nivel+1, gameMng.getReimuVidas(), gameMng.getScore(), cantFairies + 2);
+			Screen ss = new PantallaJuego(nivel+1, gameMng.getReimuVidas(), gameMng.getScore(), gameMng.getReimuDamage());
 			ss.resize(1200, 800);
 			game.setScreen(ss);
 	    }
@@ -112,13 +115,15 @@ public class PantallaJuego implements Screen {
 		// VERIFICAR SI ESTA LISTO PARA EJERCITAR
 		if (gameMng.readyToExercise() && !gameMng.areWeFightingBoss()) {
 			game.setScreen(new PantallaEjercicios(game, this));
-			System.out.println("cangri");
+			System.out.println("correctas en Pantalla Juego? = "+cantCorrectas);
 			gameMng.setFightBoss(true);
 			// ANTES DE SALIR CAMBIAR ESTADO DE CONTROL PARA NO REPETIR PANTALLA
-			
 			gameMng.setExerciseDone(true);
+			System.out.println("cumgri");
 		}
 	}
+	
+	public void setCorrectas(int c) {cantCorrectas = c;}
     
     
 	@Override

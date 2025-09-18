@@ -1,16 +1,10 @@
 package Factory;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.MathUtils;
 
 import Enemies.Boss;
 import Enemies.Fairy;
 import Managers.GameObjectManager;
-import Reimu.Drop;
-import Reimu.OneUpDrop;
-import Reimu.PowerDrop;
-import Reimu.ScoreDrop;
-import Reimu.ShieldDrop;
 
 public class TouhouEnemyFactory implements EnemyFactory{
 	private GameObjectManager gameMng;

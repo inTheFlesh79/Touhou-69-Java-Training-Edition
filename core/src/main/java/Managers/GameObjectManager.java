@@ -24,6 +24,7 @@ import puppy.code.PantallaJuego;
 
 public class GameObjectManager {
     private int score;
+    private int correctas;
     private float deltaTime = Gdx.graphics.getDeltaTime();;
     private Sound explosionSound;
 	
@@ -53,8 +54,9 @@ public class GameObjectManager {
 	// ESTADO PARA CONTROLAR PANTALLA PREGUNTAS
 	private boolean exerciseDone = false;
 	private boolean fightBoss = false;
+	private boolean checkRewards = false;
 	
-	public GameObjectManager(SpriteBatch batch, int nivel, int vidas, int score, PantallaJuego juego) {
+	public GameObjectManager(SpriteBatch batch, int nivel, int vidas, int score, int power) {
 		this.batch = batch;
 		levelMng.setCurrentLevel(nivel);
 		
@@ -68,10 +70,11 @@ public class GameObjectManager {
 				new Texture(Gdx.files.internal("Rocket2.png")), 
 				Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));
         reimu.setVidas(vidas);
+        reimu.setDamage(power);
         
         eFactory.setCurrentObjectManager(this);
         gameSetup();
-	}
+	}                     
 	
 	public void update() {
 		reimuBulletsDrawer();
@@ -266,7 +269,12 @@ public class GameObjectManager {
 		}
 		else if (fairies.isEmpty() && levelMng.areWavesOver()) {
 			// SUJETO A CAMBIO IMPORTANTISIMO: AGREGAR PANTALLA CON PREGUNTAS Y PAUSAR EL JUEGO MOMENTANEAMENTE
-			System.out.println("Boss vivo? "+isBossAlive());
+			if (!checkRewards) {
+				applyRewards();
+				checkRewards = true;
+				System.out.println("semen");
+			}
+			//System.out.println("Boss vivo? ");
 		 	//UNLEASH THE BOSS
 			boss.enemyRoutine(batch);
 		}
@@ -304,6 +312,44 @@ public class GameObjectManager {
 		System.out.println("Fairies = "+fairies.size());
 	}
 	
+	public void applyRewards() {
+		if (correctas == 0) {
+			System.out.println("correctas == 0");
+			
+			return;
+		}
+		else if (correctas < 3) { // 1 o  2 correctas
+			System.out.println("correctas < 3");
+			reimu.addDamage(20);
+		}
+		else if (correctas < 4) { //3 correctas
+			System.out.println("correctas < 4");
+			reimu.oneUp();
+			reimu.addDamage(20);
+			
+		}
+		else if (correctas < 6) { //4 o 5 correctas
+			System.out.println("correctas < 5");
+			for (int i = 0; i < 2; i++) {reimu.oneUp();}
+			reimu.addDamage(30);
+			boss.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+			//boss.setHealthChoice();
+			//boss.setSpeedChoice();
+			System.out.println(boss.getHealthChoice());
+			System.out.println(boss.getSpeedChoice());
+			System.out.println("Boss Health ="+boss.getHealth());
+			System.out.println("Boss Speed ="+boss.getSpeed());
+			System.out.println("correctas post pantalla juego = "+correctas);
+			
+		}
+		else {
+			System.out.println("else");
+			for (int i = 0; i < 3; i++) {reimu.oneUp();}
+			reimu.addDamage(50);
+			boss.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+		}
+	}
+	
 	/*
 	 * FUNCIONES QUE RECIBEN OBJETO EnemyBullet O Bullet PARA AGREGARLOS AL ARRAYLIST QUE MANEJA SU EXISTENCIA EN PANTALLAJUEGO 
 	 */
@@ -324,6 +370,7 @@ public class GameObjectManager {
     public void setScore(int score) {this.score = score;}
     public void setFightBoss(boolean b) {this.fightBoss = b;}
     public void setDeltaTime(float dt) {this.deltaTime = dt;}
+    public void setCorrectas(int c) {correctas = c;}
     
     public int getReimuVidas() {return reimu.getVidas();}
     public int getScore() {return score;}

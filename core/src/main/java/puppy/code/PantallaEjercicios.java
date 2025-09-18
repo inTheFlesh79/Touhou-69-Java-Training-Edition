@@ -40,8 +40,10 @@ public class PantallaEjercicios implements Screen {
     private ArrayList<Pregunta> preguntasRonda;
     private int indicePregunta = 0;
     private int correctas = 0;
+    private PantallaJuego tempPJ;
 
-	public PantallaEjercicios (Touhou game, Screen pantallaAnterior) {
+	public PantallaEjercicios (Touhou game, PantallaJuego pantallaAnterior) {
+		tempPJ = pantallaAnterior;
 		game = Touhou.getInstance();
         this.batch = game.getBatch();
         // camera
@@ -74,7 +76,6 @@ public class PantallaEjercicios implements Screen {
 
         // obtener 6 preguntas de una categoria
         preguntasRonda = questions.getPreguntasPorCategoria(categoria);
-
         // mostrar preguntas
         mostrarPregunta(indicePregunta, game, pantallaAnterior);
         
@@ -125,7 +126,7 @@ public class PantallaEjercicios implements Screen {
 	                	mostrarPregunta(indicePregunta, game, pantallaAnterior);
 	                } else {
 	                    System.out.println("Ronda finalizada. Correctas: " + correctas);
-	                    game.setScreen(new PantallaResultados(preguntasRonda, 1, pantallaAnterior));
+	                    game.setScreen(new PantallaResultados(preguntasRonda, 1, tempPJ));
 	                    dispose();
 	                }
 	            }
@@ -206,13 +207,9 @@ public class PantallaEjercicios implements Screen {
 	        shapeRenderer.rect(50, y, 1100, 40);
 	        shapeRenderer.end();
 	    }
-	    
 		stage.act(delta);
         stage.draw();
-		
 		batch.end();
-
-		
 	}
 
 	@Override

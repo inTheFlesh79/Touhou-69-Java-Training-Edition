@@ -9,8 +9,8 @@ import Enemies.Boss;
 import Enemies.Enemy;
 
 public class BossManager extends EnemyManager{
-	private int[] speedOptions = {800,900,1000};
-	private int[] healthOptions = {25, 27, 30};
+	private int[] speedOptions = {800,900,1000,400,450,500};
+	private int[] healthOptions = {600,800,1000,25, 27, 30};
 	
 	public BossManager() {
 		bhpType.add(new SpiralPattern());

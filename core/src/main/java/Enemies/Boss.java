@@ -30,8 +30,8 @@ public class Boss extends Enemy implements EnemyTools{
 		
 		bossSelectionAndAnimation(bossChoice);
 		
-		speedChoice = random.nextInt(bossMng.getCantSpeedOptions());
-		int healthChoice = random.nextInt(bossMng.getCantHealthOptions());
+		speedChoice = random.nextInt(bossMng.getCantSpeedOptions()-3);
+		int healthChoice = random.nextInt(bossMng.getCantHealthOptions()-3);
 		bossMng.manageSpeed(this, speedChoice);
 		bossMng.manageHealth(this, healthChoice);
 		bossMng.manageBHPType(this,0);
@@ -244,7 +244,7 @@ public class Boss extends Enemy implements EnemyTools{
 	            if (bulletGenTimer >= bulletPattern.getBulletGenInterval()) {
 		            for (int i = 0; i < bulletPattern.getCantBullet(); i++) {
 		            	bulletGenTimer = 0;
-		            	EnemyBullet generatedEBullet = bulletPattern.generateBulletInPattern(spr.getX()+16, spr.getY()+16);
+		            	EnemyBullet generatedEBullet = bulletPattern.generateBulletInPattern(spr.getX()+32, spr.getY()+20);
 		            	gameMng.agregarEnemyBullets(generatedEBullet);
 		            }
 	            }
@@ -278,6 +278,11 @@ public class Boss extends Enemy implements EnemyTools{
         if (spr.getY() < 0) spr.setY(0);
         if (spr.getY() + spr.getHeight() > Gdx.graphics.getHeight()) spr.setY(Gdx.graphics.getHeight() - spr.getHeight());
 		
+	}
+	
+	public void lowerBossHealthNSpeed(int hChoice, int sChoice) {
+		bossMng.manageHealth(this, hChoice);
+		bossMng.manageSpeed(this, sChoice);
 	}
 	
 	public void dispose() {

@@ -28,7 +28,7 @@ public class Reimu {
     
     //private Sound soundBala;
     private Texture txBala;
-    private int damageBala = 50;
+    private int damageBala = 10;
     
     private Sound sonidoHerido;
     private boolean herido = false;
@@ -210,6 +210,7 @@ public class Reimu {
     public Sprite getSpr() {return spr;}
     
 	public void setVidas(int vidas) {this.vidas = vidas;}
+	public void setDamage(int d) {this.damageBala = d;}
 	public void setShielded (boolean b) {isShielded = b;}
 	
 	public void oneUp() {this.vidas += 1;}
