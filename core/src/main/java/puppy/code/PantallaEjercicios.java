@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import Enemies.Pregunta;
+import Managers.MusicManager;
 import Managers.QuestionManager;
 
 
@@ -42,7 +43,7 @@ public class PantallaEjercicios implements Screen {
     private int correctas = 0;
     private PantallaJuego tempPJ;
 
-	public PantallaEjercicios (Touhou game, PantallaJuego pantallaAnterior) {
+	public PantallaEjercicios (Touhou game, MusicManager musicMng, PantallaJuego pantallaAnterior) {
 		tempPJ = pantallaAnterior;
 		game = Touhou.getInstance();
         this.batch = game.getBatch();
@@ -77,11 +78,11 @@ public class PantallaEjercicios implements Screen {
         // obtener 6 preguntas de una categoria
         preguntasRonda = questions.getPreguntasPorCategoria(categoria);
         // mostrar preguntas
-        mostrarPregunta(indicePregunta, game, pantallaAnterior);
+        mostrarPregunta(indicePregunta, game, musicMng, pantallaAnterior);
         
 	}
 	
-	private void mostrarPregunta(int index, Touhou game, Screen pantallaAnterior) {
+	private void mostrarPregunta(int index, Touhou game, MusicManager musicMng, Screen pantallaAnterior) {
 		stage.clear(); // limpiar stage
 		shapeRenderer = new ShapeRenderer();
 		// limpiar stage
@@ -111,11 +112,12 @@ public class PantallaEjercicios implements Screen {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	                if (opcion == preguntaActual.getIndiceCorrecto()) {
+	                	musicMng.playCorrect();
 	                	System.out.println("¡Correcto!");
 	                    correctas++;
-	                    System.out.println("correctas+1");
 	                    preguntaActual.setRespondidaCorrecta(true);
 	                } else {
+	                	musicMng.playIncorrect();
 	                    System.out.println("Incorrecto");
 	                    preguntaActual.setRespondidaCorrecta(false);
 	                }
@@ -123,9 +125,10 @@ public class PantallaEjercicios implements Screen {
 	                // Siguiente pregunta
 	                indicePregunta++;
 	                if (indicePregunta < preguntasRonda.size()) {
-	                	mostrarPregunta(indicePregunta, game, pantallaAnterior);
+	                	mostrarPregunta(indicePregunta, game, musicMng, pantallaAnterior);
 	                } else {
 	                    System.out.println("Ronda finalizada. Correctas: " + correctas);
+	                    musicMng.playBossMusic();
 	                    game.setScreen(new PantallaResultados(preguntasRonda, 1, tempPJ));
 	                    dispose();
 	                }

@@ -5,6 +5,7 @@ import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 
 public class MusicManager {
 	private int stageThemeChoice;
@@ -14,9 +15,16 @@ public class MusicManager {
 	private ArrayList<Music> fairiesThemes;
 	private Random random = new Random();
 	
+	private Sound correct;
+	private Sound incorrect;
+	
 	public MusicManager() {
 		bossThemes = new ArrayList<>();
 		fairiesThemes = new ArrayList<>();
+		
+		// sonidos correcto e incorrecto
+		correct = Gdx.audio.newSound(Gdx.files.internal("correcto.ogg"));
+        incorrect = Gdx.audio.newSound(Gdx.files.internal("incorrecto.ogg"));
 		
 		// fairies
 		
@@ -62,6 +70,15 @@ public class MusicManager {
 	
 	public int getSizeFairiesTheme() {return fairiesThemes.size();}
 	public int getSizeBossTheme() {return bossThemes.size();}
+	
+	// metodos para reproducir sonidos
+	public void playCorrect() {
+        correct.play(1.0f); // volumen = 1.0 (máximo)
+    }
+
+    public void playIncorrect() {
+        incorrect.play(1.0f);
+    }
 	
 	public void dispose() {
 		for (int i = 0; i < bossThemes.size(); i++) {

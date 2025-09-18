@@ -116,12 +116,14 @@ public class PantallaJuego implements Screen {
 		// OPCION DE DESARROLLADOR (se elimina)
 		// verificar si se presionó la tecla de ejercicios (P)
 		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-			game.setScreen(new PantallaEjercicios(game, this));
+			game.setScreen(new PantallaEjercicios(game, musicMng, this));
 		}
 		
 		// VERIFICAR SI ESTA LISTO PARA EJERCITAR
 		if (gameMng.readyToExercise() && !gameMng.areWeFightingBoss()) {
-			game.setScreen(new PantallaEjercicios(game, this));
+			musicMng.stopFairiesMusic();
+			musicMng.stopBossMusic();
+			game.setScreen(new PantallaEjercicios(game, musicMng, this));
 			System.out.println("correctas en Pantalla Juego? = "+cantCorrectas);
 			gameMng.setFightBoss(true);
 			// ANTES DE SALIR CAMBIAR ESTADO DE CONTROL PARA NO REPETIR PANTALLA
