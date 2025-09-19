@@ -16,7 +16,6 @@ public class PantallaJuego implements Screen {
 	private OrthographicCamera camera;	
 	private SpriteBatch batch;//batch
 	private int nivel;
-	private int power;
 	private int cantCorrectas = -1;
 	private boolean correctasSet = false;
 	

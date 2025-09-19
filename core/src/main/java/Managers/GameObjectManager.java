@@ -272,4 +272,5 @@ public class GameObjectManager {
     public void setExerciseDone(boolean s) {
     	this.exerciseDone = s;
     }
+    public boolean getExerciseState() { return exerciseDone; }
 }

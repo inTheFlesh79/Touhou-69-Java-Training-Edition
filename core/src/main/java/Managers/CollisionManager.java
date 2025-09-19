@@ -1,7 +1,5 @@
 package Managers;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
-
 import Enemies.Enemy;
 import Enemies.EnemyBullet;
 import Reimu.Bullet;
