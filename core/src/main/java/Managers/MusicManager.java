@@ -17,6 +17,7 @@ public class MusicManager {
 	
 	private Sound correct;
 	private Sound incorrect;
+	private Sound pause;
 	
 	public MusicManager() {
 		bossThemes = new ArrayList<>();
@@ -25,26 +26,31 @@ public class MusicManager {
 		// sonidos correcto e incorrecto
 		correct = Gdx.audio.newSound(Gdx.files.internal("correcto.ogg"));
         incorrect = Gdx.audio.newSound(Gdx.files.internal("incorrecto.ogg"));
+        
+        // pause menu;
+        pause = Gdx.audio.newSound(Gdx.files.internal("pauseSound.ogg"));
 		
 		// fairies
 		
-		fairiesThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Mp3Fairies_Ghostly Eyes.mp3"))));
-		fairiesThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Mp3Fairies_Night Bird.mp3"))));
-		fairiesThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Mp3Fairies_Old World.mp3"))));
-		fairiesThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Mp3Fairies_Imperishable Night.mp3"))));
+		fairiesThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Imperishable Night - 2 - Genshi no Yoru ~ Ghostly Eyes.ogg"))));
+		fairiesThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Imperishable Night - 8 - Eiya no Mukui ~ Imperishable Night.ogg"))));
+		fairiesThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Imperishable Night - 13 - Voyage 1969.ogg"))));
+		fairiesThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Imperishable Night - 17 - Extend Ash ~ Houraijin.ogg"))));
 		
 		// bosses
 		
-		bossThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Mp3Boss_Mooned Insect.mp3"))));
-		bossThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Mp3Boss_Mou Uta Shika Kikoenai.mp3"))));
-		bossThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Mp3Boss_Plain Asia.mp3"))));
-		bossThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Mp3Boss_Dream Battle.mp3"))));
+		bossThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Imperishable Night - 3 - Shunshun Shuugetsu ~ Mooned Insect.ogg"))));
+		bossThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Imperishable Night - 10 - Koi-iro Master Spark.ogg"))));
+		bossThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Imperishable Night - 14 - Sennen Gensoukyou ~ History of the Moon.ogg"))));
+		bossThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Imperishable Night - 18 - Tsuki Made Todoke, Fushi no Kemuri.ogg"))));
 		
 		stageThemeChoice = random.nextInt(bossThemes.size());
 	}
 	
 	public void playFairiesMusic() {
-		fairiesThemes.get(stageThemeChoice).play();
+		Music track = fairiesThemes.get(stageThemeChoice);
+		track.setVolume(0.4f);  // 40% volume
+	    track.play();
 		loopFairiesMusic();
 		setPlayingFairyTheme(true);
 	}
@@ -52,7 +58,9 @@ public class MusicManager {
 	public void playBossMusic() {
 		stopFairiesMusic();
 		setPlayingFairyTheme(false);
-		bossThemes.get(stageThemeChoice).play();
+		Music track = bossThemes.get(stageThemeChoice);
+		track.setVolume(0.4f);  // 40% volume
+	    track.play();
 		loopBossMusic();
 		setPlayingBossTheme(true);
 	}
@@ -78,6 +86,10 @@ public class MusicManager {
 
     public void playIncorrect() {
         incorrect.play(1.0f);
+    }
+    
+    public void playPause() {
+    	pause.play();
     }
 	
 	public void dispose() {

@@ -2,6 +2,8 @@ package Managers;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 
@@ -13,9 +15,15 @@ import Reimu.ScoreDrop;
 import Reimu.ShieldDrop;
 
 public class DropManager {
+	private Sound commonDropSfx = Gdx.audio.newSound(Gdx.files.internal("grabItem1.wav"));
+	private Sound shieldDropSfx = Gdx.audio.newSound(Gdx.files.internal("shield.ogg"));
+	private Sound oneUpDropSfx = Gdx.audio.newSound(Gdx.files.internal("oneUp.ogg"));
 	private ArrayList<Drop> drops = new ArrayList<>();
 	
-	public DropManager () {}
+	public DropManager () {
+		commonDropSfx.setVolume(1, 0.7f);
+		shieldDropSfx.setVolume(1, 1f);
+	}
 	
 	public void drawDrops(SpriteBatch batch) {
 		for (int i = 0; i < drops.size(); i++) {
@@ -102,22 +110,27 @@ public class DropManager {
 	    switch (dropBehavior(drop)) {
 	        case 1: // ScoreDrop
 	            reimu.addScore(500);
+	            commonDropSfx.play(1f);
 	            break;
 	        case 2: // ShieldDrop
 	            reimu.craftShield();
 	            reimu.setShielded(true);
 	            reimu.addScore(100);
+	            shieldDropSfx.play(1f);
 	            break;
 	        case 3: // OneUpDrop
 	            reimu.oneUp();
 	            reimu.addScore(100);
+	            oneUpDropSfx.play(1f);
 	            break;
 	        case 4: // PowerDrop
 	            reimu.addDamage(10);
-	            reimu.addScore(100);
+	            reimu.addScore(100); // play at full volume
+	            commonDropSfx.play(1f);  // ensure it's maxed
 	            break;
 	        default:
 	            reimu.addScore(500);
+	            commonDropSfx.play(1f);
 	            break;
 	    }
 	}

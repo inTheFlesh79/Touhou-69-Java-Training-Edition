@@ -94,7 +94,7 @@ public class Reimu {
     public void reimuAnimationAndMovement(SpriteBatch batch) {
     	float deltaTime = Gdx.graphics.getDeltaTime();
         TextureRegion currentFrame = animation.getKeyFrame(animationTime, true);
-        float speed = 400f;
+        float speed = 500f;
         
         bulletGenTimer += deltaTime;
 
@@ -103,7 +103,7 @@ public class Reimu {
              // Loop animation
             spr.setRegion(currentFrame);
 
-            float slowSpeed = speed * 0.4f; // Define the slow speed as half of the original speed
+            float slowSpeed = speed * 0.5f; // Define the slow speed as half of the original speed
 
          // Movement logic
 			 if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {

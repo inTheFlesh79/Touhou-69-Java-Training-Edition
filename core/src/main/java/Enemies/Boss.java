@@ -27,7 +27,8 @@ public class Boss extends Enemy implements EnemyTools{
 	public Boss (float initialPosX, float initialPosY, BulletManager bulletMng, int bossChoice) {
 		spriteSheet = new Texture(Gdx.files.internal("allBossesSpriteSheet.png"));
 		spriteRegions = TextureRegion.split(spriteSheet, 64, 78);
-		explosionSound.setVolume(1,0.5f);
+		explosionSound.setVolume(1,0.3f);
+		shootingSound.setVolume(1,0.2f);
 		bossSelectionAndAnimation(bossChoice);
 		
 		speedChoice = random.nextInt(bossMng.getCantSpeedOptions()-3);
@@ -246,7 +247,9 @@ public class Boss extends Enemy implements EnemyTools{
 		            	bulletGenTimer = 0;
 		            	EnemyBullet generatedEBullet = bulletPattern.generateBulletInPattern(spr.getX()+32, spr.getY()+20);
 		            	bulletMng.addEnemyBullets(generatedEBullet);
+		            	
 		            }
+		            shootingSound.play(0.8f);
 	            }
 	            
 	            // If the shooting time exceeds max, stop shooting and start cooldown

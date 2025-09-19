@@ -42,7 +42,7 @@ public class GameObjectManager {
 		levelMng.setCurrentLevel(nivel);
 		//crear a Reimu ^_^
 		reimu = new Reimu(Gdx.graphics.getWidth()/2-50,30,
-				Gdx.audio.newSound(Gdx.files.internal("DEAD.mp3")), 
+				Gdx.audio.newSound(Gdx.files.internal("DEAD.ogg")), 
 				new Texture(Gdx.files.internal("Rocket2.png")), 
 				Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));
         reimu.setVidas(vidas);
@@ -76,7 +76,6 @@ public class GameObjectManager {
 			enemyBulletsCollisionManager();
 		}
 		reimu.draw(batch, this);
-		//System.out.println("Are Fairy Waves Over = "+levelMng.areWavesOver());
 	}
 	
 	public void gameSetup() {

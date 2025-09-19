@@ -23,7 +23,8 @@ public class Fairy extends Enemy implements EnemyTools{
 	public Fairy (float initialPosX, float initialPosY, int firstTargetX, int firstTargetY, BulletManager bulletMng) {
 		spriteSheet = new Texture(Gdx.files.internal("Fairies.png"));
 		spriteRegions = TextureRegion.split(spriteSheet, 32, 32);
-		explosionSound.setVolume(1,0.5f);
+		explosionSound.setVolume(1,0.3f);
+		shootingSound.setVolume(1,0.14f);
 		int randomRow = random.nextInt(4);//Elige entre 4 estilos de Fairy distintos
 		
 		TextureRegion[] animationFrames = new TextureRegion[4];
@@ -74,39 +75,40 @@ public class Fairy extends Enemy implements EnemyTools{
 	    }
 	}
 	
-	public void shootingLogic(float deltaTime) {
-		// If Fairy is shooting, generate the bullet pattern and update shooting time
-        if (isShooting) {
-        	
-            shootingTime += deltaTime;
-            bulletGenTimer += deltaTime;
-            
-            if (bulletGenTimer >= bulletPattern.getBulletGenInterval()) {
-	            for (int i = 0; i < bulletPattern.getCantBullet(); i++) {
-	            	bulletGenTimer = 0;
-	            	EnemyBullet generatedEBullet = bulletPattern.generateBulletInPattern(spr.getX()+16, spr.getY()+16);
-	            	bulletMng.addEnemyBullets(generatedEBullet);
-	            }
-            }
-            
-            // If the shooting time exceeds max, stop shooting and start cooldown
-            if (shootingTime >= bulletPattern.getMaxShootingTime()) {
-            	//bulletPattern.setAngle(0);
-                isShooting = false;
-                shootingTime = 0f;  // Reset shooting time to zero for the next cooldown phase
-            }
-        } 
-        else {
-            // Cooldown phase: wait for 3 seconds
-            noShootingCooldown += deltaTime;
+	public boolean shootingLogic(float deltaTime) {
+	    boolean shot = false;
 
-            // Once cooldown of 3 seconds has passed, enable shooting again
-            if (noShootingCooldown >= 3.0f) {
-                isShooting = true;  // Enable shooting again
-                noShootingCooldown = 0f;      // Reset idleTime after cooldown
-            }
-        }
+	    if (isShooting) {
+	        shootingTime += deltaTime;
+	        bulletGenTimer += deltaTime;
+
+	        if (bulletGenTimer >= bulletPattern.getBulletGenInterval()) {
+	            bulletGenTimer = 0;
+
+	            for (int i = 0; i < bulletPattern.getCantBullet(); i++) {
+	                EnemyBullet generatedEBullet =
+	                    bulletPattern.generateBulletInPattern(spr.getX() + 16, spr.getY() + 16);
+	                bulletMng.addEnemyBullets(generatedEBullet);
+	            }
+
+	            shot = true; // mark that this fairy fired
+	        }
+
+	        if (shootingTime >= bulletPattern.getMaxShootingTime()) {
+	            isShooting = false;
+	            shootingTime = 0f;
+	        }
+	    } else {
+	        noShootingCooldown += deltaTime;
+	        if (noShootingCooldown >= 3.0f) {
+	            isShooting = true;
+	            noShootingCooldown = 0f;
+	        }
+	    }
+
+	    return shot;
 	}
+
 	
 	/* FUNCIONES RELACIONADAS AL MOVIMIENTO DEL FAIRY
 	 * 

@@ -51,7 +51,8 @@ public abstract class Enemy {
 	protected boolean isShooting = true;
 	protected boolean inTrack = false;
 	
-	protected Sound explosionSound = Gdx.audio.newSound(Gdx.files.internal("ATTACK3.mp3"));
+	protected Sound explosionSound = Gdx.audio.newSound(Gdx.files.internal("fairyDeath.ogg"));
+	protected Sound shootingSound = Gdx.audio.newSound(Gdx.files.internal("ATTACK3.ogg"));
 	
 	public Enemy() {};
 	
@@ -80,4 +81,5 @@ public abstract class Enemy {
 	public Sprite getSpr() {return spr;}
 
 	public void playExplosionSound() {explosionSound.play();}
+	public Sound getShootingSound() {return shootingSound;}
 }

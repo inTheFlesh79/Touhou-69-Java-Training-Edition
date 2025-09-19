@@ -17,21 +17,14 @@ public class SceneManager {
     private float screenWidth;
     private SpriteBatch batch;
     
-    private Random random = new Random();
-    private int backgroundChoice;
-    
-    public SceneManager (SpriteBatch batch) {
+    public SceneManager (SpriteBatch batch, int scnChoice) {
     	this.batch = batch;
     	
     	screenHeight = Gdx.graphics.getHeight();
         screenWidth = Gdx.graphics.getWidth();
         
         loadAllBg();
-        backgroundChoice = random.nextInt(allBackgrounds.size());
-        //background1 = new Texture("obscureBg.png");
-        //background2 = new Texture("obscureBg.png");
-        background1 = allBackgrounds.get(backgroundChoice);
-        background2 = allBackgrounds.get(backgroundChoice);
+        pickLvlBg(scnChoice);
     }
     
     public void loadAllBg() {
@@ -51,6 +44,27 @@ public class SceneManager {
     	scrollBg();
     }
     
+    public void pickLvlBg(int choice) {
+    	switch(choice) {
+    		case 1:
+    			background1 = allBackgrounds.get(0);
+    			background2 = allBackgrounds.get(0);
+    			break;
+    		case 2:
+    			background1 = allBackgrounds.get(1);
+    			background2 = allBackgrounds.get(1);
+    			break;
+    		case 3:
+    			background1 = allBackgrounds.get(2);
+    			background2 = allBackgrounds.get(2);
+    			break;
+    		case 4:
+    			background1 = allBackgrounds.get(3);
+    			background2 = allBackgrounds.get(3);
+    			break;
+    	}
+    }
+    
     public void scrollBg() {
     	// Scroll background
 		backgroundY -= backgroundVelocity;
@@ -60,7 +74,6 @@ public class SceneManager {
 		    backgroundY = 0;
 		}
 		// Draw the scrolling background
-    	// Draw the scrolling background
 		batch.draw(background1, 0, backgroundY, screenWidth, screenHeight);
 		batch.draw(background2, 0, backgroundY + screenHeight, screenWidth, screenHeight);
     }

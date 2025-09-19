@@ -30,7 +30,7 @@ public class PantallaJuego implements Screen {
 		game = Touhou.getInstance();
 		batch = game.getBatch();
 		gameMng = new GameObjectManager(batch, nivel, vidas, score, power);
-		sceneMng = new SceneManager(batch);
+		sceneMng = new SceneManager(batch, nivel);
 		
 		this.nivel = nivel;
 		gameMng.setScore(score);
@@ -62,7 +62,7 @@ public class PantallaJuego implements Screen {
 		
 		sceneMng.drawBg();
 		dibujaHUD();
-		gameMng.update();// Maneja los objetos actuales en Pantalla
+		gameMng.update(); // Maneja los objetos actuales en Pantalla
 		
 		if (!gameMng.areWavesOver() && !musicMng.isPlayingFairyTheme()) {
 			musicMng.playFairiesMusic();
@@ -84,8 +84,6 @@ public class PantallaJuego implements Screen {
 			dispose();
 		}
 		batch.end();
-		
-		//System.out.println("correctas en Pantalla Juego? = "+cantCorrectas);
 		
 		//checkear si debemos pasar al siguiente nivel
 	    levelManagement();
@@ -110,6 +108,7 @@ public class PantallaJuego implements Screen {
 		// verificar si se presionó la tecla de pausa (ESC)
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 			game.setScreen(new PantallaPausa(game, this));
+			musicMng.playPause();
 		}
 		
 		// OPCION DE DESARROLLADOR (se elimina)
