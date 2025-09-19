@@ -14,7 +14,7 @@ public class Shield {
 
     private Circle hitbox;
     private float rotation;
-    private float maxDuration = 20f;
+    private float maxDuration = 10f;
     private float elapsed;
 
     private float initialRadius;
@@ -78,10 +78,8 @@ public class Shield {
         spr.setScale(scale);
         hitbox.setRadius(currentRadius);
     }
-
-    public boolean checkCollision(Circle bullet) {
-        return Intersector.overlaps(bullet, hitbox);
-    }
+    
+    public Circle getHitbox() {return hitbox;}
 
     public boolean isExpired() {
         return elapsed >= maxDuration;

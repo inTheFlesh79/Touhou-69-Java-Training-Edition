@@ -59,19 +59,10 @@ public class Bullet {
         return false;
     }
     
-    /*
-    public boolean checkCollision(Enemy e) {
-        if(spr.getBoundingRectangle().overlaps(e.getSpr().getBoundingRectangle())){
-        	// Se destruyen ambos
-            this.destroyed = true;
-            e.setHealth(e.getHealth() - bulletDamage);
-            return true;
-
-        }
-        return false;
-    }
-    */
-    
     public boolean isDestroyed() {return destroyed;}
 	
+    public void setDestroyed(boolean b) {destroyed = b;}
+    
+    public Sprite getSpr() {return spr;}
+    public int getBulletDmg() {return bulletDamage;}
 }

@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
+import Managers.BulletManager;
 import Managers.FairyManager;
-import Managers.GameObjectManager;
 
 import java.util.Random;
 
@@ -17,13 +17,13 @@ public class Fairy extends Enemy implements EnemyTools{
 	private float deltaTime = Gdx.graphics.getDeltaTime();
 	private static final Random random = new Random();
 	private float targetX, targetY; 
-	private GameObjectManager gameMng;
+	private BulletManager bulletMng;
 	private FairyManager fairyMng = new FairyManager();
 
-	public Fairy (float initialPosX, float initialPosY, int firstTargetX, int firstTargetY, GameObjectManager gameMng) {
+	public Fairy (float initialPosX, float initialPosY, int firstTargetX, int firstTargetY, BulletManager bulletMng) {
 		spriteSheet = new Texture(Gdx.files.internal("Fairies.png"));
 		spriteRegions = TextureRegion.split(spriteSheet, 32, 32);
-		
+		explosionSound.setVolume(1,0.5f);
 		int randomRow = random.nextInt(4);//Elige entre 4 estilos de Fairy distintos
 		
 		TextureRegion[] animationFrames = new TextureRegion[4];
@@ -41,7 +41,7 @@ public class Fairy extends Enemy implements EnemyTools{
 		targetX = firstTargetX;
 	    targetY = firstTargetY;
 	    
-	    this.gameMng = gameMng;
+	    this.bulletMng = bulletMng;
 	}
 	
 	@Override
@@ -85,7 +85,7 @@ public class Fairy extends Enemy implements EnemyTools{
 	            for (int i = 0; i < bulletPattern.getCantBullet(); i++) {
 	            	bulletGenTimer = 0;
 	            	EnemyBullet generatedEBullet = bulletPattern.generateBulletInPattern(spr.getX()+16, spr.getY()+16);
-	            	gameMng.agregarEnemyBullets(generatedEBullet);
+	            	bulletMng.addEnemyBullets(generatedEBullet);
 	            }
             }
             
@@ -107,50 +107,6 @@ public class Fairy extends Enemy implements EnemyTools{
             }
         }
 	}
-	
-	//@Override
-	/* ORIGINAL BULLET HELL PATTERN
-	public void shootBulletHellPattern() {
-		float deltaTime = Gdx.graphics.getDeltaTime();
-	    if (firstSpawn) {
-	        isShooting = false;
-	    } 
-	    else {
-	        // If Fairy is shooting, generate the bullet pattern and update shooting time
-	        if (isShooting) {
-	        	
-	            shootingTime += deltaTime;
-	            bulletGenTimer += deltaTime;
-	            
-	            if (bulletGenTimer >= bulletPattern.getBulletGenInterval()) {
-		            for (int i = 0; i < bulletPattern.getCantBullet(); i++) {
-		            	bulletGenTimer = 0;
-		            	EnemyBullet generatedEBullet = bulletPattern.generateBulletInPattern(spr.getX()+16, spr.getY()+16);
-		            	gameMng.agregarEnemyBullets(generatedEBullet);
-		            }
-	            }
-	            
-	            // If the shooting time exceeds max, stop shooting and start cooldown
-	            if (shootingTime >= bulletPattern.getMaxShootingTime()) {
-	            	//bulletPattern.setAngle(0);
-	                isShooting = false;
-	                shootingTime = 0f;  // Reset shooting time to zero for the next cooldown phase
-	            }
-	        } 
-	        else {
-	            // Cooldown phase: wait for 3 seconds
-	            noShootingCooldown += deltaTime;
-
-	            // Once cooldown of 3 seconds has passed, enable shooting again
-	            if (noShootingCooldown >= 3.0f) {
-	                isShooting = true;  // Enable shooting again
-	                noShootingCooldown = 0f;      // Reset idleTime after cooldown
-	            }
-	        }
-	    }
-	}
-	*/
-	
 	
 	/* FUNCIONES RELACIONADAS AL MOVIMIENTO DEL FAIRY
 	 * 
@@ -274,5 +230,4 @@ public class Fairy extends Enemy implements EnemyTools{
 	public void setBulletGenInterval(float bgi) {this.bulletGenInterval = bgi;}
 
 	public void getSpawnSpeedChoice() {}
-	
 }

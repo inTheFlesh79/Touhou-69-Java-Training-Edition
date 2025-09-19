@@ -4,28 +4,28 @@ import com.badlogic.gdx.Gdx;
 
 import Enemies.Boss;
 import Enemies.Fairy;
-import Managers.GameObjectManager;
+import Managers.BulletManager;
 
 public class TouhouEnemyFactory implements EnemyFactory{
-	private GameObjectManager gameMng;
+	private BulletManager bulletMng;
 	
 	public TouhouEnemyFactory() {}
 	
 	@Override
-	public void setCurrentObjectManager(GameObjectManager gameMng) {
-		this.gameMng = gameMng;
+	public void setCurrentBulletManager(BulletManager bulletMng) {
+		this.bulletMng = bulletMng;
 	}
 	
 	@Override
 	public Fairy craftFairy(int spawnPointX, int spawnPointY, int firstTargetX, int firstTargetY, boolean IsShooting) {
-		Fairy newFairy = new Fairy(spawnPointX, spawnPointY, firstTargetX, firstTargetY, gameMng);
+		Fairy newFairy = new Fairy(spawnPointX, spawnPointY, firstTargetX, firstTargetY, bulletMng);
 		newFairy.setIsShooting(IsShooting);
 		return newFairy;
 	}
 
 	@Override
 	public Boss craftBoss(int bossTx) {
-		Boss newBoss = new Boss((Gdx.graphics.getWidth()/2) - 16, 932, gameMng, bossTx);
+		Boss newBoss = new Boss((Gdx.graphics.getWidth()/2) - 16, 932, bulletMng, bossTx);
 		return newBoss;
 	}
 	

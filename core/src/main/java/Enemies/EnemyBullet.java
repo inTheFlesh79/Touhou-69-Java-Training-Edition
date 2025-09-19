@@ -48,14 +48,6 @@ public class EnemyBullet {
         }	
 	}
 	
-	public boolean checkCollission(Reimu reimu) {
-		if(hitbox.overlaps(reimu.getSprHitbox())){
-			this.destroyed = true;
-            return true;
-        }
-		return false;
-	}
-	
 	public void draw(SpriteBatch batch) {
         batch.draw(bulletTxt, x - radius, y - radius, radius * 2, radius * 2);
     }

@@ -1,5 +1,7 @@
 package Reimu;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
@@ -14,24 +16,22 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
-import Enemies.EnemyBullet;
 import Managers.GameObjectManager;
 
 public class Reimu {
-	private boolean isShielded = false;
-	private boolean destruida = false;
-    private int vidas;
-    
+    private int lives;
+    private int score;
+    private int damage = 10;
     private Sprite spr;
     private Circle sprHitbox;
     private Rectangle sprDropHitbox;
-    
-    //private Sound soundBala;
     private Texture txBala;
-    private int damageBala = 10;
+    private Shield shield = null;
+    private boolean isShielded = false;
+	private boolean destruida = false;
     
-    private Sound sonidoHerido;
-    private boolean herido = false;
+    private Sound hurtSound;
+    private boolean hurt = false;
     private int tiempoHeridoMax=50;
     private int tiempoHerido;
     private float bulletGenInterval = 0.1f;
@@ -39,14 +39,13 @@ public class Reimu {
     
     private Texture spriteSheet;
     private TextureRegion[][] spriteRegions;
-    
     private Animation<TextureRegion> animation;
     private Animation<TextureRegion> animationLeft;
     private Animation<TextureRegion> animationRight;
     private float animationTime = 0f;
     
     public Reimu(int x, int y, Sound soundChoque, Texture txBala, Sound soundBala) {
-    	sonidoHerido = soundChoque;
+    	hurtSound = soundChoque;
     	//this.soundBala = soundBala;
     	this.txBala = txBala;
     	
@@ -101,7 +100,7 @@ public class Reimu {
         
         bulletGenTimer += deltaTime;
 
-        if (!herido) {
+        if (!hurt) {
             animationTime += deltaTime;
              // Loop animation
             spr.setRegion(currentFrame);
@@ -165,30 +164,12 @@ public class Reimu {
         	}
         }
     }
-    
-    //Collision with Enemy Bullets
-    public boolean checkCollision(EnemyBullet eb) {
-        if(!herido && eb.getHitbox().overlaps(sprHitbox) && !isShielded){
-            vidas--;
-            herido = true;
-  		    tiempoHerido=tiempoHeridoMax;
-  		    sonidoHerido.play();
-            if (vidas<=0) 
-          	    destruida = true; 
-            return true;
-        }
-        return false;
-    }
-
-    // Collision with Drops
-    public boolean checkCollision(Drop d) {return (d.getHitbox().overlaps(sprDropHitbox));}
-    
     public void heridoState(SpriteBatch batch) {
     	spr.setX(spr.getX() + MathUtils.random(-2, 2));
         spr.draw(batch); 
         spr.setX(spr.getX());
         tiempoHerido--;
-        if (tiempoHerido <= 0) herido = false;
+        if (tiempoHerido <= 0) hurt = false;
     }
     
     public void outOfBounds() {
@@ -198,21 +179,40 @@ public class Reimu {
 		if (spr.getY() + spr.getHeight() > Gdx.graphics.getHeight()) spr.setY(Gdx.graphics.getHeight() - spr.getHeight());
     }
     
-    public boolean estaDestruido() {return !herido && destruida;}
-    public boolean estaHerido() {return herido;}
+    public void craftShield() {shield = new Shield(spr.getX(), spr.getY(), spr);}
+    public void drawShield(SpriteBatch batch) {shield.draw(batch); shield.update();}
+    public boolean shieldExists() {return shield != null;}
+    public boolean shieldExpired() {return shield.isExpired();}
+    public void removeShield() {shield = null;}
+    
+    public boolean estaDestruido() {return !hurt && destruida;}
+    public boolean isHurt() {return hurt;}
     public boolean isShielded() {return isShielded;}
     
-    public int getDamageBala() {return damageBala;}
+    public int getDamageBala() {return damage;}
     public Circle getSprHitbox() {return sprHitbox;}
-    public int getVidas() {return vidas;}
+    public int getVidas() {return lives;}
     public int getX() {return (int) spr.getX();}
     public int getY() {return (int) spr.getY();}
     public Sprite getSpr() {return spr;}
+    public int getTHerido() {return tiempoHerido;}
+    public int getTHeridoMax() {return tiempoHeridoMax;}
+    public int getScore() {return score;}
+    public Circle getShieldHitbox() {return shield.getHitbox();}
     
-	public void setVidas(int vidas) {this.vidas = vidas;}
-	public void setDamage(int d) {this.damageBala = d;}
+    public void setTHerido(int t) {tiempoHerido = t;}
+    public void setHurt(boolean b) {hurt = b;}
+	public void setVidas(int lives) {this.lives = lives;}
+	public void setDamage(int d) {this.damage = d;}
 	public void setShielded (boolean b) {isShielded = b;}
+	public void setDestroyed(boolean b) {destruida = b;}
+	public void setScore(int s) {score = s;}
 	
-	public void oneUp() {this.vidas += 1;}
-	public void addDamage (int d) {this.damageBala += d;}
+	public void oneUp() {this.lives += 1;}
+	public void oneDown() {this.lives -= 1;}
+	
+	public void addDamage (int d) {this.damage += d;}
+	public void addScore (int s) {this.score += s;}
+	
+	public void playHurtSound() {hurtSound.play();}
 }

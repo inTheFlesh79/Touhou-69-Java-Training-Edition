@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import BulletHellPatterns.BulletHellPattern;
 import Managers.BossManager;
-import Managers.GameObjectManager;
+import Managers.BulletManager;
 
 public class Boss extends Enemy implements EnemyTools{
 	//private static Boss bossInstance;
@@ -20,14 +20,14 @@ public class Boss extends Enemy implements EnemyTools{
 	
 	private boolean changeBHP = true;
 	private float targetX, targetY; 
-	private GameObjectManager gameMng;
+	private BulletManager bulletMng;
 	private BossManager bossMng = new BossManager();
 	private ArrayList<BulletHellPattern> bossBHPlist = new ArrayList<>();
 	
-	public Boss (float initialPosX, float initialPosY, GameObjectManager gameMng, int bossChoice) {
+	public Boss (float initialPosX, float initialPosY, BulletManager bulletMng, int bossChoice) {
 		spriteSheet = new Texture(Gdx.files.internal("allBossesSpriteSheet.png"));
 		spriteRegions = TextureRegion.split(spriteSheet, 64, 78);
-		
+		explosionSound.setVolume(1,0.5f);
 		bossSelectionAndAnimation(bossChoice);
 		
 		speedChoice = random.nextInt(bossMng.getCantSpeedOptions()-3);
@@ -44,7 +44,7 @@ public class Boss extends Enemy implements EnemyTools{
 		targetX = 600 - 16;
 	    targetY = 600;
 	    
-	    this.gameMng = gameMng;
+	    this.bulletMng = bulletMng;
 	}
 	
 	public void bossSelectionAndAnimation(int bossChoice) {
@@ -245,7 +245,7 @@ public class Boss extends Enemy implements EnemyTools{
 		            for (int i = 0; i < bulletPattern.getCantBullet(); i++) {
 		            	bulletGenTimer = 0;
 		            	EnemyBullet generatedEBullet = bulletPattern.generateBulletInPattern(spr.getX()+32, spr.getY()+20);
-		            	gameMng.agregarEnemyBullets(generatedEBullet);
+		            	bulletMng.addEnemyBullets(generatedEBullet);
 		            }
 	            }
 	            

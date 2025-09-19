@@ -4,51 +4,32 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 
 import Enemies.Boss;
-import Enemies.Enemy;
-import Enemies.EnemyBullet;
-import Enemies.Fairy;
-import Enemies.FairySpawn;
 import Factory.EnemyFactory;
 import Factory.TouhouEnemyFactory;
 import Reimu.Bullet;
-import Reimu.Drop;
 import Reimu.Reimu;
-import Reimu.Shield;
-import puppy.code.PantallaJuego;
 
 public class GameObjectManager {
-    private int score;
     private int correctas;
-    private float deltaTime = Gdx.graphics.getDeltaTime();;
-    private Sound explosionSound;
-	
-	// Valores para el manejo dinamico de la cantidad total de personajes tipo Fairy
-	private int currentNumFairies;
-	//private boolean currentNumFairiesManaged = false;
-	
+    
 	// Personajes y Objetos de Personaje
 	private SpriteBatch batch;
 	private Reimu reimu;
-	private Shield reimuSh;
 	private Boss boss;
 	private EnemyFactory eFactory = new TouhouEnemyFactory();
 	
 	// Managers de Personajes con comportamientos dinamicos (en este caso: Fairy)
-	private FairyManager fairyManager = new FairyManager();
+	private FairyManager fairyMng = new FairyManager();
 	private LevelManager levelMng = new LevelManager();
 	private DropManager dropMng = new DropManager();
+	private CollisionManager collisionMng = new CollisionManager();
+	private BulletManager bulletMng = new BulletManager();
 	
-	private ArrayList<Fairy> fairies = new ArrayList<>();
 	private ArrayList<Bullet> reimuBullets = new ArrayList<>();
-	private ArrayList<EnemyBullet> enemyBullets = new ArrayList<>();
-	private ArrayList<Drop> enemyDrops = new ArrayList<>();
-	
 	
 	private Random random = new Random();
 	// ESTADO PARA CONTROLAR PANTALLA PREGUNTAS
@@ -59,11 +40,6 @@ public class GameObjectManager {
 	public GameObjectManager(SpriteBatch batch, int nivel, int vidas, int score, int power) {
 		this.batch = batch;
 		levelMng.setCurrentLevel(nivel);
-		
-		//inicializar assets; musica de fondo y efectos de sonido
-		explosionSound = Gdx.audio.newSound(Gdx.files.internal("ATTACK3.mp3"));
-		explosionSound.setVolume(1,0.5f);
-		
 		//crear a Reimu ^_^
 		reimu = new Reimu(Gdx.graphics.getWidth()/2-50,30,
 				Gdx.audio.newSound(Gdx.files.internal("DEAD.mp3")), 
@@ -71,28 +47,31 @@ public class GameObjectManager {
 				Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));
         reimu.setVidas(vidas);
         reimu.setDamage(power);
+        reimu.setScore(score);
         
-        eFactory.setCurrentObjectManager(this);
+        eFactory.setCurrentBulletManager(bulletMng);
         gameSetup();
 	}                     
 	
 	public void update() {
 		reimuBulletsDrawer();
 		enemyBulletsDrawer();
-		fairiesAndBossDrawerUpdater();
-		enemyDropsDrawer();
+		fairyDrawer();
+		//fairiesAndBossDrawerUpdater();
+		bossDrawer();
+		dropMng.drawDrops(batch);
 		enemyDropsCollisionManager();
 		
-		if (reimuSh != null && !reimuSh.isExpired()) {
-			shieldDrawer();
+		if (reimu.shieldExists() && !reimu.shieldExpired()) {
+			reimu.drawShield(batch);
 		}
 		else {
 			reimu.setShielded(false);
-			reimuSh = null;
+			reimu.removeShield();
 		}
 		
 		//SUJETO A CAMBIO (UX): ELIMINAR BALAS Y RESPAWN
-		if (!reimu.estaHerido()) {
+		if (!reimu.isHurt()) {
 			reimuBulletsCollisionManager();
 			enemyBulletsCollisionManager();
 		}
@@ -104,8 +83,9 @@ public class GameObjectManager {
 		levelMng.whatLevelIsIt();
 		System.out.println("Current Wave: "+levelMng.getCurrentLvlWave());
 		//crear Fairies
-	    fairySetup();
-        
+	    fairyMng.fairySetup(levelMng.getFairiesCurrentWave(), levelMng.getFairyStartingPoint(), levelMng.getFairyIsShooting(), bulletMng);
+	    levelMng.changeCurrentWave();
+	    levelMng.areWavesOver();
         //crear boss
         boss = eFactory.craftBoss(levelMng.getLvlId());
         //System.out.println("Boss = "+isBossAlive());
@@ -127,6 +107,7 @@ public class GameObjectManager {
 				 
 			 }
 			 b.draw(batch);
+			 b.update();
 		 }
 	}
 	
@@ -134,33 +115,27 @@ public class GameObjectManager {
 		// COLISION DE BOSS VS BULLETS
 		for (int i = 0; i < reimuBullets.size(); i++) {
 			Bullet bullet = reimuBullets.get(i);
-			bullet.update();
-			
-			if (bullet.checkCollision(boss)) {
+			if (collisionMng.chkColEnemyVsBullet(bullet, boss)) {
 			    //System.out.println("Boss Health: "+boss.getHealth());
-				if (boss.getHealth() <= 0) {
-					explosionSound.play();
+				if (collisionMng.isAliveAfterLastCol(boss) == null) {
 					boss = null;
 					reimuBullets.clear();
-					
-					//SUJETO A CAMBIO: AGREGAR NUEVAS INSTANCIAS DE SCORE 
-					score += 1000;
+					reimu.addScore(1000);
 					break;
 				}
 			}
 		
 			// COLISION DE FAIRIES VS BULLETS
-			for (int j = 0; j < fairies.size(); j++) {
-				
-			    if (bullet.checkCollision(fairies.get(j))) {
+			for (int j = 0; j < fairyMng.getFairiesSize(); j++) {
+			    if (collisionMng.chkColEnemyVsBullet(bullet,fairyMng.getFairy(j))) {
 			        // If the fairy's health reaches zero, remove it and play sound
-			        if (fairies.get(j).getHealth() <= 0) {
-			            explosionSound.play();
-			            agregarEnemyDrops(fairies.get(j));
-			            fairies.remove(j);
-			            currentNumFairies--;  // Decrement the current number of fairies
+			        if (collisionMng.isAliveAfterLastCol(fairyMng.getFairy(j)) == null) {
+			            fairyMng.getFairy(j).playExplosionSound();
+			            dropMng.spawnDrop(fairyMng.getFairy(j).getSpr().getX(),fairyMng.getFairy(j).getSpr().getY());
+			            fairyMng.removeFairy(j);
+			            fairyMng.reduceCurrentNumFairies();  // Decrement the current number of fairies
 			            j--;  // Adjust the index after removing a fairy
-			            score += 100;  // Increment the score
+			            reimu.addScore(100);  // Increment the score
 			        }
 			    }
 			    
@@ -173,101 +148,42 @@ public class GameObjectManager {
 		}
 	}
 	
-	// SUJETO A CAMBIO: ELIMINAR BALAS CUANDO OUT OF BOUNDS
-	public void enemyBulletsDrawer() {
-		for (int i = 0; i < enemyBullets.size(); i ++) {
-			 EnemyBullet eb = enemyBullets.get(i); 
-			 if (eb.isDestroyed()) {
-				 //System.out.println(eb.isDestroyed());
-				 eb.dispose();
-				 enemyBullets.remove(eb);
-				 i--;
-				 
-			 }
-			 eb.draw(batch);
-		 }
-	}
-	
+	// Drawer and Collission manager for EnemyBullet objects
 	public void enemyBulletsCollisionManager() {
-		for (int i = 0; i < enemyBullets.size(); i++) {
-		    // System.out.println("Bullet index: " + i);
-		    EnemyBullet eb = enemyBullets.get(i);
-		    // System.out.println("");
-		    eb.update();
-		    if (reimu.checkCollision(eb) && !reimu.isShielded()) {
-		        enemyBullets.remove(i);
-		    }
-		    
-		    if (reimuSh != null && reimuSh.checkCollision(eb.getHitbox())) {
-		    	enemyBullets.remove(i);
-		    }
-		    
+		for (int i = 0; i < bulletMng.getEnemyBulletsSize(); i++) {
+		    if (collisionMng.chkColReimuVsEBullet(bulletMng.getEnemyBullet(i), reimu)/* && !reimu.isShielded()*/) {bulletMng.removeEnemyBullet(i);}
+		    if (reimu.shieldExists() && collisionMng.chkColShieldVsEBullet(bulletMng.getEnemyBullet(i), reimu)) {bulletMng.removeEnemyBullet(i);}
 		}
 	}
 	
-	// Drawer for Shield object
-	public void shieldDrawer() {
-		reimuSh.draw(batch);
-		reimuSh.update();
-	}
+	public void enemyBulletsDrawer() {bulletMng.enemyBulletsDrawer(batch);}
 	
 	// Drawer and Collission manager for Drop vs Reimu objects
-	public void enemyDropsDrawer() {
-		for (int i = 0; i < enemyDrops.size(); i++) {
-			Drop d = enemyDrops.get(i);
-			if (d.isDestroyed()) {
-				d.dispose();
-				enemyDrops.remove(i);
-				i--;
-			}
-			d.draw(batch);
-		}
-	}
-	
 	public void enemyDropsCollisionManager() {
-		for (int i = 0; i < enemyDrops.size(); i++) {
-			Drop d = enemyDrops.get(i);
-			d.update();
-			if (reimu.checkCollision(d)) {
-				switch (dropMng.dropBehavior(d)) {
-					case 1: // ScoreDrop
-						score += 500;
-						break;
-					case 2: // ShieldDrop
-						reimuSh = new Shield(reimu.getSpr().getX(), reimu.getSpr().getY(), reimu.getSpr());
-						reimu.setShielded(true);
-						score += 100;
-						break;
-					case 3: // OneUpDrop
-						reimu.oneUp();
-						score += 100;
-						break;
-					case 4: // PowerDrop
-						reimu.addDamage(10);
-						score += 100;
-						break;
-					default:
-						score += 500;
-						break;
-				}
-				enemyDrops.remove(i);
+		for (int i = 0; i < dropMng.getDropsSize(); i++) {
+			if (collisionMng.chkColReimuVsDrop(dropMng.getDrop(i), reimu)) {
+				dropMng.applyDropEffect(dropMng.getDrop(i), reimu);
+	            dropMng.removeDrop(i);
 			}
 		}
 	}
 	
 	// Drawer for Enemy objects
-	public void fairiesAndBossDrawerUpdater() {
-		if (!fairies.isEmpty()) {
-		    // Draw and update all fairies that have been managed
-	        for (int i = 0; i < currentNumFairies; i++) {
-	        	fairies.get(i).enemyRoutine(batch);
-	        }
+	public void fairyDrawer() {
+		if (!fairyMng.isFairiesEmpty()) {
+			fairyMng.fairiesDrawer(batch);
 		}
-		else if (fairies.isEmpty() && !levelMng.areWavesOver()){
+		else if (fairyMng.isFairiesEmpty() && !levelMng.areWavesOver()) {
 			System.out.println("Current Wave: "+levelMng.getCurrentLvlWave());
-			fairySetup();
+			fairyMng.fairySetup(levelMng.getFairiesCurrentWave(), levelMng.getFairyStartingPoint(), levelMng.getFairyIsShooting(),bulletMng);
+			levelMng.changeCurrentWave();
+		    levelMng.areWavesOver();
+		    System.out.println("Fairies = "+fairyMng.getFairiesSize());
 		}
-		else if (fairies.isEmpty() && levelMng.areWavesOver()) {
+	}
+	
+	public void bossDrawer() {
+		if (fairyMng.isFairiesEmpty() && levelMng.areWavesOver()) {
 			// SUJETO A CAMBIO IMPORTANTISIMO: AGREGAR PANTALLA CON PREGUNTAS Y PAUSAR EL JUEGO MOMENTANEAMENTE
 			if (!checkRewards) {
 				applyRewards();
@@ -278,38 +194,6 @@ public class GameObjectManager {
 		 	//UNLEASH THE BOSS
 			boss.enemyRoutine(batch);
 		}
-	}
-	
-	public void fairySetup() {
-		int cantFairiesCurrentWave = levelMng.getFairiesCurrentWave();
-		for (int i = 0; i < cantFairiesCurrentWave; i++) {
-			// create only the amount of fairies needed for the current wave
-			FairySpawn spawn = levelMng.getFairyStartingPoint();
-			boolean IsShooting = levelMng.getFairyIsShooting();
-			Fairy f = eFactory.craftFairy(spawn.getSpawnX(), spawn.getSpawnY(), spawn.getTargetX(), spawn.getTargetY(), IsShooting);
-        	fairies.add(f);
-		}
-		
-		currentNumFairies = fairies.size();
-		
-		// manage the fairies elements with FairyManager
-		int bhpChoice = random.nextInt(fairyManager.getBhpTypeSize());
-        int speedChoice = random.nextInt(fairyManager.getCantSpeedOptions());
-        int spawnSpeedChoice = random.nextInt(fairyManager.getCantSpawnSpeedOptions());
-        int healthChoice = random.nextInt(fairyManager.getCantHealthOptions());
-        
-        for (int i = 0; i < cantFairiesCurrentWave; i++) {  // Include index 0 as valid
-        	fairies.get(i).setSpeedChoice(speedChoice);
-        	System.out.println("Fairy"+i);
-        	fairyManager.manageSpawnSpeed(fairies.get(i), spawnSpeedChoice);
-            fairyManager.manageBHPType(fairies.get(i), bhpChoice);
-            fairyManager.manageHealth(fairies.get(i), healthChoice);
-        }
-        
-		// update for next function call/new wave
-		levelMng.changeCurrentWave();
-		levelMng.areWavesOver();
-		System.out.println("Fairies = "+fairies.size());
 	}
 	
 	public void applyRewards() {
@@ -355,25 +239,14 @@ public class GameObjectManager {
 	 */
 	
     public boolean agregarReimuBullets(Bullet bb) {return reimuBullets.add(bb);}
-    public void agregarEnemyBullets(EnemyBullet eb) {enemyBullets.add(eb);}
+    //public void agregarEnemyBullets(EnemyBullet eb) {enemyBullets.add(eb);}
     
-    // ARREGLAR CHANCES
-    public void agregarEnemyDrops(Enemy fairy) {
-        //float chance = MathUtils.random();
-        Drop d = new Drop();
-        d = dropMng.addDrop(fairy.getSpr().getX(), fairy.getSpr().getY());
-        enemyDrops.add(d);
-        d = dropMng.addExtraDrop(fairy.getSpr().getX(), fairy.getSpr().getY());
-        enemyDrops.add(d);
-    }
-    
-    public void setScore(int score) {this.score = score;}
+    public void setScore(int score) {reimu.setScore(score);}
     public void setFightBoss(boolean b) {this.fightBoss = b;}
-    public void setDeltaTime(float dt) {this.deltaTime = dt;}
     public void setCorrectas(int c) {correctas = c;}
     
     public int getReimuVidas() {return reimu.getVidas();}
-    public int getScore() {return score;}
+    public int getScore() {return reimu.getScore();}
     public int getReimuDamage() {return reimu.getDamageBala();}
     
     public boolean isReimuDead() {return reimu.estaDestruido();}
@@ -388,7 +261,7 @@ public class GameObjectManager {
     }
     
     public boolean AreFairiesAlive() {
-    	if (fairies.isEmpty()) {
+    	if (fairyMng.isFairiesEmpty()) {
     		return false;
     	}
     	return true;

@@ -1,5 +1,8 @@
 package Enemies;
 
+import java.util.ArrayList;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -50,6 +53,8 @@ public abstract class Enemy {
 	protected boolean isShooting = true;
 	protected boolean inTrack = false;
 	
+	protected Sound explosionSound = Gdx.audio.newSound(Gdx.files.internal("ATTACK3.mp3"));
+	
 	public Enemy() {};
 	
 	public final void enemyRoutine(SpriteBatch batch) {
@@ -75,4 +80,6 @@ public abstract class Enemy {
 	public float getSpeed() { return speed; }
 	public int getBhpChoice() { return bhpChoice; }
 	public Sprite getSpr() {return spr;}
+
+	public void playExplosionSound() {explosionSound.play();}
 }
