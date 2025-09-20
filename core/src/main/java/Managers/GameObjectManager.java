@@ -27,6 +27,7 @@ public class GameObjectManager {
 	private CollisionManager collisionMng = new CollisionManager();
 	private BulletManager bulletMng = new BulletManager();
 	private BossManager bossMng = new BossManager();
+	private PropManager propMng = new PropManager();
 	
 	private ArrayList<Bullet> reimuBullets = new ArrayList<>();
 	
@@ -114,6 +115,7 @@ public class GameObjectManager {
 		for (int i = 0; i < reimuBullets.size(); i++) {
 			Bullet bullet = reimuBullets.get(i);
 			if (collisionMng.chkColEnemyVsBullet(bullet, bossMng.getBoss())) {
+				propMng.getBossHPBar().setHealth(bossMng.getBoss().getHealth());
 			    //System.out.println("Boss Health: "+boss.getHealth());
 				if (collisionMng.isAliveAfterLastCol(bossMng.getBoss()) == null) {
 					bossMng.destroyBoss();
@@ -182,16 +184,17 @@ public class GameObjectManager {
 	
 	public void bossDrawer() {
 		if (fairyMng.isFairiesEmpty() && levelMng.areWavesOver() && areWeFightingBoss()) {
-			// SUJETO A CAMBIO IMPORTANTISIMO: AGREGAR PANTALLA CON PREGUNTAS Y PAUSAR EL JUEGO MOMENTANEAMENTE
 			if (!checkRewards) {
 				applyRewards();
+				System.out.println("Boss Health ="+bossMng.getBoss().getHealth());
+				propMng.createBossHPBar(bossMng.getBoss().getHealth());
 				checkRewards = true;
 			}
-			//System.out.println("Boss vivo? ");
 		 	//UNLEASH THE BOSS
 			bossMng.getBoss().enemyRoutine(batch);
-			System.out.println("Boss Health ="+bossMng.getBoss().getHealth());
-			System.out.println("Boss Speed ="+bossMng.getBoss().getSpeed());
+			propMng.drawBossHPBar(batch);
+			//
+			//System.out.println("Boss Speed ="+bossMng.getBoss().getSpeed());
 		}
 	}
 	
@@ -238,29 +241,16 @@ public class GameObjectManager {
     public int getReimuVidas() {return reimu.getVidas();}
     public int getScore() {return reimu.getScore();}
     public int getReimuDamage() {return reimu.getDamageBala();}
-    
     public boolean isReimuDead() {return reimu.estaDestruido();}
+    
     public boolean areWeFightingBoss() {return fightBoss;}
+    public boolean isBossAlive() {return !(bossMng.getBoss() == null);}
+    
     public boolean areWavesOver() {return levelMng.areWavesOver();}
-    
-    public boolean isBossAlive() {
-    	if (bossMng.getBoss() == null) {
-    		return false;
-    	}
-    	return true;
-    }
-    
-    public boolean AreFairiesAlive() {
-    	if (fairyMng.isFairiesEmpty()) {
-    		return false;
-    	}
-    	return true;
-    }
+    public boolean AreFairiesAlive() {return !(fairyMng.isFairiesEmpty());}
     
     public boolean readyToExercise() {return (!AreFairiesAlive() && levelMng.areWavesOver());}
     
-    public void setExerciseDone(boolean s) {
-    	this.exerciseDone = s;
-    }
+    public void setExerciseDone(boolean s) {this.exerciseDone = s;}
     public boolean getExerciseState() { return exerciseDone; }
 }

@@ -13,7 +13,7 @@ import Enemies.Enemy;
 public class BossManager extends EnemyManager{
 	private final Random random = new Random();
 	private float[] speedOptions = {800,900,1000,400,550,590};
-	private int[] healthOptions = {600,800,1000,25, 27, 30};
+	private int[] healthOptions = {36000,38000,40000,17500, 18500, 19000};
 	private Boss boss;
 	
 	public BossManager() {
