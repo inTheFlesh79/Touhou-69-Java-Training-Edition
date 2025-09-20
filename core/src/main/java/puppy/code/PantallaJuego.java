@@ -22,7 +22,7 @@ public class PantallaJuego implements Screen {
 	// Manager de Personajes con comportamientos dinamicos
 	private GameObjectManager gameMng;
 	// Manager para controlar musica
-    private MusicManager musicMng = new MusicManager();
+    private MusicManager musicMng;
     // Manager para controlar la imagen de fondo del juego
     private SceneManager sceneMng;
     
@@ -31,10 +31,9 @@ public class PantallaJuego implements Screen {
 		batch = game.getBatch();
 		gameMng = new GameObjectManager(batch, nivel, vidas, score, power);
 		sceneMng = new SceneManager(batch, nivel);
-		
+		musicMng = new MusicManager(nivel);
 		this.nivel = nivel;
 		gameMng.setScore(score);
-		
 		camera = new OrthographicCamera();	
 		camera.setToOrtho(false, 1200, 800);
 	}
@@ -65,11 +64,11 @@ public class PantallaJuego implements Screen {
 		gameMng.update(); // Maneja los objetos actuales en Pantalla
 		
 		if (!gameMng.areWavesOver() && !musicMng.isPlayingFairyTheme()) {
-			musicMng.playFairiesMusic();
+			musicMng.pickFairiesLvlMusic();
 		}
 		//SUJETO A CAMBIO: ORDEN DE CANCIONES POR NUEVA SCREEN DE APRENDIZAJE
 		else if (!gameMng.AreFairiesAlive() && gameMng.areWavesOver() && !musicMng.isPlayingBossTheme()){
-			musicMng.playBossMusic();
+			musicMng.pickBossLvlMusic();
 		}
 		
 		//SUJETO A CAMBIO: REGISTRAR PROGRESO
@@ -84,7 +83,6 @@ public class PantallaJuego implements Screen {
 			dispose();
 		}
 		batch.end();
-		
 		//checkear si debemos pasar al siguiente nivel
 	    levelManagement();
 	}

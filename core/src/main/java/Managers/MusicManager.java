@@ -19,10 +19,10 @@ public class MusicManager {
 	private Sound incorrect;
 	private Sound pause;
 	
-	public MusicManager() {
+	public MusicManager(int level) {
 		bossThemes = new ArrayList<>();
 		fairiesThemes = new ArrayList<>();
-		
+		level -=1;
 		// sonidos correcto e incorrecto
 		correct = Gdx.audio.newSound(Gdx.files.internal("correcto.ogg"));
         incorrect = Gdx.audio.newSound(Gdx.files.internal("incorrecto.ogg"));
@@ -44,7 +44,34 @@ public class MusicManager {
 		bossThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Imperishable Night - 14 - Sennen Gensoukyou ~ History of the Moon.ogg"))));
 		bossThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Imperishable Night - 18 - Tsuki Made Todoke, Fushi no Kemuri.ogg"))));
 		
-		stageThemeChoice = random.nextInt(bossThemes.size());
+		stageThemeChoice = level;
+	}
+	
+	public void pickFairiesLvlMusic() {
+		switch (stageThemeChoice) {
+			case 0:
+				playFairiesMusic();
+			case 1:
+				playFairiesMusic();
+			case 2:
+				playFairiesMusic();
+			case 3:
+				playFairiesMusic();
+				
+		}
+	}
+	
+	public void pickBossLvlMusic() {
+		switch (stageThemeChoice) {
+			case 0:
+				playBossMusic();
+			case 1:
+				playBossMusic();
+			case 2:
+				playBossMusic();
+			case 3:
+				playBossMusic();
+		}
 	}
 	
 	public void playFairiesMusic() {
