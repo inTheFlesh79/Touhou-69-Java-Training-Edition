@@ -234,7 +234,7 @@ public class Boss extends Enemy implements EnemyTools{
 	            if (bulletGenTimer >= bulletPattern.getBulletGenInterval()) {
 		            for (int i = 0; i < bulletPattern.getCantBullet(); i++) {
 		            	bulletGenTimer = 0;
-		            	EnemyBullet generatedEBullet = bulletMng.craftEnemyBullet(spr.getX() + 16, spr.getY() + 16);
+		            	EnemyBullet generatedEBullet = bulletMng.craftEnemyBullet(spr.getX() + 34, spr.getY() + 16);
 		                bulletPattern.generateBulletInPattern(spr.getX() + 16, spr.getY() + 16, generatedEBullet);
 		                bulletMng.addEnemyBullets(generatedEBullet);
 		            	

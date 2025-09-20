@@ -83,6 +83,7 @@ public class PantallaJuego implements Screen {
 			Screen ss = new PantallaGameOver();
 			ss.resize(1200, 800);
 			game.setScreen(ss);
+			gameMng.disposeGOM();
 			dispose();
 		}
 		batch.end();
@@ -97,13 +98,16 @@ public class PantallaJuego implements Screen {
 			if ((nivel+1) < 5) {
 				Screen ss = new PantallaJuego(nivel+1, gameMng.getReimuVidas(), gameMng.getScore(), gameMng.getReimuDamage());
 				ss.resize(1200, 800);
-				gameMng.disposeGOM();
 				game.setScreen(ss);
+				gameMng.disposeGOM();
+				dispose();
 			}
 			else {
 				Screen ss = new PantallaFinal();
 				ss.resize(1200, 800);
 				game.setScreen(ss);
+				gameMng.disposeGOM();
+				dispose();
 			}
 	    }
 		

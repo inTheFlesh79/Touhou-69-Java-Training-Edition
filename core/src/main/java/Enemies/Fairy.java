@@ -75,7 +75,7 @@ public class Fairy extends Enemy implements EnemyTools{
 	
 	public void generateEBullets() {
 		for (int i = 0; i < bulletPattern.getCantBullet(); i++) {
-			EnemyBullet generatedEBullet = bulletMng.craftEnemyBullet(spr.getX() + 16, spr.getY() + 16);
+			EnemyBullet generatedEBullet = bulletMng.craftEnemyBullet(spr.getX() + 20, spr.getY() + 16);
 			bulletPattern.generateBulletInPattern(spr.getX() + 16, spr.getY() + 16, generatedEBullet);
             bulletMng.addEnemyBullets(generatedEBullet);
 	    }
@@ -93,7 +93,6 @@ public class Fairy extends Enemy implements EnemyTools{
 	            //System.out.println("SOUND PLAYED!")
 	            generateEBullets();
 	            if (isShootSoundAllowed) {shootingSound.play(0.2f);}
-	             // mark that this fairy fired
 	        }
 	        if (shootingTime >= bulletPattern.getMaxShootingTime()) {
 	            isShooting = false;
