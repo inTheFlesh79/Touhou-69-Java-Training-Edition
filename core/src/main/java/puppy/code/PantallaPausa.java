@@ -19,7 +19,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 public class PantallaPausa implements Screen {
 
 	private Touhou game;
-	private Screen pantallaAnterior;
+	private PantallaJuego pantallaAnterior;
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 	
@@ -27,7 +27,7 @@ public class PantallaPausa implements Screen {
     private Skin skin;
     private ShapeRenderer shapeRenderer;
 
-	public PantallaPausa (Touhou game, Screen pantallaAnterior) {
+	public PantallaPausa (Touhou game, PantallaJuego pantallaAnterior) {
 		this.game = Touhou.getInstance();
         this.batch = game.getBatch();
         this.pantallaAnterior = pantallaAnterior;
@@ -102,6 +102,8 @@ public class PantallaPausa implements Screen {
 	    
 	    // verificar si se sale del escape
 	    if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+	    	pantallaAnterior.setPaused(false);     // Tell PantallaJuego it's no longer paused
+	        pantallaAnterior.getMusicManager().unpauseMusic(); 
 	    	game.setScreen(pantallaAnterior);
     		dispose();
 		}

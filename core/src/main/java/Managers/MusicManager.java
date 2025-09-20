@@ -13,7 +13,8 @@ public class MusicManager {
     private boolean isPlayingBossTheme = false;
 	private ArrayList<Music> bossThemes;
 	private ArrayList<Music> fairiesThemes;
-	private Random random = new Random();
+	private Music lastPausedTrack = null;
+
 	
 	private Sound correct;
 	private Sound incorrect;
@@ -31,14 +32,12 @@ public class MusicManager {
         pause = Gdx.audio.newSound(Gdx.files.internal("pauseSound.ogg"));
 		
 		// fairies
-		
 		fairiesThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Imperishable Night - 2 - Genshi no Yoru ~ Ghostly Eyes.ogg"))));
 		fairiesThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Imperishable Night - 8 - Eiya no Mukui ~ Imperishable Night.ogg"))));
 		fairiesThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Imperishable Night - 13 - Voyage 1969.ogg"))));
 		fairiesThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Imperishable Night - 17 - Extend Ash ~ Houraijin.ogg"))));
 		
 		// bosses
-		
 		bossThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Imperishable Night - 3 - Shunshun Shuugetsu ~ Mooned Insect.ogg"))));
 		bossThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Imperishable Night - 10 - Koi-iro Master Spark.ogg"))));
 		bossThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Imperishable Night - 14 - Sennen Gensoukyou ~ History of the Moon.ogg"))));
@@ -92,19 +91,22 @@ public class MusicManager {
 		setPlayingBossTheme(true);
 	}
 	
-	public void stopFairiesMusic() {fairiesThemes.get(stageThemeChoice).stop();}
-	public void stopBossMusic() {bossThemes.get(stageThemeChoice).stop();}
-	public void loopFairiesMusic() {fairiesThemes.get(stageThemeChoice).setLooping(true);}
-	public void loopBossMusic() {bossThemes.get(stageThemeChoice).setLooping(true);}
-	
-	public boolean isPlayingFairyTheme() {return isPlayingFairyTheme;}
-	public void setPlayingFairyTheme(boolean playingFairyTheme) { this.isPlayingFairyTheme = playingFairyTheme;}
-	
-	public boolean isPlayingBossTheme() {return isPlayingBossTheme;} 
-	public void setPlayingBossTheme(boolean playingBossTheme) { this.isPlayingBossTheme = playingBossTheme;}
-	
-	public int getSizeFairiesTheme() {return fairiesThemes.size();}
-	public int getSizeBossTheme() {return bossThemes.size();}
+	public void pauseMusic() {
+	    if (bossThemes.get(stageThemeChoice).isPlaying()) {
+	        lastPausedTrack = bossThemes.get(stageThemeChoice);
+	        lastPausedTrack.pause();
+	    } else if (fairiesThemes.get(stageThemeChoice).isPlaying()) {
+	        lastPausedTrack = fairiesThemes.get(stageThemeChoice);
+	        lastPausedTrack.pause();
+	    }
+	}
+
+	public void unpauseMusic() {
+	    if (lastPausedTrack != null) {
+	        lastPausedTrack.play();
+	        lastPausedTrack = null; // reset so it doesn’t accidentally replay later
+	    }
+	}
 	
 	// metodos para reproducir sonidos
 	public void playCorrect() {
@@ -118,6 +120,20 @@ public class MusicManager {
     public void playPause() {
     	pause.play();
     }
+    
+	public void stopFairiesMusic() {fairiesThemes.get(stageThemeChoice).stop();}
+	public void stopBossMusic() {bossThemes.get(stageThemeChoice).stop();}
+	public void loopFairiesMusic() {fairiesThemes.get(stageThemeChoice).setLooping(true);}
+	public void loopBossMusic() {bossThemes.get(stageThemeChoice).setLooping(true);}
+	
+	public boolean isPlayingFairyTheme() {return isPlayingFairyTheme;}
+	public void setPlayingFairyTheme(boolean playingFairyTheme) { this.isPlayingFairyTheme = playingFairyTheme;}
+	
+	public boolean isPlayingBossTheme() {return isPlayingBossTheme;} 
+	public void setPlayingBossTheme(boolean playingBossTheme) { this.isPlayingBossTheme = playingBossTheme;}
+	
+	public int getSizeFairiesTheme() {return fairiesThemes.size();}
+	public int getSizeBossTheme() {return bossThemes.size();}
 	
 	public void dispose() {
 		for (int i = 0; i < bossThemes.size(); i++) {

@@ -17,7 +17,10 @@ public class PantallaJuego implements Screen {
 	private SpriteBatch batch;//batch
 	private int nivel;
 	private int cantCorrectas = -1;
+	private float exerciseTimer = 0f;
+	private boolean waitingForExercise = false;
 	private boolean correctasSet = false;
+	private boolean isPaused = false;
 	
 	// Manager de Personajes con comportamientos dinamicos
 	private GameObjectManager gameMng;
@@ -62,12 +65,12 @@ public class PantallaJuego implements Screen {
 		sceneMng.drawBg();
 		dibujaHUD();
 		gameMng.update(); // Maneja los objetos actuales en Pantalla
-		
+		cooldownBeforeExercise(delta);
+
 		if (!gameMng.areWavesOver() && !musicMng.isPlayingFairyTheme()) {
 			musicMng.pickFairiesLvlMusic();
 		}
-		//SUJETO A CAMBIO: ORDEN DE CANCIONES POR NUEVA SCREEN DE APRENDIZAJE
-		else if (!gameMng.AreFairiesAlive() && gameMng.areWavesOver() && !musicMng.isPlayingBossTheme()){
+		else if (!gameMng.AreFairiesAlive() && gameMng.areWavesOver() && !musicMng.isPlayingBossTheme() && !waitingForExercise){
 			musicMng.pickBossLvlMusic();
 		}
 		
@@ -83,11 +86,11 @@ public class PantallaJuego implements Screen {
 			dispose();
 		}
 		batch.end();
+		
 		//checkear si debemos pasar al siguiente nivel
 	    levelManagement();
 	}
 	
-	//SUJETO A CAMBIO: MANEJA LOS NIVELES Y DEBE DEFINIR BIEN EN QUE NIVEL VA Y MANTENER ORDEN DE SPRITES
 	public void levelManagement() {
 		if (!gameMng.isBossAlive()) {
 			musicMng.stopBossMusic();
@@ -104,19 +107,20 @@ public class PantallaJuego implements Screen {
 	    }
 		
 		// verificar si se presionó la tecla de pausa (ESC)
-		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-			game.setScreen(new PantallaPausa(game, this));
-			musicMng.playPause();
+		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) && !isPaused) {
+		    isPaused = true;
+		    musicMng.pauseMusic();
+		    musicMng.playPause();
+		    game.setScreen(new PantallaPausa(game, this)); // pass "this" to resume later
 		}
 		
 		// OPCION DE DESARROLLADOR (se elimina)
-		// verificar si se presionó la tecla de ejercicios (P)
 		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
 			game.setScreen(new PantallaEjercicios(game, musicMng, this));
 		}
 		
 		// VERIFICAR SI ESTA LISTO PARA EJERCITAR
-		if (gameMng.readyToExercise() && !gameMng.areWeFightingBoss()) {
+		if (waitingForExercise && exerciseTimer >= 5f && !gameMng.areWeFightingBoss()) {
 			musicMng.stopFairiesMusic();
 			musicMng.stopBossMusic();
 			game.setScreen(new PantallaEjercicios(game, musicMng, this));
@@ -124,41 +128,42 @@ public class PantallaJuego implements Screen {
 			gameMng.setFightBoss(true);
 			// ANTES DE SALIR CAMBIAR ESTADO DE CONTROL PARA NO REPETIR PANTALLA
 			gameMng.setExerciseDone(true);
-			System.out.println("cumgri");
 		}
 	}
 	
+	public void cooldownBeforeExercise(float delta) {
+		if (gameMng.readyToExercise() && !gameMng.areWeFightingBoss() && !waitingForExercise) {
+		    waitingForExercise = true;
+		    exerciseTimer = 0f; // reset timer
+		}
+		
+		if (waitingForExercise) {exerciseTimer += delta;}
+	}
+	
+	public void setPaused(boolean paused) {
+	    this.isPaused = paused;
+	}
+
+	public MusicManager getMusicManager() {
+	    return musicMng;
+	}
+	
 	public void setCorrectas(int c) {cantCorrectas = c;}
-    
-    
+	
 	@Override
-	public void show() {
-		// TODO Auto-generated method stub
-	}
+	public void show() {}
 
 	@Override
-	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void resize(int width, int height) {}
 
 	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void pause() {}
 
 	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void resume() {}
 
 	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void hide() {}
 
 	@Override
 	public void dispose() {

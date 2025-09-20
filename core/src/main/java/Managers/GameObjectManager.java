@@ -182,7 +182,7 @@ public class GameObjectManager {
 	}
 	
 	public void bossDrawer() {
-		if (fairyMng.isFairiesEmpty() && levelMng.areWavesOver()) {
+		if (fairyMng.isFairiesEmpty() && levelMng.areWavesOver() && areWeFightingBoss()) {
 			// SUJETO A CAMBIO IMPORTANTISIMO: AGREGAR PANTALLA CON PREGUNTAS Y PAUSAR EL JUEGO MOMENTANEAMENTE
 			if (!checkRewards) {
 				applyRewards();
