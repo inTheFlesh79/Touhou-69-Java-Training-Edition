@@ -19,6 +19,7 @@ public class Fairy extends Enemy implements EnemyTools{
 	private float targetX, targetY; 
 	private BulletManager bulletMng;
 	private FairyManager fairyMng = new FairyManager();
+	private boolean isShootSoundAllowed = false;
 
 	public Fairy (float initialPosX, float initialPosY, int firstTargetX, int firstTargetY, BulletManager bulletMng) {
 		spriteSheet = new Texture(Gdx.files.internal("Fairies.png"));
@@ -75,8 +76,14 @@ public class Fairy extends Enemy implements EnemyTools{
 	    }
 	}
 	
-	public boolean shootingLogic(float deltaTime) {
-	    boolean shot = false;
+	public void generateEBullets() {
+		for (int i = 0; i < bulletPattern.getCantBullet(); i++) {
+            EnemyBullet generatedEBullet =bulletPattern.generateBulletInPattern(spr.getX() + 16, spr.getY() + 16);
+            bulletMng.addEnemyBullets(generatedEBullet);
+	    }
+	}
+	
+	public void shootingLogic(float deltaTime) {
 
 	    if (isShooting) {
 	        shootingTime += deltaTime;
@@ -84,16 +91,11 @@ public class Fairy extends Enemy implements EnemyTools{
 
 	        if (bulletGenTimer >= bulletPattern.getBulletGenInterval()) {
 	            bulletGenTimer = 0;
-
-	            for (int i = 0; i < bulletPattern.getCantBullet(); i++) {
-	                EnemyBullet generatedEBullet =
-	                    bulletPattern.generateBulletInPattern(spr.getX() + 16, spr.getY() + 16);
-	                bulletMng.addEnemyBullets(generatedEBullet);
-	            }
-
-	            shot = true; // mark that this fairy fired
+	            System.out.println("This Fairy is Allowed to Sound When Shooting? "+isShootSoundAllowed);
+	            generateEBullets();
+	            if (isShootSoundAllowed) {shootingSound.play(0.2f); System.out.println("SOUND PLAYED!");}
+	             // mark that this fairy fired
 	        }
-
 	        if (shootingTime >= bulletPattern.getMaxShootingTime()) {
 	            isShooting = false;
 	            shootingTime = 0f;
@@ -102,11 +104,11 @@ public class Fairy extends Enemy implements EnemyTools{
 	        noShootingCooldown += deltaTime;
 	        if (noShootingCooldown >= 3.0f) {
 	            isShooting = true;
+	            
 	            noShootingCooldown = 0f;
 	        }
 	    }
-
-	    return shot;
+	    
 	}
 
 	
@@ -230,6 +232,8 @@ public class Fairy extends Enemy implements EnemyTools{
 	public Rectangle getBoundingRectangle() {return spr.getBoundingRectangle();}
 	public void setMaxShootingTime(float mst) {this.maxShootingTime = mst;}
 	public void setBulletGenInterval(float bgi) {this.bulletGenInterval = bgi;}
-
+	public void setIsShootSoundAllowed(boolean b) {isShootSoundAllowed = b;}
+	
+	public boolean getIsShootSoundAllowed() {return isShootSoundAllowed;}
 	public void getSpawnSpeedChoice() {}
 }

@@ -249,7 +249,7 @@ public class Boss extends Enemy implements EnemyTools{
 		            	bulletMng.addEnemyBullets(generatedEBullet);
 		            	
 		            }
-		            shootingSound.play(0.8f);
+		            shootingSound.play(0.25f);
 	            }
 	            
 	            // If the shooting time exceeds max, stop shooting and start cooldown

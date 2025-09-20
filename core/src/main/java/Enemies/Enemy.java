@@ -79,7 +79,8 @@ public abstract class Enemy {
 	public float getSpeed() { return speed; }
 	public int getBhpChoice() { return bhpChoice; }
 	public Sprite getSpr() {return spr;}
+	public boolean isShooting() {return isShooting;}
 
-	public void playExplosionSound() {explosionSound.play();}
+	public void playExplosionSound() {explosionSound.play(0.2f);}
 	public Sound getShootingSound() {return shootingSound;}
 }

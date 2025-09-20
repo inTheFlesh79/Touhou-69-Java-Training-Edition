@@ -4,7 +4,6 @@ import Enemies.EnemyBullet;
 
 public class ForkPattern extends BulletHellPattern {
     private float spreadAngle;  // Ángulo de separación entre disparos
-    private int currentBulletIndex = 0; // Contador para el bullet actual (de 3 en total)
 
     public ForkPattern() {
         this.cantBullet = 3;  // Tres disparos para el tenedor
@@ -13,13 +12,14 @@ public class ForkPattern extends BulletHellPattern {
         this.angle = (3.0f * (float)Math.PI) / 2; // Usando 3.0f para asegurar que se trate como float
         maxShootingTime = 4.0f;
         bulletGenInterval = 0.25f;
+        currentBullet = 0; 
     }
 
     @Override
     public EnemyBullet generateBulletInPattern(float x, float y) {
         // Calcular la dirección de los disparos
         float direction;
-        switch (currentBulletIndex) {
+        switch (currentBullet) {
             case 0:  // Bala a la izquierda
                 direction = angle - spreadAngle; // Dispara hacia la izquierda
                 break;
@@ -30,7 +30,7 @@ public class ForkPattern extends BulletHellPattern {
                 direction = angle + spreadAngle; // Dispara hacia la derecha
                 break;
             default: // Reiniciar el índice
-                currentBulletIndex = 0;
+                currentBullet = 0;
                 direction = angle;
                 break;
         }
@@ -43,10 +43,11 @@ public class ForkPattern extends BulletHellPattern {
         EnemyBullet bullet = new EnemyBullet(x, y, bulletVelocityX, bulletVelocityY);
 
         // Incrementar el índice para la siguiente bala
-        currentBulletIndex++;
-        if (currentBulletIndex >= cantBullet) {
-            currentBulletIndex = 0; // Reinicia para el próximo ciclo
+        currentBullet++;
+        if (currentBullet >= cantBullet) {
+            currentBullet = 0; // Reinicia para el próximo ciclo
         }
+        System.out.println("CurrBullet = "+currentBullet);
 
         return bullet;
     }

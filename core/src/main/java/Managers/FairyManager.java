@@ -34,22 +34,9 @@ public class FairyManager extends EnemyManager{
 	}
 	
 	public void fairiesDrawer(SpriteBatch batch) {
-		float deltaTime = com.badlogic.gdx.Gdx.graphics.getDeltaTime();
-	    boolean anyFairyShot = false;
-
 	    for (int i = 0; i < fairies.size(); i++) {
-	        Fairy f = fairies.get(i);
-	        f.enemyRoutine(batch);
-
-	        if (f.shootingLogic(deltaTime)) {
-	            anyFairyShot = true;
-	        }
-	    }
-
-	    if (anyFairyShot) {
-	        // Play once per frame, no matter how many fairies shot
-	        // adjust volume to taste
-	        fairies.get(0).getShootingSound().play(0.8f);
+	        if (i == 0) {fairies.get(i).setIsShootSoundAllowed(true);}
+	        fairies.get(i).enemyRoutine(batch);
 	    }
 	}
 	

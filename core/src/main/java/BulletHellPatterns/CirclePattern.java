@@ -3,7 +3,6 @@ package BulletHellPatterns;
 import Enemies.EnemyBullet;
 
 public class CirclePattern extends BulletHellPattern {
-    private int currentBullet = 0;
 
     public CirclePattern() {
         cantBullet = 12;  // Cantidad de balas por círculo
@@ -11,6 +10,7 @@ public class CirclePattern extends BulletHellPattern {
         speed = 200f;     // Velocidad baja para un movimiento lento
         maxShootingTime = 5.0f;
         bulletGenInterval = 0.5f;
+        currentBullet = 0;
     }
 
     @Override
@@ -35,6 +35,7 @@ public class CirclePattern extends BulletHellPattern {
         if (currentBullet >= cantBullet) {
             currentBullet = 0;
         }
+        System.out.println("CurrBullet = "+currentBullet);
 
         return bullet;
     }

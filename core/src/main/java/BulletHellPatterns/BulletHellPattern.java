@@ -3,7 +3,7 @@ package BulletHellPatterns;
 import Enemies.EnemyBullet;
 
 public abstract class BulletHellPattern {
-	
+	protected int currentBullet;
 	protected float speed;
 	protected int cantBullet;
 	protected float angle = 0f;
@@ -18,5 +18,4 @@ public abstract class BulletHellPattern {
     public int getCantBullet() {return this.cantBullet;}
     public float getMaxShootingTime() {return this.maxShootingTime;}
     public float getBulletGenInterval() {return this.bulletGenInterval;}
-    
 }
