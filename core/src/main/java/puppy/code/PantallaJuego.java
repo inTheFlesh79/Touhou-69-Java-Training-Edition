@@ -65,7 +65,7 @@ public class PantallaJuego implements Screen {
 		sceneMng.drawBg();
 		dibujaHUD();
 		gameMng.update(); // Maneja los objetos actuales en Pantalla
-		cooldownBeforeExercise(delta);
+		cooldownBeforeExercise(delta);//Does a cooldown before exercising of 5 seconds
 
 		if (!gameMng.areWavesOver() && !musicMng.isPlayingFairyTheme()) {
 			musicMng.pickFairiesLvlMusic();

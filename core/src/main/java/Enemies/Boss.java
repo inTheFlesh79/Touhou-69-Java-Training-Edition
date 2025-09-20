@@ -15,13 +15,10 @@ import Managers.BossManager;
 import Managers.BulletManager;
 
 public class Boss extends Enemy implements EnemyTools{
-	//private static Boss bossInstance;
 	private static final Random random = new Random();
-	
 	private boolean changeBHP = true;
 	private float targetX, targetY; 
 	private BulletManager bulletMng;
-	private BossManager bossMng = new BossManager();
 	private ArrayList<BulletHellPattern> bossBHPlist = new ArrayList<>();
 	
 	public Boss (float initialPosX, float initialPosY, BulletManager bulletMng, int bossChoice) {
@@ -30,12 +27,6 @@ public class Boss extends Enemy implements EnemyTools{
 		explosionSound.setVolume(1,0.3f);
 		shootingSound.setVolume(1,0.2f);
 		bossSelectionAndAnimation(bossChoice);
-		
-		speedChoice = random.nextInt(bossMng.getCantSpeedOptions()-3);
-		int healthChoice = random.nextInt(bossMng.getCantHealthOptions()-3);
-		bossMng.manageSpeed(this, speedChoice);
-		bossMng.manageHealth(this, healthChoice);
-		bossMng.manageBHPType(this,0);
 		
     	spr.setPosition(initialPosX, initialPosY);
 		//spr.setBounds(initialPosX, initialPosY, 48, 48);
@@ -125,7 +116,7 @@ public class Boss extends Enemy implements EnemyTools{
             if (bossInTarget()) {
             	//System.out.println("First Time in Movement");
                 firstSpawn = false;
-                bossMng.manageSpeed(this, this.getSpeedChoice());
+                this.setSpeed(defaultSpeed);
             }
 		    
 		}
@@ -146,7 +137,7 @@ public class Boss extends Enemy implements EnemyTools{
             if (bossInTarget()) {
             	//System.out.println("Fairy reached target. Selecting new area...");
                 inTrack = false;
-                bossMng.manageSpeed(this, this.getSpeedChoice());
+                this.setSpeed(defaultSpeed);
             }
             outOfBounds();
         }
@@ -283,9 +274,12 @@ public class Boss extends Enemy implements EnemyTools{
 		
 	}
 	
-	public void lowerBossHealthNSpeed(int hChoice, int sChoice) {
-		bossMng.manageHealth(this, hChoice);
-		bossMng.manageSpeed(this, sChoice);
+	public void lowerBossHealthNSpeed(int health, float speed) {
+		setHealth(health);
+		setSpeed(speed);
+		setDefaultSpeed(speed);
+		System.out.println("Default Speed = "+defaultSpeed);
+		System.out.println("Speed = "+speed);
 	}
 	
 	public void dispose() {

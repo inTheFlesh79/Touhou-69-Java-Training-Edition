@@ -1,5 +1,7 @@
 package Managers;
 
+import java.util.Random;
+
 import BulletHellPatterns.BulletHellPattern;
 import BulletHellPatterns.CirclePattern;
 import BulletHellPatterns.DynamicSpiralPattern;
@@ -9,14 +11,25 @@ import Enemies.Boss;
 import Enemies.Enemy;
 
 public class BossManager extends EnemyManager{
-	private int[] speedOptions = {800,900,1000,400,450,500};
+	private final Random random = new Random();
+	private float[] speedOptions = {800,900,1000,400,550,590};
 	private int[] healthOptions = {600,800,1000,25, 27, 30};
+	private Boss boss;
 	
 	public BossManager() {
 		bhpType.add(new SpiralPattern());
 		bhpType.add(new DynamicSpiralPattern());
 		bhpType.add(new CirclePattern());
 		bhpType.add(new ForkPattern());
+	}
+	
+	public void createBoss(Boss b) {
+		boss = b;
+		int speedChoice = random.nextInt(getCantSpeedOptions()-3);
+		int healthChoice = random.nextInt(getCantHealthOptions()-3);
+		manageSpeed(b, speedChoice);
+		manageHealth(b, healthChoice);
+		manageBHPType(b,0);
 	}
 
 	@Override
@@ -32,8 +45,8 @@ public class BossManager extends EnemyManager{
 
 	@Override
 	public void manageSpeed(Enemy e, int choice) {
+		e.setDefaultSpeed(speedOptions[choice]);
 		e.setSpeed(speedOptions[choice]);
-		
 	}
 
 	@Override
@@ -43,5 +56,13 @@ public class BossManager extends EnemyManager{
 	
 	public int getCantSpeedOptions() {return speedOptions.length;}
 	public int getCantHealthOptions() {return healthOptions.length;}
+	public Boss getBoss() {return boss;}
 	
+	public void lowerBossHealthNSpeed(int hChoice, int sChoice) {
+		int health  = healthOptions[hChoice];
+		float speed = (float) speedOptions[sChoice];
+		boss.lowerBossHealthNSpeed(health, speed);
+	}
+	
+	public void destroyBoss() {boss = null;}
 }

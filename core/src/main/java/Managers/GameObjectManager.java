@@ -7,7 +7,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import Enemies.Boss;
 import Factory.EnemyFactory;
 import Factory.TouhouEnemyFactory;
 import Reimu.Bullet;
@@ -19,7 +18,6 @@ public class GameObjectManager {
 	// Personajes y Objetos de Personaje
 	private SpriteBatch batch;
 	private Reimu reimu;
-	private Boss boss;
 	private EnemyFactory eFactory = new TouhouEnemyFactory();
 	
 	// Managers de Personajes con comportamientos dinamicos (en este caso: Fairy)
@@ -28,6 +26,7 @@ public class GameObjectManager {
 	private DropManager dropMng = new DropManager();
 	private CollisionManager collisionMng = new CollisionManager();
 	private BulletManager bulletMng = new BulletManager();
+	private BossManager bossMng = new BossManager();
 	
 	private ArrayList<Bullet> reimuBullets = new ArrayList<>();
 	
@@ -86,7 +85,7 @@ public class GameObjectManager {
 	    levelMng.changeCurrentWave();
 	    levelMng.areWavesOver();
         //crear boss
-        boss = eFactory.craftBoss(levelMng.getLvlId());
+        bossMng.createBoss(eFactory.craftBoss(levelMng.getLvlId()));
         //System.out.println("Boss = "+isBossAlive());
 	}
 	
@@ -114,10 +113,10 @@ public class GameObjectManager {
 		// COLISION DE BOSS VS BULLETS
 		for (int i = 0; i < reimuBullets.size(); i++) {
 			Bullet bullet = reimuBullets.get(i);
-			if (collisionMng.chkColEnemyVsBullet(bullet, boss)) {
+			if (collisionMng.chkColEnemyVsBullet(bullet, bossMng.getBoss())) {
 			    //System.out.println("Boss Health: "+boss.getHealth());
-				if (collisionMng.isAliveAfterLastCol(boss) == null) {
-					boss = null;
+				if (collisionMng.isAliveAfterLastCol(bossMng.getBoss()) == null) {
+					bossMng.destroyBoss();
 					reimuBullets.clear();
 					reimu.addScore(1000);
 					break;
@@ -187,18 +186,18 @@ public class GameObjectManager {
 			if (!checkRewards) {
 				applyRewards();
 				checkRewards = true;
-				System.out.println("semen");
 			}
 			//System.out.println("Boss vivo? ");
 		 	//UNLEASH THE BOSS
-			boss.enemyRoutine(batch);
+			bossMng.getBoss().enemyRoutine(batch);
+			System.out.println("Boss Health ="+bossMng.getBoss().getHealth());
+			System.out.println("Boss Speed ="+bossMng.getBoss().getSpeed());
 		}
 	}
 	
 	public void applyRewards() {
 		if (correctas == 0) {
 			System.out.println("correctas == 0");
-			
 			return;
 		}
 		else if (correctas < 3) { // 1 o  2 correctas
@@ -215,31 +214,23 @@ public class GameObjectManager {
 			System.out.println("correctas < 5");
 			for (int i = 0; i < 2; i++) {reimu.oneUp();}
 			reimu.addDamage(30);
-			boss.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
-			//boss.setHealthChoice();
-			//boss.setSpeedChoice();
-			System.out.println(boss.getHealthChoice());
-			System.out.println(boss.getSpeedChoice());
-			System.out.println("Boss Health ="+boss.getHealth());
-			System.out.println("Boss Speed ="+boss.getSpeed());
+			bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+			System.out.println(bossMng.getBoss().getHealthChoice());
+			System.out.println(bossMng.getBoss().getSpeedChoice());
 			System.out.println("correctas post pantalla juego = "+correctas);
-			
 		}
 		else {
 			System.out.println("else");
 			for (int i = 0; i < 3; i++) {reimu.oneUp();}
 			reimu.addDamage(50);
-			boss.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+			bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
 		}
 	}
 	
 	/*
 	 * FUNCIONES QUE RECIBEN OBJETO EnemyBullet O Bullet PARA AGREGARLOS AL ARRAYLIST QUE MANEJA SU EXISTENCIA EN PANTALLAJUEGO 
 	 */
-	
     public boolean agregarReimuBullets(Bullet bb) {return reimuBullets.add(bb);}
-    //public void agregarEnemyBullets(EnemyBullet eb) {enemyBullets.add(eb);}
-    
     public void setScore(int score) {reimu.setScore(score);}
     public void setFightBoss(boolean b) {this.fightBoss = b;}
     public void setCorrectas(int c) {correctas = c;}
@@ -253,7 +244,7 @@ public class GameObjectManager {
     public boolean areWavesOver() {return levelMng.areWavesOver();}
     
     public boolean isBossAlive() {
-    	if (boss == null) {
+    	if (bossMng.getBoss() == null) {
     		return false;
     	}
     	return true;

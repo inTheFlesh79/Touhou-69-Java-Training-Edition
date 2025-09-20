@@ -27,7 +27,7 @@ public class DynamicSpiralPattern extends BulletHellPattern {
         if (currentBullet >= cantBullet) {
             currentBullet = 0;
         }
-        System.out.println("CurrBullet = "+currentBullet);
+        //System.out.println("CurrBullet = "+currentBullet);
         return bullet;
     }
 }

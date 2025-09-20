@@ -12,8 +12,10 @@ import BulletHellPatterns.BulletHellPattern;
 public abstract class Enemy {
 	protected boolean isDestroyed = false;
 	protected int health;
+	protected int defaultHealth;
 	protected int healthChoice;
 	protected float speed;
+	protected float defaultSpeed;
 	protected int speedChoice;
 	protected BulletHellPattern bulletPattern; 
 	protected int bhpChoice;
@@ -68,8 +70,10 @@ public abstract class Enemy {
 	
 	public void setHealth(int health) {this.health = health;}
 	public void setSpeed(float speed) {this.speed = speed;}
+	public void setDefaultSpeed(float speed) {this.defaultSpeed = speed;}
 	public void setBulletPattern(BulletHellPattern bhp) {this.bulletPattern = bhp;}
 	public void setHealthChoice(int healthChoice) { this.healthChoice = healthChoice; }
+	public void setDefaultHealth(int health) {this.defaultHealth = health;}
 	public void setSpeedChoice(int speedChoice) { this.speedChoice = speedChoice; }
 	public void setBhpChoice(int bhpChoice) { this.bhpChoice = bhpChoice; }
 	public void setIsShooting (boolean is) {this.isShooting = is;}

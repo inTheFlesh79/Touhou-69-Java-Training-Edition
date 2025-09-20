@@ -47,7 +47,7 @@ public class ForkPattern extends BulletHellPattern {
         if (currentBullet >= cantBullet) {
             currentBullet = 0; // Reinicia para el próximo ciclo
         }
-        System.out.println("CurrBullet = "+currentBullet);
+        //System.out.println("CurrBullet = "+currentBullet);
 
         return bullet;
     }
