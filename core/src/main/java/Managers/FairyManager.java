@@ -3,7 +3,10 @@ package Managers;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import BulletHellPatterns.BulletHellPattern;
 import BulletHellPatterns.CirclePattern;
@@ -18,15 +21,17 @@ import Factory.TouhouEnemyFactory;
 
 public class FairyManager extends EnemyManager{
 	private EnemyFactory eFactory = new TouhouEnemyFactory();
-	private int currentNumFairies;
 	private int[] spawnSpeedOptions = {1600, 1700};
 	private int[] speedOptions = {600,650};
 	private int[] healthOptions = {2, 10, 18};
 	private Random random = new Random();
 	private ArrayList<Fairy> fairies = new ArrayList<>();
+	private Texture spriteSheet;           // shared
+    private TextureRegion[][] spriteRegions; // shared
 	
 	public FairyManager() {
-		// loads up all the potential patterns a Fairy can pick from
+		spriteSheet = new Texture(Gdx.files.internal("Fairies.png"));
+		spriteRegions = TextureRegion.split(spriteSheet, 32, 32);
 		bhpType.add(new SpiralPattern());
 		bhpType.add(new DynamicSpiralPattern());
 		bhpType.add(new CirclePattern());
@@ -43,11 +48,9 @@ public class FairyManager extends EnemyManager{
 	public void fairySetup(int cantFairiesCurrentWave, FairySpawn spawn, boolean isShooting, BulletManager bulletMng) {
 		for (int i = 0; i < cantFairiesCurrentWave; i++) {
 			eFactory.setCurrentBulletManager(bulletMng);
-			Fairy f = eFactory.craftFairy(spawn.getSpawnX(), spawn.getSpawnY(), spawn.getTargetX(), spawn.getTargetY(), isShooting);
+			Fairy f = eFactory.craftFairy(spawn.getSpawnX(), spawn.getSpawnY(), spawn.getTargetX(), spawn.getTargetY(), isShooting, spriteRegions);
         	fairies.add(f);
 		}
-		
-		currentNumFairies = fairies.size();
 		
 		// manage the fairies elements with FairyManager
 		int bhpChoice = random.nextInt(getBhpTypeSize());
@@ -95,5 +98,6 @@ public class FairyManager extends EnemyManager{
 	public Fairy getFairy(int choice) {return fairies.get(choice);}
 	public boolean isFairiesEmpty() {return fairies.isEmpty();}
 	public void removeFairy(int choice) {fairies.remove(choice);}
-	public void reduceCurrentNumFairies() {currentNumFairies--;}
+	
+	public void dispose() {spriteSheet.dispose();}
 }

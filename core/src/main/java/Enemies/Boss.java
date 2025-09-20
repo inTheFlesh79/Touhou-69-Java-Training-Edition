@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import BulletHellPatterns.BulletHellPattern;
-import Managers.BossManager;
 import Managers.BulletManager;
 
 public class Boss extends Enemy implements EnemyTools{
@@ -96,7 +95,6 @@ public class Boss extends Enemy implements EnemyTools{
 
 	@Override
 	public void update() {
-		//System.out.println("Boss Speed = "+this.getSpeed());
 		enemyMovement();
 		shootBulletHellPattern();
 	}
@@ -236,8 +234,9 @@ public class Boss extends Enemy implements EnemyTools{
 	            if (bulletGenTimer >= bulletPattern.getBulletGenInterval()) {
 		            for (int i = 0; i < bulletPattern.getCantBullet(); i++) {
 		            	bulletGenTimer = 0;
-		            	EnemyBullet generatedEBullet = bulletPattern.generateBulletInPattern(spr.getX()+32, spr.getY()+20);
-		            	bulletMng.addEnemyBullets(generatedEBullet);
+		            	EnemyBullet generatedEBullet = bulletMng.craftEnemyBullet(spr.getX() + 16, spr.getY() + 16);
+		                bulletPattern.generateBulletInPattern(spr.getX() + 16, spr.getY() + 16, generatedEBullet);
+		                bulletMng.addEnemyBullets(generatedEBullet);
 		            	
 		            }
 		            shootingSound.play(0.25f);
@@ -282,10 +281,7 @@ public class Boss extends Enemy implements EnemyTools{
 		System.out.println("Speed = "+speed);
 	}
 	
-	public void dispose() {
-	    spriteSheet.dispose();
-	    // Dispose of other resources
-	}
+	public void dispose() {spriteSheet.dispose();}
 	
 	public void setBossBHPlist(BulletHellPattern bhp) {
 		bossBHPlist.add(bhp);

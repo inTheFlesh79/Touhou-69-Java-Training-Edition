@@ -4,9 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
-
-import Enemies.Enemy;
 
 public class Bullet {
 	private int xSpeed;
@@ -35,28 +32,6 @@ public class Bullet {
     
     public void draw(SpriteBatch batch) {
     	spr.draw(batch);
-    }
-    
-    // Reduces the size of the original rectangle's hit box that comes off the Enemy's Sprite
-    private Rectangle getReducedBoundingRectangle(Sprite s, float shrinkX, float shrinkY) {
-        Rectangle rect = new Rectangle(s.getBoundingRectangle()); // copy!
-        rect.x += shrinkX;
-        rect.y += shrinkY;
-        rect.width -= 2 * shrinkX;
-        rect.height -= 2 * shrinkY;
-        return rect;
-    }
-    
-    //new shit
-    public boolean checkCollision(Enemy e) {     
-        Rectangle enemyRect = getReducedBoundingRectangle(e.getSpr(), 10f, 10f); // shrink enemy hitbox
-
-        if(spr.getBoundingRectangle().overlaps(enemyRect)) {
-            this.destroyed = true;
-            e.setHealth(e.getHealth() - bulletDamage);
-            return true;
-        }
-        return false;
     }
     
     public boolean isDestroyed() {return destroyed;}

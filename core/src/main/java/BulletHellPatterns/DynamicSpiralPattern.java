@@ -14,12 +14,13 @@ public class DynamicSpiralPattern extends BulletHellPattern {
     }
 
     @Override
-    public EnemyBullet generateBulletInPattern(float x, float y) {
+    public void generateBulletInPattern(float x, float y, EnemyBullet bullet) {
         float direction = angle + (float) (2 * Math.PI * currentBullet / cantBullet);
         float bulletVelocityX = (float) Math.cos(direction) * speed;
         float bulletVelocityY = (float) Math.sin(direction) * speed;
 
-        EnemyBullet bullet = new EnemyBullet(x, y, bulletVelocityX, bulletVelocityY);
+        bullet.setVelocityX(bulletVelocityX);
+        bullet.setVelocityY(bulletVelocityY);
         
         angle += 0.065f;
         currentBullet ++;
@@ -28,6 +29,5 @@ public class DynamicSpiralPattern extends BulletHellPattern {
             currentBullet = 0;
         }
         //System.out.println("CurrBullet = "+currentBullet);
-        return bullet;
     }
 }

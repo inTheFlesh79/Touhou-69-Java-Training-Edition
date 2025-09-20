@@ -10,7 +10,7 @@ public abstract class BulletHellPattern {
 	protected float maxShootingTime;
 	protected float bulletGenInterval;
     
-    public abstract EnemyBullet generateBulletInPattern(float x, float y);
+    public abstract void generateBulletInPattern(float x, float y, EnemyBullet eb);
     
     public void setSpeed(float speed) {this.speed = speed;}
     public void setAngle(float angle) {this.angle = angle;}

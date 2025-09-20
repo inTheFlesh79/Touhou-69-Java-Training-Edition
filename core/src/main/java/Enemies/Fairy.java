@@ -1,7 +1,6 @@
 package Enemies;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -21,9 +20,7 @@ public class Fairy extends Enemy implements EnemyTools{
 	private FairyManager fairyMng = new FairyManager();
 	private boolean isShootSoundAllowed = false;
 
-	public Fairy (float initialPosX, float initialPosY, int firstTargetX, int firstTargetY, BulletManager bulletMng) {
-		spriteSheet = new Texture(Gdx.files.internal("Fairies.png"));
-		spriteRegions = TextureRegion.split(spriteSheet, 32, 32);
+	public Fairy (float initialPosX, float initialPosY, int firstTargetX, int firstTargetY, BulletManager bulletMng, TextureRegion[][] spriteRegions) {
 		explosionSound.setVolume(1,0.3f);
 		shootingSound.setVolume(1,0.14f);
 		int randomRow = random.nextInt(4);//Elige entre 4 estilos de Fairy distintos
@@ -78,7 +75,8 @@ public class Fairy extends Enemy implements EnemyTools{
 	
 	public void generateEBullets() {
 		for (int i = 0; i < bulletPattern.getCantBullet(); i++) {
-            EnemyBullet generatedEBullet =bulletPattern.generateBulletInPattern(spr.getX() + 16, spr.getY() + 16);
+			EnemyBullet generatedEBullet = bulletMng.craftEnemyBullet(spr.getX() + 16, spr.getY() + 16);
+			bulletPattern.generateBulletInPattern(spr.getX() + 16, spr.getY() + 16, generatedEBullet);
             bulletMng.addEnemyBullets(generatedEBullet);
 	    }
 	}
@@ -91,9 +89,10 @@ public class Fairy extends Enemy implements EnemyTools{
 
 	        if (bulletGenTimer >= bulletPattern.getBulletGenInterval()) {
 	            bulletGenTimer = 0;
-	            System.out.println("This Fairy is Allowed to Sound When Shooting? "+isShootSoundAllowed);
+	            //System.out.println("This Fairy is Allowed to Sound When Shooting? "+isShootSoundAllowed);
+	            //System.out.println("SOUND PLAYED!")
 	            generateEBullets();
-	            if (isShootSoundAllowed) {shootingSound.play(0.2f); System.out.println("SOUND PLAYED!");}
+	            if (isShootSoundAllowed) {shootingSound.play(0.2f);}
 	             // mark that this fairy fired
 	        }
 	        if (shootingTime >= bulletPattern.getMaxShootingTime()) {
@@ -226,7 +225,6 @@ public class Fairy extends Enemy implements EnemyTools{
 	
 	public void dispose() {
 	    spriteSheet.dispose();
-	    // Dispose of other resources
 	}
 	
 	public Rectangle getBoundingRectangle() {return spr.getBoundingRectangle();}

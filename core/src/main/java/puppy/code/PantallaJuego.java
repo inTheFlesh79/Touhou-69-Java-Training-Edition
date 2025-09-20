@@ -97,6 +97,7 @@ public class PantallaJuego implements Screen {
 			if ((nivel+1) < 5) {
 				Screen ss = new PantallaJuego(nivel+1, gameMng.getReimuVidas(), gameMng.getScore(), gameMng.getReimuDamage());
 				ss.resize(1200, 800);
+				gameMng.disposeGOM();
 				game.setScreen(ss);
 			}
 			else {

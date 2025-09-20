@@ -1,6 +1,7 @@
 package Factory;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import Enemies.Boss;
 import Enemies.Fairy;
@@ -17,8 +18,8 @@ public class TouhouEnemyFactory implements EnemyFactory{
 	}
 	
 	@Override
-	public Fairy craftFairy(int spawnPointX, int spawnPointY, int firstTargetX, int firstTargetY, boolean IsShooting) {
-		Fairy newFairy = new Fairy(spawnPointX, spawnPointY, firstTargetX, firstTargetY, bulletMng);
+	public Fairy craftFairy(int spawnPointX, int spawnPointY, int firstTargetX, int firstTargetY, boolean IsShooting, TextureRegion[][] spriteRegions) {
+		Fairy newFairy = new Fairy(spawnPointX, spawnPointY, firstTargetX, firstTargetY, bulletMng, spriteRegions);
 		newFairy.setIsShooting(IsShooting);
 		return newFairy;
 	}

@@ -14,7 +14,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
-import Managers.GameObjectManager;
+import Managers.BulletManager;
 
 public class Reimu {
     private int lives;
@@ -85,9 +85,9 @@ public class Reimu {
     	spr = new Sprite(animationFrames[0]);
     }
     
-    public void draw(SpriteBatch batch, GameObjectManager gameMng) {
+    public void draw(SpriteBatch batch, BulletManager bulletMng) {
         reimuAnimationAndMovement(batch);
-        reimuShooting(gameMng);
+        reimuShooting(bulletMng);
         sprDropHitbox.setPosition(spr.getX(), spr.getY());
     }
     
@@ -152,12 +152,12 @@ public class Reimu {
 		batch.begin(); // Restart the sprite batch
     }
     
-    public void reimuShooting(GameObjectManager gameMng) {
+    public void reimuShooting(BulletManager bulletMng) {
     	// Shoot bullet
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
         	if (bulletGenTimer >= bulletGenInterval) {
 	            Bullet bala = new Bullet(spr.getX() + spr.getWidth() / 2 - 5, spr.getY() + spr.getHeight() - 5, 0, 8, txBala);
-	            gameMng.agregarReimuBullets(bala);
+	            bulletMng.addReimuBullets(bala);
 	            bulletGenTimer = 0f;
         	}
         }

@@ -7,15 +7,15 @@ import Enemies.EnemyBullet;
 public class SpiralPattern extends BulletHellPattern{
     private float angleTilt;
     
-	public EnemyBullet generateBulletInPattern(float x, float y) {
+	public void generateBulletInPattern(float x, float y, EnemyBullet bullet) {
         float bulletVelocityX = (float) Math.cos(angle) * speed;
         float bulletVelocityY = (float) Math.sin(angle) * speed;
         //System.out.println("Angle: " + angle + ", VelocityX: " + bulletVelocityX + ", VelocityY: " + bulletVelocityY);
-        EnemyBullet bullet = new EnemyBullet(x, y, bulletVelocityX, bulletVelocityY);
+        bullet.setVelocityX(bulletVelocityX);
+        bullet.setVelocityY(bulletVelocityY);
         angle += angleTilt;
         maxShootingTime = 3.0f;
         bulletGenInterval = 0.25f;
-        return bullet;
 	}
 	
 	public SpiralPattern() {

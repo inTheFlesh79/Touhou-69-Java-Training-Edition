@@ -27,7 +27,7 @@ public class LevelOne extends Level {
 		this.bossChoice = 0;
 		this.cantFairies = 10;
 		this.cantWaves = 4;
-		this.fairiesByWave = new int [] {1,2,3,2};
+		this.fairiesByWave = new int [] {1,4,3,2};
 	}
 	
 	@Override

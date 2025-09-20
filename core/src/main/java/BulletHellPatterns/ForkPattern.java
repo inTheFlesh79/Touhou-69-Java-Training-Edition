@@ -16,7 +16,7 @@ public class ForkPattern extends BulletHellPattern {
     }
 
     @Override
-    public EnemyBullet generateBulletInPattern(float x, float y) {
+    public void generateBulletInPattern(float x, float y, EnemyBullet bullet) {
         // Calcular la dirección de los disparos
         float direction;
         switch (currentBullet) {
@@ -39,8 +39,9 @@ public class ForkPattern extends BulletHellPattern {
         float bulletVelocityX = (float) Math.cos(direction) * speed;
         float bulletVelocityY = (float) Math.sin(direction) * speed;
 
-        // Crear la bala
-        EnemyBullet bullet = new EnemyBullet(x, y, bulletVelocityX, bulletVelocityY);
+        // Configurar la bala
+        bullet.setVelocityX(bulletVelocityX);
+        bullet.setVelocityY(bulletVelocityY);
 
         // Incrementar el índice para la siguiente bala
         currentBullet++;
@@ -48,7 +49,5 @@ public class ForkPattern extends BulletHellPattern {
             currentBullet = 0; // Reinicia para el próximo ciclo
         }
         //System.out.println("CurrBullet = "+currentBullet);
-
-        return bullet;
     }
 }

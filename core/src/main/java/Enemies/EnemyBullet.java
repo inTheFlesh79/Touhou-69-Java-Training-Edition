@@ -14,27 +14,39 @@ public class EnemyBullet {
 	private float x, y;
     private float velocityX, velocityY;
     private float radius;
-    private static Random random = new Random();
-    private TextureRegion[][] spriteRegions;
+    //private static Random random = new Random();
+    //private TextureRegion[][] spriteRegions;
     private Texture spriteSheet;
     private boolean destroyed = false;
     
-    public EnemyBullet(float x, float y, float velocityX, float velocityY) {
+    public EnemyBullet(float x, float y, float velocityX, float velocityY, TextureRegion[][] sharedRegions) {
         this.x = x;
         this.y = y;
         this.velocityX = velocityX;
         this.velocityY = velocityY;
         
-        spriteSheet = new Texture(Gdx.files.internal("bulletTypes.png"));
-		spriteRegions = TextureRegion.split(spriteSheet, 24, 30);
-		TextureRegion currentSprite = spriteRegions[random.nextInt(4)][0];
+        //spriteSheet = new Texture(Gdx.files.internal("bulletTypes.png"));
+		//spriteRegions = TextureRegion.split(spriteSheet, 24, 30);
+		TextureRegion currentSprite = sharedRegions[new Random().nextInt(4)][0];
         this.bulletTxt = currentSprite;
 
         this.radius = calculateRadius(bulletTxt);
 
         hitbox = new Circle(x, y, radius);
     }
+    
+    public EnemyBullet(float x, float y, TextureRegion[][] sharedRegions) {
+    	this.x = x;
+        this.y = y;
+        
+        TextureRegion currentSprite = sharedRegions[new Random().nextInt(4)][0];
+        this.bulletTxt = currentSprite;
 
+        this.radius = calculateRadius(bulletTxt);
+
+        hitbox = new Circle(x, y, radius);
+    }
+    
 	public float calculateRadius(TextureRegion bulletTxt) {
 		int width = bulletTxt.getRegionWidth();
         int height = bulletTxt.getRegionHeight();
@@ -66,11 +78,32 @@ public class EnemyBullet {
 	    }
     }
 	
-	public Circle getHitbox() {
-        return hitbox;
-    }
-	
-	public boolean isDestroyed() {return destroyed;}
+	public Circle getHitbox() { return hitbox; }
+	public void setHitbox(Circle hitbox) { this.hitbox = hitbox; }
+
+	public TextureRegion getBulletTxt() { return bulletTxt; }
+	public void setBulletTxt(TextureRegion bulletTxt) { this.bulletTxt = bulletTxt; }
+
+	public float getX() { return x; }
+	public void setX(float x) { this.x = x; }
+
+	public float getY() { return y; }
+	public void setY(float y) { this.y = y; }
+
+	public float getVelocityX() { return velocityX; }
+	public void setVelocityX(float velocityX) { this.velocityX = velocityX; }
+
+	public float getVelocityY() { return velocityY; }
+	public void setVelocityY(float velocityY) { this.velocityY = velocityY; }
+
+	public float getRadius() { return radius; }
+	public void setRadius(float radius) { this.radius = radius; }
+
+	public Texture getSpriteSheet() { return spriteSheet; }
+	public void setSpriteSheet(Texture spriteSheet) { this.spriteSheet = spriteSheet; }
+
+	public boolean isDestroyed() { return destroyed; }
+	public void setDestroyed(boolean destroyed) { this.destroyed = destroyed; }
 	
 	public void dispose() {
         spriteSheet.dispose();

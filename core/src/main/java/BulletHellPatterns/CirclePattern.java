@@ -14,7 +14,7 @@ public class CirclePattern extends BulletHellPattern {
     }
 
     @Override
-    public EnemyBullet generateBulletInPattern(float x, float y) {
+    public void generateBulletInPattern(float x, float y, EnemyBullet bullet) {
         // Calculamos la dirección de la bala usando el ángulo y el índice actual
         float direction = angle + (float) (2 * Math.PI * currentBullet / cantBullet);
         
@@ -23,7 +23,8 @@ public class CirclePattern extends BulletHellPattern {
         float bulletVelocityY = (float) Math.sin(direction) * speed;
 
         // Creamos la bala con la posición y velocidad calculadas
-        EnemyBullet bullet = new EnemyBullet(x, y, bulletVelocityX, bulletVelocityY);
+        bullet.setVelocityX(bulletVelocityX);
+        bullet.setVelocityY(bulletVelocityY);
         
         // Aumentamos el ángulo para que el siguiente disparo sea en una dirección diferente
         angle += 0.02f;  // Cambiar el ángulo lentamente para mantener la forma circular
@@ -36,7 +37,5 @@ public class CirclePattern extends BulletHellPattern {
             currentBullet = 0;
         }
         //System.out.println("CurrBullet = "+currentBullet);
-
-        return bullet;
     }
 }

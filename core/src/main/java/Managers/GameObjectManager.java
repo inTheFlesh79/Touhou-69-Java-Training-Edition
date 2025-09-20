@@ -1,6 +1,5 @@
 package Managers;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
@@ -9,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import Factory.EnemyFactory;
 import Factory.TouhouEnemyFactory;
-import Reimu.Bullet;
 import Reimu.Reimu;
 
 public class GameObjectManager {
@@ -19,6 +17,7 @@ public class GameObjectManager {
 	private SpriteBatch batch;
 	private Reimu reimu;
 	private EnemyFactory eFactory = new TouhouEnemyFactory();
+	private Random random = new Random();
 	
 	// Managers de Personajes con comportamientos dinamicos (en este caso: Fairy)
 	private FairyManager fairyMng = new FairyManager();
@@ -29,9 +28,6 @@ public class GameObjectManager {
 	private BossManager bossMng = new BossManager();
 	private PropManager propMng = new PropManager();
 	
-	private ArrayList<Bullet> reimuBullets = new ArrayList<>();
-	
-	private Random random = new Random();
 	// ESTADO PARA CONTROLAR PANTALLA PREGUNTAS
 	private boolean exerciseDone = false;
 	private boolean fightBoss = false;
@@ -54,10 +50,9 @@ public class GameObjectManager {
 	}                     
 	
 	public void update() {
-		reimuBulletsDrawer();
-		enemyBulletsDrawer();
+		bulletMng.reimuBulletsDrawer(batch);
+		bulletMng.enemyBulletsDrawer(batch);
 		fairyDrawer();
-		//fairiesAndBossDrawerUpdater();
 		bossDrawer();
 		dropMng.drawDrops(batch);
 		enemyDropsCollisionManager();
@@ -70,24 +65,20 @@ public class GameObjectManager {
 			reimu.removeShield();
 		}
 		
-		//SUJETO A CAMBIO (UX): ELIMINAR BALAS Y RESPAWN
 		if (!reimu.isHurt()) {
 			reimuBulletsCollisionManager();
 			enemyBulletsCollisionManager();
 		}
-		reimu.draw(batch, this);
+		reimu.draw(batch, bulletMng);
 	}
 	
 	public void gameSetup() {
 		levelMng.whatLevelIsIt();
 		System.out.println("Current Wave: "+levelMng.getCurrentLvlWave());
-		//crear Fairies
 	    fairyMng.fairySetup(levelMng.getFairiesCurrentWave(), levelMng.getFairyStartingPoint(), levelMng.getFairyIsShooting(), bulletMng);
 	    levelMng.changeCurrentWave();
 	    levelMng.areWavesOver();
-        //crear boss
         bossMng.createBoss(eFactory.craftBoss(levelMng.getLvlId()));
-        //System.out.println("Boss = "+isBossAlive());
 	}
 	
 	/*
@@ -95,31 +86,16 @@ public class GameObjectManager {
 	 * 
 	 */
 	
-	public void reimuBulletsDrawer() {
-		//dibujar balas
-		for (int i = 0; i < reimuBullets.size(); i ++) {
-			 Bullet b = reimuBullets.get(i); 
-			 if (b.isDestroyed()) {
-				 //System.out.println(b.isDestroyed());
-				 reimuBullets.remove(b);
-				 i--;
-				 
-			 }
-			 b.draw(batch);
-			 b.update();
-		 }
-	}
-	
 	public void reimuBulletsCollisionManager() {
 		// COLISION DE BOSS VS BULLETS
-		for (int i = 0; i < reimuBullets.size(); i++) {
-			Bullet bullet = reimuBullets.get(i);
-			if (collisionMng.chkColEnemyVsBullet(bullet, bossMng.getBoss())) {
+		for (int i = 0; i < bulletMng.getReimuBulletsSize(); i++) {
+			if (collisionMng.chkColEnemyVsBullet(bulletMng.getReimuBullet(i), bossMng.getBoss())) {
 				propMng.getBossHPBar().setHealth(bossMng.getBoss().getHealth());
 			    //System.out.println("Boss Health: "+boss.getHealth());
 				if (collisionMng.isAliveAfterLastCol(bossMng.getBoss()) == null) {
+					bossMng.getBoss().dispose();
 					bossMng.destroyBoss();
-					reimuBullets.clear();
+					bulletMng.clearReimuBullets();
 					reimu.addScore(1000);
 					break;
 				}
@@ -127,23 +103,16 @@ public class GameObjectManager {
 		
 			// COLISION DE FAIRIES VS BULLETS
 			for (int j = 0; j < fairyMng.getFairiesSize(); j++) {
-			    if (collisionMng.chkColEnemyVsBullet(bullet,fairyMng.getFairy(j))) {
+			    if (collisionMng.chkColEnemyVsBullet(bulletMng.getReimuBullet(i),fairyMng.getFairy(j))) {
 			        // If the fairy's health reaches zero, remove it and play sound
 			        if (collisionMng.isAliveAfterLastCol(fairyMng.getFairy(j)) == null) {
 			            fairyMng.getFairy(j).playExplosionSound();
 			            dropMng.spawnDrop(fairyMng.getFairy(j).getSpr().getX(),fairyMng.getFairy(j).getSpr().getY());
 			            fairyMng.removeFairy(j);
-			            fairyMng.reduceCurrentNumFairies();  // Decrement the current number of fairies
 			            j--;  // Adjust the index after removing a fairy
 			            reimu.addScore(100);  // Increment the score
 			        }
 			    }
-			    
-			    if (bullet.isDestroyed()) {
-					reimuBullets.remove(i);
-					i--;  // Adjust index after removing bullet
-					break;  // Exit bullet loop after removal to avoid index issues
-		        }
 			}
 		}
 	}
@@ -155,8 +124,6 @@ public class GameObjectManager {
 		    if (reimu.shieldExists() && collisionMng.chkColShieldVsEBullet(bulletMng.getEnemyBullet(i), reimu)) {bulletMng.removeEnemyBullet(i);}
 		}
 	}
-	
-	public void enemyBulletsDrawer() {bulletMng.enemyBulletsDrawer(batch);}
 	
 	// Drawer and Collission manager for Drop vs Reimu objects
 	public void enemyDropsCollisionManager() {
@@ -193,7 +160,6 @@ public class GameObjectManager {
 		 	//UNLEASH THE BOSS
 			bossMng.getBoss().enemyRoutine(batch);
 			propMng.drawBossHPBar(batch);
-			//
 			//System.out.println("Boss Speed ="+bossMng.getBoss().getSpeed());
 		}
 	}
@@ -233,7 +199,6 @@ public class GameObjectManager {
 	/*
 	 * FUNCIONES QUE RECIBEN OBJETO EnemyBullet O Bullet PARA AGREGARLOS AL ARRAYLIST QUE MANEJA SU EXISTENCIA EN PANTALLAJUEGO 
 	 */
-    public boolean agregarReimuBullets(Bullet bb) {return reimuBullets.add(bb);}
     public void setScore(int score) {reimu.setScore(score);}
     public void setFightBoss(boolean b) {this.fightBoss = b;}
     public void setCorrectas(int c) {correctas = c;}
@@ -250,7 +215,11 @@ public class GameObjectManager {
     public boolean AreFairiesAlive() {return !(fairyMng.isFairiesEmpty());}
     
     public boolean readyToExercise() {return (!AreFairiesAlive() && levelMng.areWavesOver());}
-    
     public void setExerciseDone(boolean s) {this.exerciseDone = s;}
     public boolean getExerciseState() { return exerciseDone; }
+    
+    public void disposeGOM() {
+    	bulletMng.dispose();
+    	fairyMng.dispose();
+    }
 }
