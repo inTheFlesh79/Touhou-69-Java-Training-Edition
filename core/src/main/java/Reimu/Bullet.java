@@ -1,6 +1,5 @@
 package Reimu;
-
-import com.badlogic.gdx.Gdx;
+            
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -19,23 +18,19 @@ public class Bullet {
         this.ySpeed = ySpeed;
     }
     
-    public void update() {
+    public void update(float scrWidth, float scrHeight) {
         spr.setPosition(spr.getX()+xSpeed, spr.getY()+ySpeed);
-        if (spr.getX() < 0 || spr.getX()+spr.getWidth() > Gdx.graphics.getWidth()) {
-            destroyed = true;
-        }
-        if (spr.getY() < 0 || spr.getY()+spr.getHeight() > Gdx.graphics.getHeight()) {
-        	destroyed = true;
-        }
-        
+        outOfBounds(scrWidth, scrHeight);
     }
     
-    public void draw(SpriteBatch batch) {
-    	spr.draw(batch);
+    public void outOfBounds(float scrWidth, float scrHeight) {
+        if (spr.getX() < 0 || spr.getX() + spr.getWidth() > scrWidth) {destroyed = true;}
+        if (spr.getY() < 0 || spr.getY() + spr.getHeight() > scrHeight) {destroyed = true;}
     }
+    
+    public void draw(SpriteBatch batch) {spr.draw(batch);}
     
     public boolean isDestroyed() {return destroyed;}
-	
     public void setDestroyed(boolean b) {destroyed = b;}
     
     public Sprite getSpr() {return spr;}

@@ -1,27 +1,16 @@
 package Managers;
 
 import java.util.Random;
-
-import BulletHellPatterns.BulletHellPattern;
-import BulletHellPatterns.CirclePattern;
-import BulletHellPatterns.DynamicSpiralPattern;
-import BulletHellPatterns.ForkPattern;
-import BulletHellPatterns.SpiralPattern;
 import Enemies.Boss;
 import Enemies.Enemy;
 
 public class BossManager extends EnemyManager{
 	private final Random random = new Random();
-	private float[] speedOptions = {800,900,1000,400,550,590};
+	private float[] speedOptions = {600,550,500,300,350,400};
 	private int[] healthOptions = {36000,38000,40000,17500, 18500, 19000};
 	private Boss boss;
 	
-	public BossManager() {
-		bhpType.add(new SpiralPattern());
-		bhpType.add(new DynamicSpiralPattern());
-		bhpType.add(new CirclePattern());
-		bhpType.add(new ForkPattern());
-	}
+	public BossManager() {}
 	
 	public void createBoss(Boss b) {
 		boss = b;
@@ -29,18 +18,6 @@ public class BossManager extends EnemyManager{
 		int healthChoice = random.nextInt(getCantHealthOptions()-3);
 		manageSpeed(b, speedChoice);
 		manageHealth(b, healthChoice);
-		manageBHPType(b,0);
-	}
-
-	@Override
-	public void manageBHPType(Enemy e, int choice) {
-		if (e instanceof Boss) {
-			Boss boss = (Boss) e;
-			for (choice = 0; choice < bhpType.size() ; choice++) {
-				BulletHellPattern bhpChosen = bhpType.get(choice);
-				boss.setBossBHPlist(bhpChosen);
-			}
-		}
 	}
 
 	@Override

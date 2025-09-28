@@ -1,6 +1,5 @@
 package Enemies;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
@@ -10,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import BulletHellPatterns.BulletHellPattern;
 import Managers.BulletManager;
 
 public class Boss extends Enemy implements EnemyTools{
@@ -18,9 +16,8 @@ public class Boss extends Enemy implements EnemyTools{
 	private boolean changeBHP = true;
 	private float targetX, targetY; 
 	private BulletManager bulletMng;
-	private ArrayList<BulletHellPattern> bossBHPlist = new ArrayList<>();
 	
-	public Boss (float initialPosX, float initialPosY, BulletManager bulletMng, int bossChoice) {
+	public Boss (float initialPosX, float initialPosY, BulletManager bulletMng, int bossChoice, float scrW, float scrH) {
 		spriteSheet = new Texture(Gdx.files.internal("allBossesSpriteSheet.png"));
 		spriteRegions = TextureRegion.split(spriteSheet, 64, 78);
 		explosionSound.setVolume(1,0.3f);
@@ -32,8 +29,9 @@ public class Boss extends Enemy implements EnemyTools{
 		
 		maxIdleTime = 5.0f;
 		
-		targetX = 600 - 16;
-	    targetY = 600;
+		// Use proportional values based on viewport
+	    targetX = scrW / 2f - spr.getWidth() / 2f;
+	    targetY = scrH - 300f; // boss starts ~65% up screen
 	    
 	    this.bulletMng = bulletMng;
 	}
@@ -94,8 +92,8 @@ public class Boss extends Enemy implements EnemyTools{
 	}
 
 	@Override
-	public void update() {
-		enemyMovement();
+	public void update(float scrWidth, float scrHeight) {
+		enemyMovement(scrWidth, scrHeight);
 		shootBulletHellPattern();
 	}
 	
@@ -105,7 +103,7 @@ public class Boss extends Enemy implements EnemyTools{
 	 * 
 	 * */
 	@Override
-	public void enemyMovement() {
+	public void enemyMovement(float scrWidth, float scrHeight) {
 		float deltaTime = Gdx.graphics.getDeltaTime();
 		if (firstSpawn) {
 		    
@@ -126,7 +124,7 @@ public class Boss extends Enemy implements EnemyTools{
             if (idleTime >= maxIdleTime) {
             	//System.out.println("In Movement");
             	inTrack = true;
-                selectNewArea(); 
+                selectNewArea(scrWidth, scrHeight); 
                 
             }
             
@@ -137,7 +135,7 @@ public class Boss extends Enemy implements EnemyTools{
                 inTrack = false;
                 this.setSpeed(defaultSpeed);
             }
-            outOfBounds();
+            outOfBounds(scrWidth, scrHeight);
         }
 	}
 	
@@ -150,12 +148,9 @@ public class Boss extends Enemy implements EnemyTools{
 	public void bossTrack(float deltaTime) {
 		float currentX = spr.getX();
 	    float currentY = spr.getY();
-
 	    float directionX = targetX - currentX;
 	    float directionY = targetY - currentY;
-	    
 	    float distance = (float) Math.sqrt(directionX * directionX + directionY * directionY);
-	    
 	    /*
 	    System.out.println("Boss Position - X: " + currentX + ", Y: " + currentY);
 	    System.out.println("Target Position - X: " + targetX + ", Y: " + targetY);
@@ -180,44 +175,39 @@ public class Boss extends Enemy implements EnemyTools{
 	
 
 	@Override
-	public void selectNewArea() {
-		int area = random.nextInt(5);
-		while (area == currentArea) {
-			area = random.nextInt(5);
-		}
-		
-		currentArea = area;
-		switch (currentArea) {
-			case 0:
-				//System.out.println("area 0");
-				targetX = random.nextInt(100,240);
-				break;
-			case 1:
-				//System.out.println("area 1");
-				targetX = 240 + random.nextInt(240);
-				break;
-			case 2:
-				//System.out.println("area 2");
-				targetX = 480 + random.nextInt(240);;
-				break;
-			case 3:
-				targetX = 720 + random.nextInt(240);
-				break;
-			case 4:
-				targetX = 960 + random.nextInt(150);
-				break;
-		}
-		
-		targetY = 500 + random.nextInt(120);
-		idleTime = 0f;
+	public void selectNewArea(float scrWidth, float scrHeight) {
+	    int area = random.nextInt(3);
+	    while (area == currentArea) {
+	        area = random.nextInt(3);
+	    }
+	    currentArea = area;
+
+	    switch (currentArea) {
+	        case 0:
+	            // Left third, but start after a fixed 85px margin
+	            targetX = 85 + random.nextFloat() * (scrWidth * 0.33f - 85);
+	            break;
+	        case 1:
+	            // Middle third (fully proportional)
+	            targetX = (scrWidth * 0.33f) + random.nextFloat() * (scrWidth * 0.33f);
+	            break;
+	        case 2:
+	            // Right third, but clamp with a fixed 58px offset
+	            targetX = (scrWidth * 0.66f) + random.nextFloat() * (scrWidth * 0.33f - 85);
+	            break;
+	    }
+
+	    // Y between ~65% and 90% of screen height
+	    targetY = (scrHeight * 0.65f) + random.nextFloat() * (scrHeight * 0.25f);
+	    idleTime = 0f;
 	}
+
 
 	@Override
 	public void shootBulletHellPattern() {
 		float deltaTime = Gdx.graphics.getDeltaTime();
 		if (changeBHP) {
-			bhpChoice = random.nextInt(bossBHPlist.size());
-			bulletPattern = bossBHPlist.get(bhpChoice);
+			bhpChoice = random.nextInt(bulletMng.getBhpArrSize());
 			changeBHP = false;
 		}
 		
@@ -231,19 +221,14 @@ public class Boss extends Enemy implements EnemyTools{
 	            shootingTime += deltaTime;
 	            bulletGenTimer += deltaTime;
 	            
-	            if (bulletGenTimer >= bulletPattern.getBulletGenInterval()) {
-		            for (int i = 0; i < bulletPattern.getCantBullet(); i++) {
-		            	bulletGenTimer = 0;
-		            	EnemyBullet generatedEBullet = bulletMng.craftEnemyBullet(spr.getX() + 34, spr.getY() + 16);
-		                bulletPattern.generateBulletInPattern(spr.getX() + 16, spr.getY() + 16, generatedEBullet);
-		                bulletMng.addEnemyBullets(generatedEBullet);
-		            	
-		            }
+	            if (bulletGenTimer >= bulletMng.getBHP(bhpChoice).getBulletGenInterval()) {
+	            	bulletGenTimer = 0;
+	            	bulletMng.generateEBullets(bhpChoice, spr.getX() + 16, spr.getY() + 16);
 		            shootingSound.play(0.25f);
 	            }
 	            
 	            // If the shooting time exceeds max, stop shooting and start cooldown
-	            if (shootingTime >= bulletPattern.getMaxShootingTime()) {
+	            if (shootingTime >= bulletMng.getBHP(bhpChoice).getMaxShootingTime()) {
 	            	//bulletPattern.setAngle(0);
 	                isShooting = false;
 	                shootingTime = 0f;  // Reset shooting time to zero for the next cooldown phase
@@ -263,15 +248,6 @@ public class Boss extends Enemy implements EnemyTools{
 	        }
 	    }
 	}
-
-	@Override
-	public void outOfBounds() {
-		if (spr.getX() < 0) spr.setX(0);
-        if (spr.getX() + spr.getWidth() > Gdx.graphics.getWidth()) spr.setX(Gdx.graphics.getWidth() - spr.getWidth());
-        if (spr.getY() < 0) spr.setY(0);
-        if (spr.getY() + spr.getHeight() > Gdx.graphics.getHeight()) spr.setY(Gdx.graphics.getHeight() - spr.getHeight());
-		
-	}
 	
 	public void lowerBossHealthNSpeed(int health, float speed) {
 		setHealth(health);
@@ -282,8 +258,4 @@ public class Boss extends Enemy implements EnemyTools{
 	}
 	
 	public void dispose() {spriteSheet.dispose();}
-	
-	public void setBossBHPlist(BulletHellPattern bhp) {
-		bossBHPlist.add(bhp);
-	}
 }

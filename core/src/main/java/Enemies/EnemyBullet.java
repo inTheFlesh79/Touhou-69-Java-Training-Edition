@@ -62,7 +62,7 @@ public class EnemyBullet {
         batch.draw(bulletTxt, x - radius, y - radius, radius * 2, radius * 2);
     }
 	
-	public void update() {
+	public void update(float scrWidth, float scrHeight) {
 		float deltaTime = Gdx.graphics.getDeltaTime();
 		//System.out.println("deltaTime: " + deltaTime);
 	    //System.out.println("velocityX: " + velocityX + ", velocityY: " + velocityY);
@@ -70,10 +70,10 @@ public class EnemyBullet {
         y += velocityY * deltaTime;
         hitbox.setPosition(x, y);
         
-        if (x - radius < -50 || x + radius > Gdx.graphics.getWidth()+50) {
+        if (x - radius < -50 || x + radius > scrWidth+50) {
 	        destroyed = true;
 	    }
-	    if (y - radius < -50 || y + radius > Gdx.graphics.getHeight()+50) {
+	    if (y - radius < -50 || y + radius > scrHeight+50) {
 	        destroyed = true;
 	    }
     }

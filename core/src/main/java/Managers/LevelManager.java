@@ -12,26 +12,26 @@ public class LevelManager {
 	
 	public LevelManager() {}
 	
-	public void setCurrentLevel(int level) {
+	public void setCurrentLevel(int level, float scrWidth, float scrHeight) {
 		switch(level) {
 			case 1:
 				System.out.println("ElegiLevelOne");
-				currentLvl = new LevelOne();
+				currentLvl = new LevelOne(scrWidth, scrHeight);
 				areWavesOver = false;
 				break;
 			case 2:
 				System.out.println("ElegiLevelTwo");
-				currentLvl = new LevelTwo();
+				currentLvl = new LevelTwo(scrWidth, scrHeight);
 				areWavesOver = false;
 				break;
 			case 3:
 				System.out.println("ElegiLevelThree");
-				currentLvl = new LevelThree();
+				currentLvl = new LevelThree(scrWidth, scrHeight);
 				areWavesOver = false;
 				break;
 			case 4:
 				System.out.println("ElegiLevelFour");
-				currentLvl = new LevelFour();
+				currentLvl = new LevelFour(scrWidth, scrHeight);
 				areWavesOver = false;
 				break;
 		}
@@ -52,7 +52,6 @@ public class LevelManager {
 	}
 	
 	public FairySpawn getFairyStartingPoint() {return currentLvl.getCoordsCurrentWave(currentLvlWave);}
-	
 	public boolean getFairyIsShooting() {return currentLvl.getShootsFirstCurrrentWave(currentLvlWave);}
 	
 	public int getLvlId() {return currentLvl.getLvlId();}
@@ -69,7 +68,5 @@ public class LevelManager {
 		else {
 			System.out.println("Level 2");
 		}
-
-		
 	}
 }

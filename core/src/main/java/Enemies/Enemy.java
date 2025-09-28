@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import BulletHellPatterns.BulletHellPattern;
 
 public abstract class Enemy {
 	protected boolean isDestroyed = false;
@@ -17,7 +16,6 @@ public abstract class Enemy {
 	protected float speed;
 	protected float defaultSpeed;
 	protected int speedChoice;
-	protected BulletHellPattern bulletPattern; 
 	protected int bhpChoice;
 	
 	protected Sprite spr;
@@ -58,20 +56,30 @@ public abstract class Enemy {
 	
 	public Enemy() {};
 	
-	public final void enemyRoutine(SpriteBatch batch) {
+	public final void enemyRoutine(SpriteBatch batch, float scrWidth, float scrHeight) {
 		draw(batch);
-		update();
+		update(scrWidth, scrHeight);
 	}
 	
 	public abstract void draw(SpriteBatch batch);
-	public abstract void update();
+	public abstract void update(float scrWidth, float scrHeight);
+	
+	public void outOfBounds(float scrWidth, float scrHeight) {
+	    if (spr.getX() < 0) spr.setX(0);
+	    if (spr.getX() + spr.getWidth() > scrWidth) 
+	        spr.setX(scrWidth - spr.getWidth());
+
+	    if (spr.getY() < 0) spr.setY(0);
+	    if (spr.getY() + spr.getHeight() > scrHeight) 
+	        spr.setY(scrHeight - spr.getHeight());
+	}
+
 	
 	public int getHealth() {return health;}
 	
 	public void setHealth(int health) {this.health = health;}
 	public void setSpeed(float speed) {this.speed = speed;}
 	public void setDefaultSpeed(float speed) {this.defaultSpeed = speed;}
-	public void setBulletPattern(BulletHellPattern bhp) {this.bulletPattern = bhp;}
 	public void setHealthChoice(int healthChoice) { this.healthChoice = healthChoice; }
 	public void setDefaultHealth(int health) {this.defaultHealth = health;}
 	public void setSpeedChoice(int speedChoice) { this.speedChoice = speedChoice; }
@@ -80,6 +88,7 @@ public abstract class Enemy {
 
 	public int getHealthChoice() { return healthChoice; }
 	public int getSpeedChoice() { return speedChoice; }
+	public float getDefSpeed() {return defaultSpeed;}
 	public float getSpeed() { return speed; }
 	public int getBhpChoice() { return bhpChoice; }
 	public Sprite getSpr() {return spr;}

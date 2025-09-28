@@ -1,6 +1,5 @@
 package Factory;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import Enemies.Boss;
@@ -25,8 +24,8 @@ public class TouhouEnemyFactory implements EnemyFactory{
 	}
 
 	@Override
-	public Boss craftBoss(int bossTx) {
-		Boss newBoss = new Boss((Gdx.graphics.getWidth()/2) - 16, 932, bulletMng, bossTx);
+	public Boss craftBoss(int bossTx, float scrW, float scrH) {
+		Boss newBoss = new Boss(scrW / 2f - 16, scrH + 200, bulletMng, bossTx, scrW, scrH);
 		return newBoss;
 	}
 	

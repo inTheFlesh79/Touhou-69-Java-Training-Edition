@@ -8,16 +8,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 import Managers.BulletManager;
-import Managers.FairyManager;
 
 import java.util.Random;
 
 public class Fairy extends Enemy implements EnemyTools{
 	private float deltaTime = Gdx.graphics.getDeltaTime();
 	private static final Random random = new Random();
-	private float targetX, targetY; 
+	private float targetX, targetY;
 	private BulletManager bulletMng;
-	private FairyManager fairyMng = new FairyManager();
 	private boolean isShootSoundAllowed = false;
 
 	public Fairy (float initialPosX, float initialPosY, int firstTargetX, int firstTargetY, BulletManager bulletMng, TextureRegion[][] spriteRegions) {
@@ -35,7 +33,7 @@ public class Fairy extends Enemy implements EnemyTools{
     	//spr.setPosition(initialPosX, initialPosY);
 		spr.setBounds(initialPosX, initialPosY, 48, 48);
 		
-		maxIdleTime = 3.0f;
+		maxIdleTime = 3f;
 		
 		targetX = firstTargetX;
 	    targetY = firstTargetY;
@@ -51,10 +49,10 @@ public class Fairy extends Enemy implements EnemyTools{
 		spr.draw(batch);		
 	}
 	
-	public void update() {
+	public void update(float scrWidth, float scrHeight) {
 		//System.out.println("Fairy Speed = "+this.getSpeed());
 		//System.out.println("Fairy Health = "+this.getHealth());
-		enemyMovement();
+		enemyMovement(scrWidth, scrHeight);
 		shootBulletHellPattern();
 	}
 	
@@ -73,28 +71,19 @@ public class Fairy extends Enemy implements EnemyTools{
 	    }
 	}
 	
-	public void generateEBullets() {
-		for (int i = 0; i < bulletPattern.getCantBullet(); i++) {
-			EnemyBullet generatedEBullet = bulletMng.craftEnemyBullet(spr.getX() + 20, spr.getY() + 16);
-			bulletPattern.generateBulletInPattern(spr.getX() + 16, spr.getY() + 16, generatedEBullet);
-            bulletMng.addEnemyBullets(generatedEBullet);
-	    }
-	}
 	
 	public void shootingLogic(float deltaTime) {
-
 	    if (isShooting) {
 	        shootingTime += deltaTime;
 	        bulletGenTimer += deltaTime;
-
-	        if (bulletGenTimer >= bulletPattern.getBulletGenInterval()) {
+	        if (bulletGenTimer >= bulletMng.getBHP(bhpChoice).getBulletGenInterval()) {
 	            bulletGenTimer = 0;
 	            //System.out.println("This Fairy is Allowed to Sound When Shooting? "+isShootSoundAllowed);
 	            //System.out.println("SOUND PLAYED!")
-	            generateEBullets();
+	            bulletMng.generateEBullets(bhpChoice, spr.getX(), spr.getY());
 	            if (isShootSoundAllowed) {shootingSound.play(0.2f);}
 	        }
-	        if (shootingTime >= bulletPattern.getMaxShootingTime()) {
+	        if (shootingTime >= bulletMng.getBHP(bhpChoice).getMaxShootingTime()) {
 	            isShooting = false;
 	            shootingTime = 0f;
 	        }
@@ -106,7 +95,6 @@ public class Fairy extends Enemy implements EnemyTools{
 	            noShootingCooldown = 0f;
 	        }
 	    }
-	    
 	}
 
 	
@@ -117,7 +105,7 @@ public class Fairy extends Enemy implements EnemyTools{
 	 * */
 
 	@Override
-	public void enemyMovement() {
+	public void enemyMovement(float scrWidth, float scrHeight) {
 		float deltaTime = Gdx.graphics.getDeltaTime();
 		if (firstSpawn) {
 			fairyTrack(deltaTime);
@@ -125,7 +113,7 @@ public class Fairy extends Enemy implements EnemyTools{
             if (fairyInTarget()) {
             	//System.out.println("First Time in Movement");
                 firstSpawn = false;
-                fairyMng.manageSpeed(this, this.getSpeedChoice());
+                this.setSpeed(defaultSpeed);
             }
 		    
 		}
@@ -137,7 +125,7 @@ public class Fairy extends Enemy implements EnemyTools{
             if (idleTime >= maxIdleTime) {
             	//System.out.println("In Movement");
             	inTrack = true;
-                selectNewArea(); 
+                selectNewArea(scrWidth, scrHeight); 
                 
             }
             
@@ -146,9 +134,9 @@ public class Fairy extends Enemy implements EnemyTools{
             if (fairyInTarget()) {
             	//System.out.println("Fairy reached target. Selecting new area...");
                 inTrack = false;
-                fairyMng.manageSpeed(this, this.getSpeedChoice());
+                this.setSpeed(defaultSpeed);
             }
-            outOfBounds();
+            outOfBounds(scrWidth, scrHeight);
         }
         
 	}
@@ -168,13 +156,11 @@ public class Fairy extends Enemy implements EnemyTools{
 	    
 	    float distance = (float) Math.sqrt(directionX * directionX + directionY * directionY);
 	    
-	    /*
-	    System.out.println("Fairy Position - X: " + currentX + ", Y: " + currentY);
-	    System.out.println("Target Position - X: " + targetX + ", Y: " + targetY);
-	    System.out.println("Distance to Target: " + distance);
-	    */
+	    //System.out.println("Fairy Position - X: " + currentX + ", Y: " + currentY);
+	    //System.out.println("Target Position - X: " + targetX + ", Y: " + targetY);
+	    //System.out.println("Distance to Target: " + distance);	
 
-	    if (distance > 5.0f) {
+	    if (distance > 2.0f) {
 	        directionX /= distance;
 	        directionY /= distance;
 
@@ -190,36 +176,27 @@ public class Fairy extends Enemy implements EnemyTools{
 	    }
 	}
 	
-	public void selectNewArea() {
-		int area = random.nextInt(3);
-		while (area == currentArea) {
-			area = random.nextInt(3);
-		}
-		currentArea = area;
-		switch (currentArea) {
-			case 0:
-				//System.out.println("area 0");
-				targetX = random.nextInt(32,399);
-				break;
-			case 1:
-				//System.out.println("area 1");
-				targetX = 400 + random.nextInt(799);
-				break;
-			case 2:
-				//System.out.println("area 2");
-				targetX = 800 + random.nextInt(340);;
-				break;
-		}
-		
-		targetY = 500 + random.nextInt(120);
-		idleTime = 0f;
-	}
+	public void selectNewArea(float scrWidth, float scrHeight) {
+	    int area = random.nextInt(3);
+	    while (area == currentArea) {
+	        area = random.nextInt(3);
+	    }
+	    currentArea = area;
 
-	public void outOfBounds() {
-		if (spr.getX() < 0) spr.setX(0);
-        if (spr.getX() + spr.getWidth() > Gdx.graphics.getWidth()) spr.setX(Gdx.graphics.getWidth() - spr.getWidth());
-        if (spr.getY() < 0) spr.setY(0);
-        if (spr.getY() + spr.getHeight() > Gdx.graphics.getHeight()) spr.setY(Gdx.graphics.getHeight() - spr.getHeight());
+	    switch (currentArea) {
+	        case 0:
+	            targetX = 48 + (random.nextFloat() * (scrWidth * 0.33f)); // left third
+	            break;
+	        case 1:
+	            targetX = (scrWidth * 0.33f) + random.nextFloat() * (scrWidth * 0.33f); // middle
+	            break;
+	        case 2:
+	            targetX = ((scrWidth * 0.66f) + random.nextFloat() * (scrWidth * 0.33f)) - 58; // right third
+	            break;
+	    }
+
+	    targetY = scrHeight * 0.7f + random.nextFloat() * (scrHeight * 0.25f); // 70–95% height
+	    idleTime = 0f;
 	}
 	
 	public void dispose() {
@@ -230,7 +207,13 @@ public class Fairy extends Enemy implements EnemyTools{
 	public void setMaxShootingTime(float mst) {this.maxShootingTime = mst;}
 	public void setBulletGenInterval(float bgi) {this.bulletGenInterval = bgi;}
 	public void setIsShootSoundAllowed(boolean b) {isShootSoundAllowed = b;}
+	public void setTarget(float x, float y) {
+		targetX = x;
+		targetY = y;
+	}
 	
 	public boolean getIsShootSoundAllowed() {return isShootSoundAllowed;}
 	public void getSpawnSpeedChoice() {}
+	public float getTargetX() {return targetX;}
+	public float getTargetY() {return targetY;}
 }

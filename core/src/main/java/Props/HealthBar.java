@@ -14,7 +14,7 @@ public class HealthBar {
     private float fullWidth;  // <- store once
     private float fullHeight;
 
-    public HealthBar(int maxHealth, float drawWidth, float drawHeight, float marginTop) {
+    public HealthBar(int maxHealth, float scrWidth, float scrHeight, float drawWidth, float drawHeight, float marginTop) {
         this.texture = new Texture(Gdx.files.internal("bossHpBar.png"));
         this.spr = new Sprite(texture);
 
@@ -26,8 +26,10 @@ public class HealthBar {
 
         spr.setSize(fullWidth, fullHeight);
 
-        float x = (Gdx.graphics.getWidth() - fullWidth) / 2f;
-        float y = Gdx.graphics.getHeight() - fullHeight - marginTop;
+        // use scrWidth/scrHeight (world units), not Gdx.graphics
+        float x = (scrWidth - fullWidth) / 2f; // center horizontally
+        float y = scrHeight - fullHeight - marginTop; // align from top in world units
+
         spr.setPosition(x, y);
     }
 

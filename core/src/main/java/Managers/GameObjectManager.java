@@ -3,17 +3,22 @@ package Managers;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import Factory.EnemyFactory;
 import Factory.TouhouEnemyFactory;
 import Reimu.Reimu;
 
 public class GameObjectManager {
+	private float scrWidth, scrHeight;
     private int correctas;
     
 	// Personajes y Objetos de Personaje
+    private FitViewport viewport;
 	private SpriteBatch batch;
 	private Reimu reimu;
 	private EnemyFactory eFactory = new TouhouEnemyFactory();
@@ -33,29 +38,38 @@ public class GameObjectManager {
 	private boolean fightBoss = false;
 	private boolean checkRewards = false;
 	
-	public GameObjectManager(SpriteBatch batch, int nivel, int vidas, int score, int power) {
+	public GameObjectManager(SpriteBatch batch, FitViewport viewport, int nivel, int vidas, int score, int power) {
 		this.batch = batch;
-		levelMng.setCurrentLevel(nivel);
+		this.viewport = viewport;
+		scrWidth = viewport.getWorldWidth();
+		scrHeight = viewport.getWorldHeight();
+		levelMng.setCurrentLevel(nivel, scrWidth, scrHeight);
 		//crear a Reimu ^_^
-		reimu = new Reimu(Gdx.graphics.getWidth()/2-50,30,
+		Vector2 spawn = new Vector2(920/2f, 30);
+		reimu = new Reimu((int)spawn.x,(int)spawn.y,
 				Gdx.audio.newSound(Gdx.files.internal("DEAD.ogg")), 
 				new Texture(Gdx.files.internal("Rocket2.png")), 
 				Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));
         reimu.setVidas(vidas);
         reimu.setDamage(power);
         reimu.setScore(score);
+        bulletMng.setReimu(reimu);
         
         eFactory.setCurrentBulletManager(bulletMng);
         gameSetup();
 	}                     
 	
 	public void update() {
-		bulletMng.reimuBulletsDrawer(batch);
-		bulletMng.enemyBulletsDrawer(batch);
+		scrWidth = viewport.getWorldWidth();
+		scrHeight = viewport.getWorldHeight();
+		bulletMng.reimuBulletsDrawer(batch, scrWidth, scrHeight);
+		bulletMng.enemyBulletsDrawer(batch, scrWidth, scrHeight);
 		fairyDrawer();
 		bossDrawer();
 		dropMng.drawDrops(batch);
 		enemyDropsCollisionManager();
+		reimu.draw(batch, bulletMng, scrWidth, scrHeight);
+		reimu.drawReimuHitbox(batch, (OrthographicCamera) viewport.getCamera());
 		
 		if (reimu.shieldExists() && !reimu.shieldExpired()) {
 			reimu.drawShield(batch);
@@ -69,23 +83,21 @@ public class GameObjectManager {
 			reimuBulletsCollisionManager();
 			enemyBulletsCollisionManager();
 		}
-		reimu.draw(batch, bulletMng);
 	}
 	
 	public void gameSetup() {
 		levelMng.whatLevelIsIt();
 		System.out.println("Current Wave: "+levelMng.getCurrentLvlWave());
-	    fairyMng.fairySetup(levelMng.getFairiesCurrentWave(), levelMng.getFairyStartingPoint(), levelMng.getFairyIsShooting(), bulletMng);
+	    fairyMng.fairySetup(levelMng.getFairiesCurrentWave(), levelMng.getFairyStartingPoint(), levelMng.getFairyIsShooting(), bulletMng, scrWidth, scrHeight);
 	    levelMng.changeCurrentWave();
 	    levelMng.areWavesOver();
-        bossMng.createBoss(eFactory.craftBoss(levelMng.getLvlId()));
+	    bossMng.createBoss(eFactory.craftBoss(levelMng.getLvlId(), scrWidth-360, scrHeight));
 	}
 	
 	/*
 	 * FUNCIONES DE DRAW, UPDATE Y MANEJO DE OBJETOS EN PANTALLAJUEGO
 	 * 
 	 */
-	
 	public void reimuBulletsCollisionManager() {
 		// COLISION DE BOSS VS BULLETS
 		for (int i = 0; i < bulletMng.getReimuBulletsSize(); i++) {
@@ -138,11 +150,11 @@ public class GameObjectManager {
 	// Drawer for Enemy objects
 	public void fairyDrawer() {
 		if (!fairyMng.isFairiesEmpty()) {
-			fairyMng.fairiesDrawer(batch);
+			fairyMng.fairiesDrawer(batch, scrWidth-360, scrHeight);
 		}
 		else if (fairyMng.isFairiesEmpty() && !levelMng.areWavesOver()) {
 			System.out.println("Current Wave: "+levelMng.getCurrentLvlWave());
-			fairyMng.fairySetup(levelMng.getFairiesCurrentWave(), levelMng.getFairyStartingPoint(), levelMng.getFairyIsShooting(),bulletMng);
+			fairyMng.fairySetup(levelMng.getFairiesCurrentWave(), levelMng.getFairyStartingPoint(), levelMng.getFairyIsShooting(),bulletMng, scrWidth, scrHeight);
 			levelMng.changeCurrentWave();
 		    levelMng.areWavesOver();
 		    System.out.println("Fairies = "+fairyMng.getFairiesSize());
@@ -154,11 +166,11 @@ public class GameObjectManager {
 			if (!checkRewards) {
 				applyRewards();
 				System.out.println("Boss Health ="+bossMng.getBoss().getHealth());
-				propMng.createBossHPBar(bossMng.getBoss().getHealth());
+				propMng.createBossHPBar(bossMng.getBoss().getHealth(), scrWidth-360, scrHeight);
 				checkRewards = true;
 			}
 		 	//UNLEASH THE BOSS
-			bossMng.getBoss().enemyRoutine(batch);
+			bossMng.getBoss().enemyRoutine(batch, scrWidth-360, scrHeight);
 			propMng.drawBossHPBar(batch);
 			//System.out.println("Boss Speed ="+bossMng.getBoss().getSpeed());
 		}
@@ -177,10 +189,9 @@ public class GameObjectManager {
 			System.out.println("correctas < 4");
 			reimu.oneUp();
 			reimu.addDamage(20);
-			
 		}
 		else if (correctas < 6) { //4 o 5 correctas
-			System.out.println("correctas < 5");
+			System.out.println("correctas < 6");
 			for (int i = 0; i < 2; i++) {reimu.oneUp();}
 			reimu.addDamage(30);
 			bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));

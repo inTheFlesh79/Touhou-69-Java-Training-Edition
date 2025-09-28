@@ -9,7 +9,9 @@ public class PropManager {
 	
 	public PropManager() {}
 	
-	public void createBossHPBar(int defaultHealth) {bossHPBar = new HealthBar(defaultHealth, 650, 12, 4);}
+	public void createBossHPBar(int defaultHealth, float scrWidth, float scrHeight) {
+		bossHPBar = new HealthBar(defaultHealth,scrWidth,scrHeight,650, 12, 4);
+	}
 	public void drawBossHPBar(SpriteBatch batch) {bossHPBar.draw(batch);}
 	public HealthBar getBossHPBar() {return bossHPBar;}
 }

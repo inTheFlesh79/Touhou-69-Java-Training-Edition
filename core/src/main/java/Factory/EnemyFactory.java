@@ -8,7 +8,7 @@ import Managers.BulletManager;
 
 public interface EnemyFactory {
 	void setCurrentBulletManager(BulletManager bulletMng);
-	Boss craftBoss(int bossTx);
+	Boss craftBoss(int bossTx, float scrW, float scrH);
 	Fairy craftFairy(int spawnPointX, int spawnPointY, int firstTargetX, int firstTargetY, boolean IsShooting, TextureRegion[][] spriteRegions);
 	
 }

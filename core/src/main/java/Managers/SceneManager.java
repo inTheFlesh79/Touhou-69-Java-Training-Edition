@@ -1,9 +1,7 @@
 package Managers;
 
 import java.util.ArrayList;
-import java.util.Random;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -17,15 +15,17 @@ public class SceneManager {
     private float screenWidth;
     private SpriteBatch batch;
     
-    public SceneManager (SpriteBatch batch, int scnChoice) {
-    	this.batch = batch;
-    	
-    	screenHeight = Gdx.graphics.getHeight();
-        screenWidth = Gdx.graphics.getWidth();
+    public SceneManager(SpriteBatch batch, int scnChoice, float scrWidth, float scrHeight) {
+        this.batch = batch;
         
+        // Use viewport world dimensions, not raw Gdx graphics
+        this.screenWidth = scrWidth;
+        this.screenHeight = scrHeight;
+
         loadAllBg();
         pickLvlBg(scnChoice);
     }
+
     
     public void loadAllBg() {
     	Texture bg = new Texture("obscureBg.png");
@@ -40,7 +40,7 @@ public class SceneManager {
     	allBackgrounds.add(bg5);
     }
     
-    public void drawBg() {
+    public void drawBg(float scrWidth, float scrHeight) {
     	scrollBg();
     }
     

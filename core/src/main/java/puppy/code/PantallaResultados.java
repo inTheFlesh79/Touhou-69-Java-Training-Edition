@@ -10,24 +10,25 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import Enemies.Pregunta;
 
 
 public class PantallaResultados implements Screen {
-
 	private Touhou game;
 	private PantallaJuego pantallaAnterior;
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
-	
+	private FitViewport viewport;
 	private Stage stage;
     private Skin skin;
     private ShapeRenderer shapeRenderer;
@@ -39,14 +40,15 @@ public class PantallaResultados implements Screen {
         this.batch = game.getBatch();
         this.correctas = 0;
 
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, 1200, 800);
-
-        stage = new Stage(new ScreenViewport());
+        camera = game.getCamera();
+        viewport = game.getViewport();
+        
+        stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
 
         skin = new Skin();
-        BitmapFont font = new BitmapFont();
+        BitmapFont font = game.getFont();
+		font.getData().setScale(0.75f);
         skin.add("default-font", font);
 
         Label.LabelStyle labelStyle = new Label.LabelStyle();
@@ -63,20 +65,20 @@ public class PantallaResultados implements Screen {
 
         // titulo pantalla
         Label titulo = new Label("¡Felicitaciones por superar la ronda " + ronda + "!", skin);
-        titulo.setPosition(480, 740);
+        titulo.setPosition(450, 888);
         stage.addActor(titulo);
 
         // posiciones para labels de preguntas y resultados
-        float startY = 650;    // posición inicial vertical
-        float rectHeight = 40; // más pequeño
-        float rectWidth = 300; // más angosto
+        float startY = 780;    // posición inicial vertical
+        float rectHeight = 48; // más pequeño
+        float rectWidth = 320; // más angosto
         float spacing = 15;
 
         // centrar columnas
-        float totalWidth = rectWidth * 2 + 40; // 2 columnas + separación
-        float startX = (1200 - totalWidth) / 2f;
+        float totalWidth = rectWidth * 2 + 48; // 2 columnas + separación
+        float startX = (1280 - totalWidth) / 2f;
         float col1X = startX;
-        float col2X = startX + rectWidth + 40;
+        float col2X = startX + rectWidth + 48;
 
         for (int i = 0; i < 6; i++) {
             float y = startY - i * (rectHeight + spacing);
@@ -111,7 +113,7 @@ public class PantallaResultados implements Screen {
             if (texResultado != null) {
                 Image imgResultado = new Image(texResultado);
                 imgResultado.setSize(32, 32); // escalas a 32x32
-                imgResultado.setPosition(col2X + rectWidth - 100, y + rectHeight / 2 - 16);
+                imgResultado.setPosition(col2X + rectWidth - 100, y + rectHeight / 2 - 17);
                 stage.addActor(imgResultado);
             }
         }
@@ -121,28 +123,29 @@ public class PantallaResultados implements Screen {
 
         // mostrar texto de volver
         TextButton btnVolver = new TextButton("Volver", skin);
-        btnVolver.setPosition(1050, 65);
+        btnVolver.setPosition(1120, 78);
         stage.addActor(btnVolver);
     }
 
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0, 0, 0.2f, 1);
-
+        
         camera.update();
 		// actualizar
+        viewport.apply();
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 
-        float startY = 650;
-        float rectHeight = 40;
-        float rectWidth = 300;
+        float startY = 780;
+        float rectHeight = 48;
+        float rectWidth = 320;
         float spacing = 15;
 
-        float totalWidth = rectWidth * 2 + 40;
-        float startX = (1200 - totalWidth) / 2f;
+        float totalWidth = rectWidth * 2 + 48;
+        float startX = (1280 - totalWidth) / 2f;
         float col1X = startX;
-        float col2X = startX + rectWidth + 40;
+        float col2X = startX + rectWidth + 48;
 
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -173,10 +176,11 @@ public class PantallaResultados implements Screen {
 
         shapeRenderer.end();
         
-        float recompensasY = 300;
-        float centerX = 1200 / 2f;
-        float rectWidthRec = 250;
-        float rectHeightRec = 40;
+        // RECTANGULOS RECOMPENSAS
+        float recompensasY = 348;
+        float centerX = 1280 / 2f;
+        float rectWidthRec = 427;
+        float rectHeightRec = 48;
         float spacingY = 60;
         
         // dibujar rectangulos dependiendo de las recompensas obtenidas
@@ -191,8 +195,8 @@ public class PantallaResultados implements Screen {
         	}
         	case 3: {
         		shapeRenderer.setColor(Color.DARK_GRAY);
-        		float x1 = centerX - rectWidthRec - 20;
-        		float x2 = centerX + 20;
+        		float x1 = centerX - rectWidthRec - 22;
+        		float x2 = centerX + 22;
         		float y = recompensasY - spacingY;
         		shapeRenderer.rect(x1, y, rectWidthRec, rectHeightRec);
         		shapeRenderer.rect(x2, y, rectWidthRec, rectHeightRec);
@@ -202,8 +206,8 @@ public class PantallaResultados implements Screen {
         	case 5:
         	case 6: {
         		shapeRenderer.setColor(Color.DARK_GRAY);
-        		float x1 = centerX - rectWidthRec - 20;
-        		float x2 = centerX + 20;
+        		float x1 = centerX - rectWidthRec - 22;
+        		float x2 = centerX + 22;
         		float yTop = recompensasY - spacingY;
         		float yBottom = recompensasY - 2 * spacingY - rectHeightRec;
         		shapeRenderer.rect(x1, yTop, rectWidthRec, rectHeightRec);
@@ -215,13 +219,15 @@ public class PantallaResultados implements Screen {
         shapeRenderer.end();
         
         // efecto de cambio de color sobre el boton de Volver
-        float btnX = 1000;
-        float btnY = 50;
-        float btnWidth = 150;
-        float btnHeight = 50;
+        float btnX = 1062;
+        float btnY = 56;
+        float btnWidth = 160;
+        float btnHeight = 60;
 
-        float mouseX = Gdx.input.getX();
-        float mouseY = 800 - Gdx.input.getY();
+        Vector2 mouse = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+        viewport.unproject(mouse);
+        float mouseX = mouse.x;
+        float mouseY = mouse.y;
 
         if (mouseX >= btnX && mouseX <= btnX + btnWidth && mouseY >= btnY && mouseY <= btnY + btnHeight) {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -252,7 +258,7 @@ public class PantallaResultados implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
+		viewport.update(width, height, true);
     }
 
 	@Override
@@ -277,20 +283,21 @@ public class PantallaResultados implements Screen {
 	    }
 
 	    // posiciones para labels de recompensas
-	    float recompensasY = 300;
-	    float centerX = 1200 / 2f;
-	    float spacingY = 60;
-	    float rectWidth = 250;
-	    float rectHeightRec = 40;
+	    float recompensasY = 360;
+	    float centerX = 1280 / 2f;
+	    float spacingY = 72;
+	    float rectWidth = 267;
+	    float rectHeightRec = 48;
 
 	    // mostrar titulo de recompensas
-	    Label lblRecompensasTitulo = new Label("¡HAS OBTENIDO LAS SIGUIENTES RECOMPENSAS!", skin);
+	    Label lblRecompensasTitulo = new Label("HAS OBTENIDO LAS SIGUIENTES RECOMPENSAS!", skin);
 	    lblRecompensasTitulo.setAlignment(com.badlogic.gdx.utils.Align.center);
-	    lblRecompensasTitulo.setPosition(centerX - 180, recompensasY);
+	    lblRecompensasTitulo.setPosition(centerX - 270, recompensasY);
 	    stage.addActor(lblRecompensasTitulo);
 
 	    
 	    switch (correctas) {
+	    	case 1:
 	        case 2: {
 	            // 1 recompensa centrada
 	            float x = centerX - rectWidth / 2f;
@@ -305,8 +312,8 @@ public class PantallaResultados implements Screen {
 	        }
 	        case 3: {
 	            // 2 recompensas: lado a lado arriba
-	            float x1 = centerX - rectWidth - 20;
-	            float x2 = centerX + 20;
+	            float x1 = centerX - rectWidth - 104;
+	            float x2 = centerX + 104;
 	            float y = recompensasY - spacingY;
 
 	            Label r1 = new Label("1 Vida", skin);
@@ -326,8 +333,8 @@ public class PantallaResultados implements Screen {
 	        case 5:
 	        case 6: {
 	            // 3 recompensas: 2 arriba, 1 abajo centrada
-	            float x1 = centerX - rectWidth - 20;
-	            float x2 = centerX + 20;
+	            float x1 = centerX - rectWidth - 104;
+	            float x2 = centerX + 104;
 	            float yTop = recompensasY - spacingY;
 	            float yBottom = recompensasY - 2 * spacingY - rectHeightRec;
 
@@ -343,10 +350,10 @@ public class PantallaResultados implements Screen {
 	            r2.setPosition(x2, yTop + rectHeightRec / 2 - r2.getHeight() / 2);
 	            stage.addActor(r2);
 
-	            Label r3 = new Label("Reducción de Dificultad del Jefe Final", skin);
+	            Label r3 = new Label("Reduccion de Dificultad del Jefe Final", skin);
 	            r3.setAlignment(com.badlogic.gdx.utils.Align.center);
 	            r3.setWidth(rectWidth);
-	            r3.setPosition(centerX - rectWidth / 2f, yBottom + rectHeightRec / 2 - r3.getHeight() / 2);
+	            r3.setPosition(centerX - rectWidth / 2f, (yBottom + rectHeightRec / 2 - r3.getHeight() / 2)+10);
 	            stage.addActor(r3);
 	            break;
 	        }
@@ -354,5 +361,4 @@ public class PantallaResultados implements Screen {
 	    }
 	    shapeRenderer.end();
 	}
-	
 }

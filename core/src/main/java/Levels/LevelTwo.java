@@ -1,45 +1,66 @@
 package Levels;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 
 import Enemies.FairySpawn;
 
 public class LevelTwo extends Level {
-	
-	private int[] spawnPointWave1 = {(Gdx.graphics.getWidth()) - 200, 932};
-	private int[] firstTarXYWave1 = {48, 600};
-	private boolean shootsFirstW1 = false;
-	
-	private int[] spawnPointWave2 = {150, 932};
-	private int[] firstTarXYWave2 = {1000,600};
-	private boolean shootsFirstW2 = false;
-	
-	private int[] spawnPointWave3 = {-48, 750};
-	private int[] firstTarXYWave3 = {584,600};
-	private boolean shootsFirstW3 = true;
-	
-	private int[] spawnPointWave4 = {(Gdx.graphics.getWidth()) - 16, 932};
-	private int[] firstTarXYWave4 = {48,600};
-	private boolean shootsFirstW4 = true;
-	
-	public LevelTwo() {
-		this.levelId = 1;
-		this.bossChoice = 1;
-		this.cantFairies = 10;
-		this.cantWaves = 4;
-		this.fairiesByWave = new int [] {2,3,3,2};
-	}
-	
-	@Override
-	public FairySpawn getCoordsCurrentWave(int currentWave) {
-	    switch (currentWave) {
-	        case 0: return new FairySpawn(spawnPointWave1[0], spawnPointWave1[1], firstTarXYWave1[0], firstTarXYWave1[1]);
-	        case 1: return new FairySpawn(spawnPointWave2[0], spawnPointWave2[1], firstTarXYWave2[0], firstTarXYWave2[1]);
-	        case 2: return new FairySpawn(spawnPointWave3[0], spawnPointWave3[1], firstTarXYWave3[0], firstTarXYWave3[1]);
-	        case 3: return new FairySpawn(spawnPointWave4[0], spawnPointWave4[1], firstTarXYWave4[0], firstTarXYWave4[1]);
-	        default: return new FairySpawn(600,600,600,600);
-	    }
-	}
+	private Vector2 spawnPointWave1;
+    private Vector2 firstTarXYWave1;
+    private boolean shootsFirstW1 = false;
+
+    private Vector2 spawnPointWave2;
+    private Vector2 firstTarXYWave2;
+    private boolean shootsFirstW2 = false;
+
+    private Vector2 spawnPointWave3;
+    private Vector2 firstTarXYWave3;
+    private boolean shootsFirstW3 = true;
+
+    private Vector2 spawnPointWave4;
+    private Vector2 firstTarXYWave4;
+    private boolean shootsFirstW4 = true;
+
+    public LevelTwo(float scrWidth, float scrHeight) {
+        this.levelId = 1;
+        this.bossChoice = 1;
+        this.cantFairies = 10;
+        this.cantWaves = 4;
+        this.fairiesByWave = new int [] {2,3,3,2};
+
+        // Use scrWidth instead of Gdx.graphics.getWidth()
+        spawnPointWave1 = new Vector2(scrWidth - 200, 932);
+        firstTarXYWave1 = new Vector2(48, 600);
+
+        spawnPointWave2 = new Vector2(150, 932);
+        firstTarXYWave2 = new Vector2(850, 600);
+
+        spawnPointWave3 = new Vector2(-48, 750);
+        firstTarXYWave3 = new Vector2(584, 600);
+
+        spawnPointWave4 = new Vector2(scrWidth - 16, 932);
+        firstTarXYWave4 = new Vector2(48, 600);
+    }
+
+    @Override
+    public FairySpawn getCoordsCurrentWave(int currentWave) {
+        switch (currentWave) {
+            case 0: 
+                return new FairySpawn((int)spawnPointWave1.x, (int)spawnPointWave1.y,
+                                      (int)firstTarXYWave1.x, (int)firstTarXYWave1.y);
+            case 1: 
+                return new FairySpawn((int)spawnPointWave2.x, (int)spawnPointWave2.y,
+                                      (int)firstTarXYWave2.x, (int)firstTarXYWave2.y);
+            case 2: 
+                return new FairySpawn((int)spawnPointWave3.x, (int)spawnPointWave3.y,
+                                      (int)firstTarXYWave3.x, (int)firstTarXYWave3.y);
+            case 3: 
+                return new FairySpawn((int)spawnPointWave4.x, (int)spawnPointWave4.y,
+                                      (int)firstTarXYWave4.x, (int)firstTarXYWave4.y);
+            default: 
+                return new FairySpawn(600,600,600,600);
+        }
+    }
 	
 	@Override
 	public boolean getShootsFirstCurrrentWave(int currentWave) {

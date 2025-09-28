@@ -1,8 +1,7 @@
 package Enemies;
 
 public interface EnemyTools {
-	void enemyMovement();
-	void selectNewArea();
-	void outOfBounds();
+	void enemyMovement(float scrWidth, float scrHeight);
+	void selectNewArea(float scrWidth, float scrHeight);
 	void shootBulletHellPattern();
 }

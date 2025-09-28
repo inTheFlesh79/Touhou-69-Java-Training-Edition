@@ -21,18 +21,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import Enemies.Pregunta;
 import Managers.MusicManager;
 import Managers.QuestionManager;
 
-
 public class PantallaEjercicios implements Screen {
-
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
-	
+	private FitViewport screenViewport;
 	private Stage stage;
     private Skin skin;
     private QuestionManager questions = new QuestionManager();
@@ -48,10 +46,10 @@ public class PantallaEjercicios implements Screen {
 		game = Touhou.getInstance();
         this.batch = game.getBatch();
         // camera
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 1200, 800);
+		camera = game.getCamera();
+		screenViewport = game.getViewport();
 		
-		stage = new Stage(new ScreenViewport());
+		stage = new Stage(screenViewport);
         Gdx.input.setInputProcessor(stage);
         
         skin = new Skin();
@@ -91,20 +89,20 @@ public class PantallaEjercicios implements Screen {
 
 	    // Label enunciado
 	    Label lblPregunta = new Label(preguntaActual.getEnunciado(), skin);
-	    lblPregunta.setPosition(60, 740);
+	    lblPregunta.setPosition(64, 888);
 	    lblPregunta.setWrap(true);
-	    lblPregunta.setWidth(1100);
+	    lblPregunta.setWidth(1178);
 	    stage.addActor(lblPregunta);
 
 	    // Botones y click
 	    TextButton[] botones = new TextButton[4];
 	    for (int i = 0; i < 4; i++) {
 	        botones[i] = new TextButton(preguntaActual.getRespuestas()[i], skin);
-	        botones[i].setPosition(60, rectY[i] + 10);
+	        botones[i].setPosition(64, rectY[i] + 12);
 	        stage.addActor(botones[i]);
 
 	        Actor areaClick = new Actor();
-	        areaClick.setBounds(50, rectY[i], 1100, 40);
+	        areaClick.setBounds(54, rectY[i], 1174, 48);
 	        areaClick.setTouchable(Touchable.enabled);
 	        final int opcion = i;
 
@@ -172,42 +170,42 @@ public class PantallaEjercicios implements Screen {
 		batch.begin();
 		
 		float mouseX = Gdx.input.getX();
-		float mouseY = 800 - Gdx.input.getY(); // invertimos Y porque LibGDX tiene origen abajo
+		float mouseY = 960 - Gdx.input.getY(); // invertimos Y porque LibGDX tiene origen abajo
 		
 		// Dibujar el rectángulo de fondo para preguntas y respuestas
 		shapeRenderer.setProjectionMatrix(camera.combined);
 	    shapeRenderer.begin(ShapeType.Filled);
 	    shapeRenderer.setColor(0, 0, 0, 0.5f); // negro semi-transparente
 	    // x, y, ancho, alto
-	    shapeRenderer.rect(50, 710, 1100, 70);
+	    shapeRenderer.rect(54, 852, 1178, 84);
 	    shapeRenderer.end();
 	    
 	    // Dibujar borde opcional
 	    shapeRenderer.begin(ShapeType.Line);
 	    shapeRenderer.setColor(Color.WHITE);
-	    shapeRenderer.rect(50, 710, 1100, 70);
+	    shapeRenderer.rect(54, 852, 1178, 84);
 	    shapeRenderer.end();
 
 	    for (int i = 0; i < 4 ; i++) {
 	        float y = rectY[i];
 
 	        // Cambiar color si el mouse está encima del rectángulo
-	        if (mouseX >= 50 && mouseX <= 50 + 1100 && mouseY >= y && mouseY <= y + 40) {
+	        if (mouseX >= 54 && mouseX <= 54 + 1178 && mouseY >= y && mouseY <= y + 48) {
 	            shapeRenderer.begin(ShapeType.Filled);
 	            shapeRenderer.setColor(Color.LIGHT_GRAY); // color gris
-	            shapeRenderer.rect(50, y, 1100, 40);
+	            shapeRenderer.rect(54, y, 1178, 48);
 	            shapeRenderer.end();
 	        } else {
 	            shapeRenderer.begin(ShapeType.Filled);
 	            shapeRenderer.setColor(Color.WHITE); // color normal
-	            shapeRenderer.rect(50, y, 1100, 40);
+	            shapeRenderer.rect(54, y, 1178, 48);
 	            shapeRenderer.end();
 	        }
 
 	        // Borde
 	        shapeRenderer.begin(ShapeType.Line);
 	        shapeRenderer.setColor(Color.BLACK);
-	        shapeRenderer.rect(50, y, 1100, 40);
+	        shapeRenderer.rect(54, y, 1178, 48);
 	        shapeRenderer.end();
 	    }
 		stage.act(delta);

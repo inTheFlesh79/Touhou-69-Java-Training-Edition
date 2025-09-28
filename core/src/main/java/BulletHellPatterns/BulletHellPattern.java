@@ -16,6 +16,7 @@ public abstract class BulletHellPattern {
     public void setAngle(float angle) {this.angle = angle;}
     
     public int getCantBullet() {return this.cantBullet;}
+    public float getSpeed() {return this.speed;}
     public float getMaxShootingTime() {return this.maxShootingTime;}
     public float getBulletGenInterval() {return this.bulletGenInterval;}
 }

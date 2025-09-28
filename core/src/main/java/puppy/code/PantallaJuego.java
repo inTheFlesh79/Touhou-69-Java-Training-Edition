@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import Managers.MusicManager;
 import Managers.SceneManager;
@@ -13,66 +14,51 @@ import Managers.GameObjectManager;
 
 public class PantallaJuego implements Screen {
 	private Touhou game;
-	private OrthographicCamera camera;	
-	private SpriteBatch batch;//batch
-	private int nivel;
-	private int cantCorrectas = -1;
-	private float exerciseTimer = 0f;
-	private boolean waitingForExercise = false;
-	private boolean correctasSet = false;
-	private boolean isPaused = false;
-	
-	// Manager de Personajes con comportamientos dinamicos
-	private GameObjectManager gameMng;
-	// Manager para controlar musica
+    private OrthographicCamera screenCamera;
+    private FitViewport viewport;
+    private SpriteBatch batch;
+    private HUD hud;
+    private int nivel;
+    private int cantCorrectas = -1;
+    private float exerciseTimer = 0f;
+    private boolean waitingForExercise = false;
+    private boolean correctasSet = false;
+    private boolean isPaused = false;
+    // Managers
+    private GameObjectManager gameMng;
     private MusicManager musicMng;
-    // Manager para controlar la imagen de fondo del juego
     private SceneManager sceneMng;
     
 	public PantallaJuego(int nivel, int vidas, int score, int power) {
-		game = Touhou.getInstance();
-		batch = game.getBatch();
-		gameMng = new GameObjectManager(batch, nivel, vidas, score, power);
-		sceneMng = new SceneManager(batch, nivel);
-		musicMng = new MusicManager(nivel);
-		this.nivel = nivel;
-		gameMng.setScore(score);
-		camera = new OrthographicCamera();	
-		camera.setToOrtho(false, 1200, 800);
-	}
-    
-	public void dibujaHUD() {
-		CharSequence str = "Lives: "+ gameMng.getReimuVidas() +" Level: "+nivel;
-		game.getFont().getData().setScale(2f);		
-		game.getFont().draw(batch, str, 10, 30);
-		game.getFont().draw(batch, "Score:"+ gameMng.getScore(), Gdx.graphics.getWidth()-250, 30);
-		game.getFont().draw(batch, "HighScore:"+game.getHighScore(), Gdx.graphics.getWidth()/2+70, 30);
-		game.getFont().draw(batch, "Power:"+gameMng.getReimuDamage(), Gdx.graphics.getWidth()/2-225, 30);
+	    game = Touhou.getInstance();
+	    batch = game.getBatch();
+	    screenCamera = game.getCamera();
+	    viewport = game.getViewport();
+	    hud = new HUD(batch, viewport);
+	    gameMng = new GameObjectManager(batch, viewport, nivel, vidas, score, power);
+	    sceneMng = new SceneManager(batch, nivel, viewport.getWorldWidth() - 360, viewport.getWorldHeight());
+	    musicMng = new MusicManager(nivel);
+	    this.nivel = nivel;
+	    gameMng.setScore(score);
 	}
 	
 	@Override
 	public void render(float delta) {
-		//System.out.println("FPS: " + Gdx.graphics.getFramesPerSecond());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		
-		if (correctasSet == false && cantCorrectas > -1) {
+	    viewport.apply();
+	    batch.setProjectionMatrix(screenCamera.combined);
+	    
+	    // --- GAME AREA (0 → 920) ---
+	    if (correctasSet == false && cantCorrectas > -1) {
 			gameMng.setCorrectas(cantCorrectas);
 			System.out.println("correctas = "+cantCorrectas);
 			correctasSet = true;
 		}
-		
-		sceneMng.drawBg();
-		dibujaHUD();
-		gameMng.update(); // Maneja los objetos actuales en Pantalla
-		cooldownBeforeExercise(delta);//Does a cooldown before exercising of 5 seconds
-
-		if (!gameMng.areWavesOver() && !musicMng.isPlayingFairyTheme()) {
-			musicMng.pickFairiesLvlMusic();
-		}
-		else if (!gameMng.AreFairiesAlive() && gameMng.areWavesOver() && !musicMng.isPlayingBossTheme() && !waitingForExercise){
-			musicMng.pickBossLvlMusic();
-		}
+	    batch.begin();
+	    sceneMng.drawBg(viewport.getWorldWidth() - 360, viewport.getWorldHeight());
+	    gameMng.update();
+	    cooldownBeforeExercise(delta);//Does a cooldown before exercising of 5 seconds
+	    musicSetup();
 		
 		//SUJETO A CAMBIO: REGISTRAR PROGRESO
 		if (gameMng.isReimuDead()) {
@@ -81,13 +67,15 @@ public class PantallaJuego implements Screen {
 			if (gameMng.getScore() > game.getHighScore())
 				game.setHighScore(gameMng.getScore());
 			Screen ss = new PantallaGameOver();
-			ss.resize(1200, 800);
+			ss.resize(1280, 960);
 			game.setScreen(ss);
 			gameMng.disposeGOM();
 			dispose();
 		}
-		batch.end();
 		
+		batch.end();
+		hud.drawHUD(gameMng.getReimuVidas(), nivel, gameMng.getScore(), gameMng.getReimuDamage());
+
 		//checkear si debemos pasar al siguiente nivel
 	    levelManagement();
 	}
@@ -136,6 +124,15 @@ public class PantallaJuego implements Screen {
 		}
 	}
 	
+	public void musicSetup() {
+		if (!gameMng.areWavesOver() && !musicMng.isPlayingFairyTheme()) {
+			musicMng.pickFairiesLvlMusic();
+		}
+		else if (!gameMng.AreFairiesAlive() && gameMng.areWavesOver() && !musicMng.isPlayingBossTheme() && !waitingForExercise){
+			musicMng.pickBossLvlMusic();
+		}
+	}
+	
 	public void cooldownBeforeExercise(float delta) {
 		if (gameMng.readyToExercise() && !gameMng.areWeFightingBoss() && !waitingForExercise) {
 		    waitingForExercise = true;
@@ -159,7 +156,9 @@ public class PantallaJuego implements Screen {
 	public void show() {}
 
 	@Override
-	public void resize(int width, int height) {}
+	public void resize(int width, int height) {
+	    viewport.update(width, height, true);
+	}
 
 	@Override
 	public void pause() {}

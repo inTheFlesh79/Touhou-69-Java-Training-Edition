@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 import Managers.BulletManager;
 
@@ -22,9 +24,11 @@ public class Reimu {
     private int damage = 10;
     private Sprite spr;
     private Circle sprHitbox;
+    private Vector2 sprHitboxPos;
     private Rectangle sprDropHitbox;
     private Texture txBala;
     private Shield shield = null;
+    private ShapeRenderer shapeRenderer = new ShapeRenderer();
     private boolean isShielded = false;
 	private boolean destruida = false;
     
@@ -54,9 +58,9 @@ public class Reimu {
     	reimuAnimation();
     	
     	spr.setPosition(x, y);
-    	//spr.setOriginCenter();
     	spr.setBounds(x, y, 32, 48);
     	sprHitbox = new Circle(spr.getX() + spr.getWidth() / 2, spr.getY() + spr.getHeight()/ 2, 5f);
+    	sprHitboxPos = new Vector2((int) (spr.getX() + spr.getWidth() / 2), (int) (spr.getY() + spr.getHeight()/ 2));
     	sprDropHitbox = spr.getBoundingRectangle();
     }
     
@@ -85,13 +89,13 @@ public class Reimu {
     	spr = new Sprite(animationFrames[0]);
     }
     
-    public void draw(SpriteBatch batch, BulletManager bulletMng) {
-        reimuAnimationAndMovement(batch);
+    public void draw(SpriteBatch batch, BulletManager bulletMng, float scrWidth, float scrHeight) {
+        reimuAnimationAndMovement(batch, scrWidth, scrHeight);
         reimuShooting(bulletMng);
         sprDropHitbox.setPosition(spr.getX(), spr.getY());
     }
     
-    public void reimuAnimationAndMovement(SpriteBatch batch) {
+    public void reimuAnimationAndMovement(SpriteBatch batch, float scrWidth, float scrHeight) {
     	float deltaTime = Gdx.graphics.getDeltaTime();
         TextureRegion currentFrame = animation.getKeyFrame(animationTime, true);
         float speed = 500f;
@@ -129,27 +133,31 @@ public class Reimu {
 			     float moveSpeed = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) ? slowSpeed : speed; // Use slowSpeed if shift is held
 			     spr.setY(spr.getY() - moveSpeed * deltaTime); // Move down
 			 }
-
-			 outOfBounds();
-			 
+			 outOfBounds(scrWidth, scrHeight);
 			 spr.draw(batch);
-			 drawReimuHitbox(batch);
         } 
         else {
             heridoState(batch);
         }
     }
     
-    public void drawReimuHitbox(SpriteBatch batch) {
-    	sprHitbox.setPosition(spr.getX() + spr.getWidth() / 2, spr.getY() + spr.getHeight() / 2);
-    	batch.end(); // End the sprite batch temporarily
-		ShapeRenderer shapeRenderer = new ShapeRenderer(); // Initialize shapeRenderer
-		shapeRenderer.setColor(Color.YELLOW);
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-		shapeRenderer.circle(sprHitbox.x, sprHitbox.y, 5f); // Draw hitbox circle
-		shapeRenderer.end();
-		shapeRenderer.dispose();
-		batch.begin(); // Restart the sprite batch
+    public void drawReimuHitbox(SpriteBatch batch, OrthographicCamera camera) {
+        // update hitbox position
+        sprHitboxPos.set(
+            spr.getX() + spr.getWidth() / 2f + 1,
+            spr.getY() + spr.getHeight() / 2f + 1
+        );
+        sprHitbox.setPosition(sprHitboxPos.x, sprHitboxPos.y);
+
+        // temporarily stop batch
+        batch.end();
+        // use same projection as camera so coords line up
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.YELLOW);
+        shapeRenderer.circle(sprHitboxPos.x, sprHitboxPos.y, 5f);
+        shapeRenderer.end();
+        batch.begin();
     }
     
     public void reimuShooting(BulletManager bulletMng) {
@@ -170,11 +178,11 @@ public class Reimu {
         if (tiempoHerido <= 0) hurt = false;
     }
     
-    public void outOfBounds() {
-    	if (spr.getX() < 0) spr.setX(0);
-		if (spr.getX() + spr.getWidth() > Gdx.graphics.getWidth()) spr.setX(Gdx.graphics.getWidth() - spr.getWidth());
-		if (spr.getY() < 0) spr.setY(0);
-		if (spr.getY() + spr.getHeight() > Gdx.graphics.getHeight()) spr.setY(Gdx.graphics.getHeight() - spr.getHeight());
+    public void outOfBounds(float scrWidth, float scrHeight) {
+        if (spr.getX() < 0) spr.setX(0);
+        if (spr.getX() + spr.getWidth() > 920) spr.setX(920 - spr.getWidth());
+        if (spr.getY() < 0) spr.setY(0);
+        if (spr.getY() + spr.getHeight() > scrHeight) spr.setY(scrHeight - spr.getHeight());
     }
     
     public void craftShield() {shield = new Shield(spr.getX(), spr.getY(), spr);}
@@ -187,16 +195,16 @@ public class Reimu {
     public boolean isHurt() {return hurt;}
     public boolean isShielded() {return isShielded;}
     
-    public int getDamageBala() {return damage;}
     public Circle getSprHitbox() {return sprHitbox;}
+    public Circle getShieldHitbox() {return shield.getHitbox();}
+    public Sprite getSpr() {return spr;}
     public int getVidas() {return lives;}
     public int getX() {return (int) spr.getX();}
     public int getY() {return (int) spr.getY();}
-    public Sprite getSpr() {return spr;}
+    public int getDamageBala() {return damage;}
     public int getTHerido() {return tiempoHerido;}
     public int getTHeridoMax() {return tiempoHeridoMax;}
     public int getScore() {return score;}
-    public Circle getShieldHitbox() {return shield.getHitbox();}
     
     public void setTHerido(int t) {tiempoHerido = t;}
     public void setHurt(boolean b) {hurt = b;}
