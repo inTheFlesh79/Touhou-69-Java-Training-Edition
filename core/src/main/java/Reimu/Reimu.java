@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -12,7 +13,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -28,19 +28,20 @@ public class Reimu {
     private Rectangle sprDropHitbox;
     private Texture txBala;
     private Shield shield = null;
+    private RingStripe ring1, ring2;
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
     private boolean isShielded = false;
-	private boolean destruida = false;
+	private boolean dead = false;
     
     private Sound hurtSound;
     private boolean hurt = false;
-    private int tiempoHeridoMax=50;
-    private int tiempoHerido;
+    private float maxHurtTime=0.75f;
+    private float hurtTime;
     private float bulletGenInterval = 0.1f;
     private float bulletGenTimer = 0f;
     
-    private Texture spriteSheet;
-    private TextureRegion[][] spriteRegions;
+    private Texture spriteSheet, ringStripeSheet;
+    private TextureRegion[][] spriteRegions, ringStripeRegions;
     private Animation<TextureRegion> animation;
     private Animation<TextureRegion> animationLeft;
     private Animation<TextureRegion> animationRight;
@@ -53,8 +54,8 @@ public class Reimu {
     	
     	spriteSheet = new Texture(Gdx.files.internal("reimuSpriteSheet.png"));
     	spriteRegions = TextureRegion.split(spriteSheet, 32, 48);
-    	//lastSprite = new TextureRegion(spriteSheet, 320, 0, 3, 48);
-    	
+    	ringStripeSheet = new Texture(Gdx.files.internal("ringSpriteSheet.png"));
+    	ringStripeRegions = TextureRegion.split(ringStripeSheet, 80, 80);
     	reimuAnimation();
     	
     	spr.setPosition(x, y);
@@ -137,29 +138,44 @@ public class Reimu {
 			 spr.draw(batch);
         } 
         else {
-            heridoState(batch);
+            hurtState(batch, scrWidth-360);
         }
     }
     
     public void drawReimuHitbox(SpriteBatch batch, OrthographicCamera camera) {
-        // update hitbox position
         sprHitboxPos.set(
             spr.getX() + spr.getWidth() / 2f + 1,
             spr.getY() + spr.getHeight() / 2f + 1
         );
         sprHitbox.setPosition(sprHitboxPos.x, sprHitboxPos.y);
 
-        // temporarily stop batch
         batch.end();
-        // use same projection as camera so coords line up
         shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.YELLOW);
+        
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+        // alpha = fully visible if not hurt, semi-transparent if hurt
+        float alpha = hurt ? 0.1f : 1f;
+        
+        Gdx.app.debug("ReimuHitbox", "hurt=" + hurt + "  alpha=" + alpha);
+
+        // --- Filled white circle ---
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(1f, 1f, 1f, alpha); // white with alpha
         shapeRenderer.circle(sprHitboxPos.x, sprHitboxPos.y, 5f);
         shapeRenderer.end();
+
+        // --- Red outline ---
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(1f, 0f, 0f, alpha); // red with alpha
+        shapeRenderer.circle(sprHitboxPos.x, sprHitboxPos.y, 5f);
+        shapeRenderer.end();
+
         batch.begin();
     }
-    
+
+
     public void reimuShooting(BulletManager bulletMng) {
     	// Shoot bullet
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
@@ -170,12 +186,54 @@ public class Reimu {
         	}
         }
     }
-    public void heridoState(SpriteBatch batch) {
-    	spr.setX(spr.getX() + MathUtils.random(-2, 2));
-        spr.draw(batch); 
-        spr.setX(spr.getX());
-        tiempoHerido--;
-        if (tiempoHerido <= 0) hurt = false;
+    
+    public void hurtState(SpriteBatch batch, float scrWidth) {
+        float deltaTime = Gdx.graphics.getDeltaTime();
+        float progress = 1f - (hurtTime / maxHurtTime);
+
+        // --- Step 1: squash/stretch scaling ---
+        float scaleY = 3f * progress + 1f;   // grows tall
+        float scaleX = 1f - 1f * progress;   // shrinks thin
+        spr.setScale(scaleX, scaleY);
+
+        // --- Step 2: fade-in alpha ---
+        float alpha = 1f - progress; // starts transparent, becomes opaque
+        Color c = spr.getColor();
+        spr.setColor(c.r, c.g, c.b, alpha);
+        float halfDuration = maxHurtTime / 2f;
+
+        if (progress < 0.5f) {
+            if (ring1 == null) {
+                ring1 = new RingStripe(ringStripeRegions[0][0], 
+	                    spr.getX() + spr.getWidth() / 2f, 
+	                    spr.getY() + spr.getHeight() / 2f, 
+	                    halfDuration, false); // shrinking
+            }
+            if (ring1 != null && !ring1.isFinished()) {
+                ring1.updateAndDraw(batch, deltaTime);
+            }
+        } else {
+            if (ring2 == null) {
+                ring2 = new RingStripe(ringStripeRegions[0][1], 
+	                    spr.getX() + spr.getWidth() / 2f, 
+	                    spr.getY() + spr.getHeight() / 2f, 
+	                    halfDuration, true); // expanding
+            }
+            if (ring2 != null && !ring2.isFinished()) {
+                ring2.updateAndDraw(batch, deltaTime);
+            }
+        }
+        
+        spr.draw(batch);
+        hurtTime -= deltaTime;
+        if (hurtTime <= 0) {
+            hurt = false;
+            spr.setScale(1f, 1f); // reset scale
+            spr.setColor(1f, 1f, 1f, 1f); // reset alpha
+            spr.setPosition(scrWidth / 2f, 64f); // bottom center (like Touhou)
+            ring1 = null;
+            ring2 = null;
+        }
     }
     
     public void outOfBounds(float scrWidth, float scrHeight) {
@@ -191,34 +249,32 @@ public class Reimu {
     public boolean shieldExpired() {return shield.isExpired();}
     public void removeShield() {shield = null;}
     
-    public boolean estaDestruido() {return !hurt && destruida;}
+    public boolean isDead() {return !hurt && dead;}
     public boolean isHurt() {return hurt;}
     public boolean isShielded() {return isShielded;}
     
     public Circle getSprHitbox() {return sprHitbox;}
     public Circle getShieldHitbox() {return shield.getHitbox();}
     public Sprite getSpr() {return spr;}
-    public int getVidas() {return lives;}
+    public int getLives() {return lives;}
     public int getX() {return (int) spr.getX();}
     public int getY() {return (int) spr.getY();}
     public int getDamageBala() {return damage;}
-    public int getTHerido() {return tiempoHerido;}
-    public int getTHeridoMax() {return tiempoHeridoMax;}
+    public float getHurtTime() {return hurtTime;}
+    public float getMaxHurtTime() {return maxHurtTime;}
     public int getScore() {return score;}
     
-    public void setTHerido(int t) {tiempoHerido = t;}
+    public void setHurtTime(float t) {hurtTime = t;}
     public void setHurt(boolean b) {hurt = b;}
 	public void setVidas(int lives) {this.lives = lives;}
 	public void setDamage(int d) {this.damage = d;}
 	public void setShielded (boolean b) {isShielded = b;}
-	public void setDestroyed(boolean b) {destruida = b;}
+	public void setDead(boolean b) {dead = b;}
 	public void setScore(int s) {score = s;}
 	
 	public void oneUp() {this.lives += 1;}
 	public void oneDown() {this.lives -= 1;}
-	
 	public void addDamage (int d) {this.damage += d;}
 	public void addScore (int s) {this.score += s;}
-	
 	public void playHurtSound() {hurtSound.play();}
 }

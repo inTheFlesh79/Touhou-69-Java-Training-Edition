@@ -23,10 +23,10 @@ public class CollisionManager {
 		if(!r.isHurt() && eb.getHitbox().overlaps(r.getSprHitbox()) && !r.isShielded()){
             r.oneDown();;
             r.setHurt(true);;
-  		    r.setTHerido(r.getTHeridoMax());
+  		    r.setHurtTime(r.getMaxHurtTime());
   		    r.playHurtSound();
-            if (r.getVidas()<=0) 
-          	    r.setDestroyed(true);
+            if (r.getLives()<=0) 
+          	    r.setDead(true);
             return true;
         }
         return false;
@@ -47,5 +47,4 @@ public class CollisionManager {
 		}
 		return e;
 	}
-	
 }

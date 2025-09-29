@@ -83,6 +83,8 @@ public class GameObjectManager {
 			reimuBulletsCollisionManager();
 			enemyBulletsCollisionManager();
 		}
+		
+		if (reimu.isHurt()) {bulletMng.clearEnemyBullets();}
 	}
 	
 	public void gameSetup() {
@@ -96,7 +98,6 @@ public class GameObjectManager {
 	
 	/*
 	 * FUNCIONES DE DRAW, UPDATE Y MANEJO DE OBJETOS EN PANTALLAJUEGO
-	 * 
 	 */
 	public void reimuBulletsCollisionManager() {
 		// COLISION DE BOSS VS BULLETS
@@ -132,7 +133,7 @@ public class GameObjectManager {
 	// Drawer and Collission manager for EnemyBullet objects
 	public void enemyBulletsCollisionManager() {
 		for (int i = 0; i < bulletMng.getEnemyBulletsSize(); i++) {
-		    if (collisionMng.chkColReimuVsEBullet(bulletMng.getEnemyBullet(i), reimu)/* && !reimu.isShielded()*/) {bulletMng.removeEnemyBullet(i);}
+		    if (collisionMng.chkColReimuVsEBullet(bulletMng.getEnemyBullet(i), reimu)) {bulletMng.removeEnemyBullet(i);}
 		    if (reimu.shieldExists() && collisionMng.chkColShieldVsEBullet(bulletMng.getEnemyBullet(i), reimu)) {bulletMng.removeEnemyBullet(i);}
 		}
 	}
@@ -214,10 +215,10 @@ public class GameObjectManager {
     public void setFightBoss(boolean b) {this.fightBoss = b;}
     public void setCorrectas(int c) {correctas = c;}
     
-    public int getReimuVidas() {return reimu.getVidas();}
+    public int getReimuVidas() {return reimu.getLives();}
     public int getScore() {return reimu.getScore();}
     public int getReimuDamage() {return reimu.getDamageBala();}
-    public boolean isReimuDead() {return reimu.estaDestruido();}
+    public boolean isReimuDead() {return reimu.isDead();}
     
     public boolean areWeFightingBoss() {return fightBoss;}
     public boolean isBossAlive() {return !(bossMng.getBoss() == null);}

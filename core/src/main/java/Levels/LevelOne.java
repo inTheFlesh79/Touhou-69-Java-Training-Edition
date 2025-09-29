@@ -32,11 +32,11 @@ public class LevelOne extends Level {
         spawnPointWave1 = new Vector2(scrWidth - 16f, 932f);
         firstTarXYWave1 = new Vector2(48f, 600f);
 
-        spawnPointWave2 = new Vector2(0f, 932f);
+        spawnPointWave2 = new Vector2(230f, 1032f);
         firstTarXYWave2 = new Vector2(866f, 600f);
 
-        spawnPointWave3 = new Vector2(scrWidth / 2f - 48f, 1032f);
-        firstTarXYWave3 = new Vector2(300f, 600f);
+        spawnPointWave3 = new Vector2(scrWidth / 2f - 408f, 1032f);
+        firstTarXYWave3 = new Vector2(460f, 600f);
 
         spawnPointWave4 = new Vector2(scrWidth - 16f, 932f);
         firstTarXYWave4 = new Vector2(108f, 720f);

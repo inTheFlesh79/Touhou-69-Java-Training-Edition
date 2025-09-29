@@ -85,14 +85,15 @@ public class PantallaJuego implements Screen {
 			musicMng.stopBossMusic();
 			if ((nivel+1) < 5) {
 				Screen ss = new PantallaJuego(nivel+1, gameMng.getReimuVidas(), gameMng.getScore(), gameMng.getReimuDamage());
-				ss.resize(1200, 800);
+				ss.resize(1280, 960);
 				game.setScreen(ss);
 				gameMng.disposeGOM();
 				dispose();
 			}
 			else {
+				game.setHighScore(gameMng.getScore());
 				Screen ss = new PantallaFinal();
-				ss.resize(1200, 800);
+				ss.resize(1280, 960);
 				game.setScreen(ss);
 				gameMng.disposeGOM();
 				dispose();
