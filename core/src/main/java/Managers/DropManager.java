@@ -134,6 +134,7 @@ public class DropManager {
 	            break;
 	    }
 	}
+	
 	public boolean isScoreDrop(Drop d) {return d instanceof ScoreDrop;}
 	public boolean isShieldDrop(Drop d) {return d instanceof ShieldDrop;}
 	

@@ -20,9 +20,9 @@ public class GameObjectManager {
 	// Personajes y Objetos de Personaje
     private FitViewport viewport;
 	private SpriteBatch batch;
+	private Random random = new Random();
 	private Reimu reimu;
 	private EnemyFactory eFactory = new TouhouEnemyFactory();
-	private Random random = new Random();
 	
 	// Managers de Personajes con comportamientos dinamicos (en este caso: Fairy)
 	private FairyManager fairyMng = new FairyManager();
@@ -70,6 +70,7 @@ public class GameObjectManager {
 		enemyDropsCollisionManager();
 		reimu.draw(batch, bulletMng, scrWidth, scrHeight);
 		reimu.drawReimuHitbox(batch, (OrthographicCamera) viewport.getCamera());
+		propMng.drawProps(batch);
 		
 		if (reimu.shieldExists() && !reimu.shieldExpired()) {
 			reimu.drawShield(batch);
@@ -120,6 +121,8 @@ public class GameObjectManager {
 			        // If the fairy's health reaches zero, remove it and play sound
 			        if (collisionMng.isAliveAfterLastCol(fairyMng.getFairy(j)) == null) {
 			            fairyMng.getFairy(j).playExplosionSound();
+			            propMng.createExplosionRing(fairyMng.getFairy(j).getSpr().getX() + 13, fairyMng.getFairy(j).getSpr().getY()+ 34);
+			            propMng.createSparkles(fairyMng.getFairy(j).getSpr().getX()+ 13, fairyMng.getFairy(j).getSpr().getY()+ 34);
 			            dropMng.spawnDrop(fairyMng.getFairy(j).getSpr().getX(),fairyMng.getFairy(j).getSpr().getY());
 			            fairyMng.removeFairy(j);
 			            j--;  // Adjust the index after removing a fairy
