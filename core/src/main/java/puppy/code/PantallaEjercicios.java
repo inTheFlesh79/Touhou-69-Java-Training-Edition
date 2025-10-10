@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -38,12 +39,16 @@ public class PantallaEjercicios implements Screen {
     private final float[] rectY = {250, 180, 110, 40};
     private ArrayList<Pregunta> preguntasRonda;
     private int indicePregunta = 0;
-    private int correctas = 0;
+    private int correctas = 0; // (era para ruteo)
     private PantallaJuego tempPJ;
+    private int intentosFallidos = 0;
+    
+    private boolean retryAndBuff;
 
-	public PantallaEjercicios (Touhou game, MusicManager musicMng, PantallaJuego pantallaAnterior) {
+	public PantallaEjercicios (Touhou game, MusicManager musicMng, PantallaJuego pantallaAnterior, boolean retryAndBuff) {
 		tempPJ = pantallaAnterior;
 		game = Touhou.getInstance();
+		this.retryAndBuff = retryAndBuff;
         this.batch = game.getBatch();
         // camera
 		camera = game.getCamera();
@@ -126,8 +131,7 @@ public class PantallaEjercicios implements Screen {
 	                	mostrarPregunta(indicePregunta, game, musicMng, pantallaAnterior);
 	                } else {
 	                    System.out.println("Ronda finalizada. Correctas: " + correctas);
-	                    musicMng.playBossMusic();
-	                    game.setScreen(new PantallaResultados(preguntasRonda, 1, tempPJ));
+	                    game.setScreen(new PantallaResultados(preguntasRonda, 1, intentosFallidos, musicMng, tempPJ, retryAndBuff));
 	                    dispose();
 	                }
 	            }
@@ -169,8 +173,11 @@ public class PantallaEjercicios implements Screen {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		
-		float mouseX = Gdx.input.getX();
-		float mouseY = 960 - Gdx.input.getY(); // invertimos Y porque LibGDX tiene origen abajo
+		// convertir coordenadas de pantalla a coordenadas del stage 
+		Vector2 mouseStage = stage.screenToStageCoordinates(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
+		float mouseX = mouseStage.x;
+		float mouseY = mouseStage.y;
+
 		
 		// Dibujar el rectángulo de fondo para preguntas y respuestas
 		shapeRenderer.setProjectionMatrix(camera.combined);

@@ -19,8 +19,9 @@ public class Touhou extends Game {
     private static final float VIRTUAL_WIDTH = 1280f;
     private static final float VIRTUAL_HEIGHT = 960f;
     private int highScore;
-    // para manejar rotacion de categorias en TODO el juego
+    // para manejar rotacion de categorias e intentos de ronda en TODO el juego
     private static int categoriaActual = 1;
+    private static int intentosRonda = 0;
 
     private Touhou() {}
 
@@ -34,7 +35,7 @@ public class Touhou extends Game {
     private void loadFont() {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("thFont.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 22;
+        parameter.size = 27;
         font = generator.generateFont(parameter);
         generator.dispose();
     }
@@ -75,9 +76,20 @@ public class Touhou extends Game {
     public void setHighScore(int highScore) {this.highScore = highScore;}
     
     public static int getCategoria() {
-        int cat = categoriaActual;
+        return categoriaActual;
+    }
+    
+    public static void pasarCategoria() {
         categoriaActual++;
         if (categoriaActual > 3) categoriaActual = 1;
-        return cat;
     }
+    
+    public static int getIntentosRonda() {
+        return intentosRonda;
+    }
+    
+    public static void setIntentosRonda(int n) {
+        intentosRonda = n;
+    }
+
 }

@@ -66,7 +66,7 @@ public class PantallaJuego implements Screen {
 			musicMng.stopFairiesMusic();
 			if (gameMng.getScore() > game.getHighScore())
 				game.setHighScore(gameMng.getScore());
-			Screen ss = new PantallaGameOver();
+			Screen ss = new PantallaGameOver(musicMng);
 			ss.resize(1280, 960);
 			game.setScreen(ss);
 			gameMng.disposeGOM();
@@ -108,16 +108,34 @@ public class PantallaJuego implements Screen {
 		    game.setScreen(new PantallaPausa(game, this)); // pass "this" to resume later
 		}
 		
-		// OPCION DE DESARROLLADOR (se elimina)
+		// OPCIONES DE DESARROLLADOR DEV (se eliminan)
 		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-			game.setScreen(new PantallaEjercicios(game, musicMng, this));
+			musicMng.stopFairiesMusic();
+			musicMng.stopBossMusic();
+			game.setScreen(new PantallaEjercicios(game, musicMng, this, false));
+			System.out.println("correctas en Pantalla Juego? = "+cantCorrectas);
+			gameMng.setFightBoss(true);
+			// ANTES DE SALIR CAMBIAR ESTADO DE CONTROL PARA NO REPETIR PANTALLA
+			gameMng.setExerciseDone(true);
+		}
+		// DEV
+		if (Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
+			musicMng.stopFairiesMusic();
+			musicMng.stopBossMusic();
+			game.setScreen(new PantallaHint(game, this));
+		}
+		// DEV
+		if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+			musicMng.stopFairiesMusic();
+			musicMng.stopBossMusic();
+			game.setScreen(new PantallaCodigo(game, this));
 		}
 		
 		// VERIFICAR SI ESTA LISTO PARA EJERCITAR
 		if (waitingForExercise && exerciseTimer >= 5f && !gameMng.areWeFightingBoss()) {
 			musicMng.stopFairiesMusic();
 			musicMng.stopBossMusic();
-			game.setScreen(new PantallaEjercicios(game, musicMng, this));
+			game.setScreen(new PantallaEjercicios(game, musicMng, this, false));
 			System.out.println("correctas en Pantalla Juego? = "+cantCorrectas);
 			gameMng.setFightBoss(true);
 			// ANTES DE SALIR CAMBIAR ESTADO DE CONTROL PARA NO REPETIR PANTALLA
