@@ -9,24 +9,20 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 
 public class EnemyBullet {
+	private int id;
 	private Circle hitbox;
 	private TextureRegion bulletTxt;
 	private float x, y;
     private float velocityX, velocityY;
     private float radius;
-    //private static Random random = new Random();
-    //private TextureRegion[][] spriteRegions;
     private Texture spriteSheet;
-    private boolean destroyed = false;
+    private boolean destroyed = false, twoStagedBullet, stopped = false;
     
     public EnemyBullet(float x, float y, float velocityX, float velocityY, TextureRegion[][] sharedRegions) {
         this.x = x;
         this.y = y;
         this.velocityX = velocityX;
         this.velocityY = velocityY;
-        
-        //spriteSheet = new Texture(Gdx.files.internal("bulletTypes.png"));
-		//spriteRegions = TextureRegion.split(spriteSheet, 24, 30);
 		TextureRegion currentSprite = sharedRegions[new Random().nextInt(4)][0];
         this.bulletTxt = currentSprite;
 
@@ -66,6 +62,7 @@ public class EnemyBullet {
 		float deltaTime = Gdx.graphics.getDeltaTime();
 		//System.out.println("deltaTime: " + deltaTime);
 	    //System.out.println("velocityX: " + velocityX + ", velocityY: " + velocityY);
+		
         x += velocityX * deltaTime;
         y += velocityY * deltaTime;
         hitbox.setPosition(x, y);
@@ -77,6 +74,9 @@ public class EnemyBullet {
 	        destroyed = true;
 	    }
     }
+	
+	public int getId() {return id;}
+	public void setId(int id) {this.id = id;}
 	
 	public Circle getHitbox() { return hitbox; }
 	public void setHitbox(Circle hitbox) { this.hitbox = hitbox; }
@@ -104,6 +104,12 @@ public class EnemyBullet {
 
 	public boolean isDestroyed() { return destroyed; }
 	public void setDestroyed(boolean destroyed) { this.destroyed = destroyed; }
+	
+	public boolean getTwoStagedBullet() {return twoStagedBullet;}
+	public void setTwoStagedBullet(boolean bool) {twoStagedBullet = bool;}
+	
+	public boolean getStopped() {return stopped;}
+	public void setStopped(boolean bool) {stopped = bool;}
 	
 	public void dispose() {
         spriteSheet.dispose();

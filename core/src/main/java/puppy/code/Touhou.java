@@ -34,7 +34,7 @@ public class Touhou extends Game {
     private void loadFont() {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("thFont.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 27;
+        parameter.size = 22;
         font = generator.generateFont(parameter);
         generator.dispose();
     }

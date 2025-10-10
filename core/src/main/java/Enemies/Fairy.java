@@ -80,7 +80,7 @@ public class Fairy extends Enemy implements EnemyTools{
 	            bulletGenTimer = 0;
 	            //System.out.println("This Fairy is Allowed to Sound When Shooting? "+isShootSoundAllowed);
 	            //System.out.println("SOUND PLAYED!")
-	            bulletMng.generateEBullets(bhpChoice, spr.getX(), spr.getY());
+	            bulletMng.generateEBullets(bhpChoice, spr.getX(), spr.getY(), false);
 	            if (isShootSoundAllowed) {shootingSound.play(0.2f);}
 	        }
 	        if (shootingTime >= bulletMng.getBHP(bhpChoice).getMaxShootingTime()) {

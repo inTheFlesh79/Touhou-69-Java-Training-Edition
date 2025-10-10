@@ -9,7 +9,7 @@ public class Bullet {
 	private int ySpeed;
 	private boolean destroyed = false;
 	private Sprite spr;
-	private int bulletDamage = 200;
+	private int bulletDamage = 2000;
 	    
     public Bullet(float x, float y, int xSpeed, int ySpeed, Texture tx) {
     	spr = new Sprite(tx);

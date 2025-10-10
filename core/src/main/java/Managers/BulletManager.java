@@ -14,11 +14,14 @@ import Reimu.Reimu;
 
 public class BulletManager {
 	private ArrayList<BulletHellPattern> bhpTypes = new ArrayList<>();
+	private ArrayList<BulletHellPattern> tsBhpTypes = new ArrayList<>();
 	private ArrayList<EnemyBullet> enemyBullets = new ArrayList<>();
 	private ArrayList<Bullet> reimuBullets = new ArrayList<>();
 	private Texture enemyBulletSheet;           // shared
     private TextureRegion[][] enemyBulletRegions; // shared
     private Reimu player;
+    private int currentTSBhpChoice;
+    private boolean shiftBullets = false;
 	
 	public BulletManager () {
 		enemyBulletSheet = new Texture(Gdx.files.internal("bulletTypes.png"));
@@ -28,6 +31,9 @@ public class BulletManager {
       	bhpTypes.add(new CirclePattern());
       	bhpTypes.add(new ForkPattern());
       	bhpTypes.add(new TargetedPattern());
+      	bhpTypes.add(new FastTargetedPattern());
+      	
+      	tsBhpTypes.add(new TargetedCirclePattern());
 	}
 	
 	public void enemyBulletsDrawer(SpriteBatch batch, float scrWidth, float scrHeight) {
@@ -42,6 +48,8 @@ public class BulletManager {
 			 eb.draw(batch);
 			 eb.update(scrWidth, scrHeight);
 		}
+		if (shiftBullets) {System.out.println("shiftbullets");shiftBullets();}
+		
 	}
 	
 	public void reimuBulletsDrawer(SpriteBatch batch, float scrWidth, float scrHeight) {
@@ -56,17 +64,29 @@ public class BulletManager {
 		 }
 	}
 	
-	public void generateEBullets(int bhpChoice, float x, float y) {
-		BulletHellPattern pattern = bhpTypes.get(bhpChoice);
-		
-	    if (pattern instanceof TargetedPattern && player != null) {
-	    	((TargetedPattern) pattern).setReimuCoords(player.getSpr().getX() + 16, player.getSpr().getY() + 24);
+	public void generateEBullets(int bhpChoice, float x, float y, boolean multiStage) {
+	    if (multiStage) {
+	    	BulletHellPattern pattern = tsBhpTypes.get(bhpChoice);
+	    	currentTSBhpChoice = bhpChoice;
+	    	for (int i = 0; i < pattern.getCantBullet(); i++) {
+		    	EnemyBullet genEBullet = craftEnemyBullet(x + 20, y + 16);
+		    	genEBullet.setTwoStagedBullet(true);
+		    	pattern.generateBulletInPattern(x + 16, y + 16, genEBullet);
+		        addEnemyBullets(genEBullet);
+		        System.out.println("Shift bullets for ID " + i + " (" + enemyBullets.size() + " bullets total)");
+	    	}
 	    }
-	    
-		for (int i = 0; i < bhpTypes.get(bhpChoice).getCantBullet(); i++) {
-			EnemyBullet generatedEBullet = craftEnemyBullet(x + 20, y + 16);
-			pattern.generateBulletInPattern(x + 16, y + 16, generatedEBullet);
-            addEnemyBullets(generatedEBullet);
+	    else {
+	    	BulletHellPattern pattern = bhpTypes.get(bhpChoice);
+	    	if (pattern instanceof PlayerTrackingPattern) {
+		    	((PlayerTrackingPattern) pattern).setReimuCoords(player.getX(),player.getY());
+		    }
+	    	// --- Generate new bullets ---
+		    for (int i = 0; i < pattern.getCantBullet(); i++) {
+		        EnemyBullet genEBullet = craftEnemyBullet(x + 20, y + 16);
+		        pattern.generateBulletInPattern(x + 16, y + 16, genEBullet);
+		        addEnemyBullets(genEBullet);
+		    }
 	    }
 	}
 	
@@ -88,9 +108,87 @@ public class BulletManager {
 	
 	//BHP ArrayList Methods
 	public int getBhpArrSize() {return bhpTypes.size();}
+	public int getTsBhpArrSize() {return tsBhpTypes.size();}
 	public BulletHellPattern getBHP(int choice) {return bhpTypes.get(choice);}
+	public BulletHellPattern getTSBHP (int choice) {return tsBhpTypes.get(choice);}
+	public float getBHPMaxShootingTime(int bhpChoice) {return bhpTypes.get(bhpChoice).getMaxShootingTime();}
 	
 	public void setReimu(Reimu r) {player = r;}
 	public TextureRegion[][] getEnemyBulletSprSheet() {return enemyBulletRegions;}
 	public void dispose() {enemyBulletSheet.dispose();}
+	
+	// MultiStage Pattern Management 
+	public void setTSBhpChoice(int bhpChoice) {currentTSBhpChoice = bhpChoice;}
+	public void setShiftBullets (boolean bool) {shiftBullets = bool;}
+	public boolean getShiftBullets() {return shiftBullets;}
+	public void shiftBullets() {
+		TwoStagePattern pattern = (TwoStagePattern) tsBhpTypes.get(currentTSBhpChoice);
+		for (int i = 0; i < enemyBullets.size(); i ++) {
+		    if (pattern instanceof PlayerTrackingPattern) {
+		    	((PlayerTrackingPattern) pattern).setReimuCoords(player.getX(),player.getY());
+		    }
+			EnemyBullet eb = enemyBullets.get(i);
+			if (eb.getTwoStagedBullet()) {
+				pattern.applyMultiStage(eb);
+			} 
+		}
+		shiftBullets = false;
+	}
+	
+	public void bulletShiftingHandler() {
+		TwoStagePattern pattern = (TwoStagePattern) tsBhpTypes.get(currentTSBhpChoice);
+		if (pattern.hasDeceleration()) {
+			
+		}
+			if (shiftBullets) {shiftBullets();}
+	}
+	
+	public void decelerateBullets() {
+	    final float dt = Gdx.graphics.getDeltaTime();
+	    if (dt <= 0f) return;
+
+	    // Tunable: how many units of speed are removed per second
+	    final float DECEL_RATE = 60f; // tweak to taste
+	    final float STOP_THRESHOLD = 1f; // below this speed we consider it stopped
+
+	    for (int i = 0; i < enemyBullets.size(); i++) {
+	        EnemyBullet eb = enemyBullets.get(i);
+	        // skip bullets that are not flagged as two-staged
+	        // (you said bullets already have getTwoStagedBullet())
+	        if (!eb.getTwoStagedBullet()) continue;
+
+	        float vx = eb.getVelocityX();
+	        float vy = eb.getVelocityY();
+	        float speed = (float) Math.sqrt(vx * vx + vy * vy);
+
+	        if (speed <= STOP_THRESHOLD) {
+	            // stop the bullet completely
+	            eb.setVelocityX(0f);
+	            eb.setVelocityY(0f);
+	            eb.setStopped(true);
+	            continue;
+	        }
+
+	        // reduce speed by DECEL_RATE * dt (keeps direction)
+	        float newSpeed = speed - DECEL_RATE * dt;
+	        if (newSpeed <= 0f) {
+	            eb.setVelocityX(0f);
+	            eb.setVelocityY(0f);
+	            eb.setStopped(true);
+	        } else {
+	            float nx = vx / speed;
+	            float ny = vy / speed;
+	            eb.setVelocityX(nx * newSpeed);
+	            eb.setVelocityY(ny * newSpeed);
+	        }
+	    }
+	}
+	
+	public boolean isDecelerationOver() {
+		for (int i = 0; i < enemyBullets.size(); i++) {
+			EnemyBullet eb = enemyBullets.get(i);
+			if (eb.getTwoStagedBullet() && !eb.getStopped()) {return false;}
+		}
+		return true;
+	}
 }

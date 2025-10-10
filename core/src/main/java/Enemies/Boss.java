@@ -13,7 +13,7 @@ import Managers.BulletManager;
 
 public class Boss extends Enemy implements EnemyTools{
 	private static final Random random = new Random();
-	private boolean changeBHP = true;
+	private boolean changeBHP = true, multiStage = false, shiftSet = false;
 	private float targetX, targetY; 
 	private BulletManager bulletMng;
 	
@@ -106,15 +106,12 @@ public class Boss extends Enemy implements EnemyTools{
 	public void enemyMovement(float scrWidth, float scrHeight) {
 		float deltaTime = Gdx.graphics.getDeltaTime();
 		if (firstSpawn) {
-		    
 			bossTrack(deltaTime);
-            
             if (bossInTarget()) {
             	//System.out.println("First Time in Movement");
                 firstSpawn = false;
                 this.setSpeed(defaultSpeed);
             }
-		    
 		}
 		else {
 			if (!inTrack) {
@@ -205,48 +202,120 @@ public class Boss extends Enemy implements EnemyTools{
 
 	@Override
 	public void shootBulletHellPattern() {
-		float deltaTime = Gdx.graphics.getDeltaTime();
-		if (changeBHP) {
-			bhpChoice = random.nextInt(bulletMng.getBhpArrSize());
-			changeBHP = false;
-		}
-		
 	    if (firstSpawn) {
 	        isShooting = false;
 	    } 
 	    else {
-	        // If Fairy is shooting, generate the bullet pattern and update shooting time
+	    	changePattern();
 	        if (isShooting) {
-	        	
-	            shootingTime += deltaTime;
-	            bulletGenTimer += deltaTime;
-	            
-	            if (bulletGenTimer >= bulletMng.getBHP(bhpChoice).getBulletGenInterval()) {
-	            	bulletGenTimer = 0;
-	            	bulletMng.generateEBullets(bhpChoice, spr.getX() + 16, spr.getY() + 16);
-		            shootingSound.play(0.25f);
-	            }
-	            
-	            // If the shooting time exceeds max, stop shooting and start cooldown
-	            if (shootingTime >= bulletMng.getBHP(bhpChoice).getMaxShootingTime()) {
-	            	//bulletPattern.setAngle(0);
-	                isShooting = false;
-	                shootingTime = 0f;  // Reset shooting time to zero for the next cooldown phase
-	            }
+	        	if (!multiStage) {
+	        		singleStageShooting();
+	        	}
+	        	else {
+	        		multiStageShooting();
+	        	}
 	            
 	        } 
 	        else {
-	            // Cooldown phase: wait for 3 seconds
-	            noShootingCooldown += deltaTime;
-
-	            // Once cooldown of 3 seconds has passed, enable shooting again
-	            if (noShootingCooldown >= 1.5f) {
-	                isShooting = true;  // Enable shooting again
-	                noShootingCooldown = 0f;      // Reset idleTime after cooldown
-	                changeBHP = true;
-	            }
+	        	shootingCooldown();
 	        }
 	    }
+	}
+	
+	public void multiStageShooting() {
+		float deltaTime = Gdx.graphics.getDeltaTime();
+		shootingTime += deltaTime;
+        bulletGenTimer += deltaTime;
+        
+        if (bulletGenTimer >= bulletMng.getTSBHP(bhpChoice).getBulletGenInterval()) {
+        	bulletGenTimer = 0f;
+        	bulletMng.generateEBullets(bhpChoice, spr.getX() + 16, spr.getY() + 16, true);
+            shootingSound.play(0.25f);
+        	
+        }
+        
+		if (shootingTime >= bulletMng.getTSBHP(bhpChoice).getMaxShootingTime()) {
+			if (bulletMng.getTSBHP(bhpChoice).hasDeceleration()) {
+        		isShooting = false;
+	            shootingTime = 0f;
+			}
+			else {
+				if (!shiftSet) {
+	        		bulletMng.setShiftBullets(true);
+	        		shiftSet = true;
+	        	}
+	    		isShooting = false;
+	            shootingTime = 0f;
+			}
+		}
+	}
+	
+	public void singleStageShooting() {	
+		float deltaTime = Gdx.graphics.getDeltaTime();
+		shootingTime += deltaTime;
+        bulletGenTimer += deltaTime;
+        
+        if (bulletGenTimer >= bulletMng.getBHP(bhpChoice).getBulletGenInterval()) {
+        	bulletGenTimer = 0;
+        	bulletMng.generateEBullets(bhpChoice, spr.getX() + 16, spr.getY() + 16, false);
+            shootingSound.play(0.25f);
+        }
+        
+        if (shootingTime >= bulletMng.getBHP(bhpChoice).getMaxShootingTime()) {
+    		isShooting = false;
+            shootingTime = 0f;
+        }
+	}
+	
+	public void shootingCooldown() {
+		if (multiStage && bulletMng.getTSBHP(bhpChoice).hasDeceleration()) {
+			if (bulletMng.isDecelerationOver()) {
+				if (!shiftSet) {
+					bulletMng.setShiftBullets(true);
+					shiftSet = true;
+				}
+				else {
+					float deltaTime = Gdx.graphics.getDeltaTime();
+	    	        noShootingCooldown += deltaTime;
+	    	        if (noShootingCooldown >= 3.0f /*has to be something else*/) {
+	    	            isShooting = true;  // Enable shooting again
+	    	            noShootingCooldown = 0f;      // Reset idleTime after cooldown
+	    	            changeBHP = true;
+	    	            if (multiStage) {multiStage = false;}
+	    	            else {multiStage = true;}
+	    	        }
+				}
+        	}
+			else {
+				bulletMng.decelerateBullets();
+			}
+		}
+		else {
+			float deltaTime = Gdx.graphics.getDeltaTime();
+	        noShootingCooldown += deltaTime;
+	        if (noShootingCooldown >= 3.0f /*has to be something else*/) {
+	            isShooting = true;  // Enable shooting again
+	            noShootingCooldown = 0f;      // Reset idleTime after cooldown
+	            changeBHP = true;
+	            if (multiStage) {multiStage = false;}
+	            else {multiStage = true;}
+	        }
+		}
+		
+	}
+	
+	public void changePattern() {
+		if (changeBHP) {
+			if (multiStage) {
+				bhpChoice = random.nextInt(bulletMng.getTsBhpArrSize());
+				changeBHP = false;
+				shiftSet = false;
+			}
+			else {
+				bhpChoice = random.nextInt(bulletMng.getBhpArrSize());
+				changeBHP = false;
+			}
+		}
 	}
 	
 	public void lowerBossHealthNSpeed(int health, float speed) {
@@ -256,6 +325,9 @@ public class Boss extends Enemy implements EnemyTools{
 		System.out.println("Default Speed = "+defaultSpeed);
 		System.out.println("Speed = "+speed);
 	}
+	
+	public void setMultiStage(boolean bool) {multiStage = bool;}
+	public boolean getMultiStage() {return multiStage;}
 	
 	public void dispose() {spriteSheet.dispose();}
 }

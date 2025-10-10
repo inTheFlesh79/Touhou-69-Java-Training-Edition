@@ -29,7 +29,7 @@ public class EnemyExplosionRing {
         float progress = timeAlive / duration;
 
         // Scale up from 0.5 to 2.0
-        float scale = 0.5f + 1.5f * progress;
+        float scale = 0.5f + 2.5f * progress;
         spr.setScale(scale);
 
         // Fade out

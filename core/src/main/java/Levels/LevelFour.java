@@ -12,7 +12,7 @@ public class LevelFour extends Level {
 
     private Vector2 spawnPointWave2;
     private Vector2 firstTarXYWave2;
-    private boolean shootsFirstW2 = false;
+    private boolean shootsFirstW2 = true;
 
     private Vector2 spawnPointWave3;
     private Vector2 firstTarXYWave3;
@@ -33,34 +33,56 @@ public class LevelFour extends Level {
     private Vector2 spawnPointWave7;
     private Vector2 firstTarXYWave7;
     private boolean shootsFirstW7 = true;
+    
+    private Vector2 spawnPointWave8;
+    private Vector2 firstTarXYWave8;
+    private boolean shootsFirstW8 = true;
+    
+    private Vector2 spawnPointWave9;
+    private Vector2 firstTarXYWave9;
+    private boolean shootsFirstW9 = true;
+    
+    private Vector2 spawnPointWave10;
+    private Vector2 firstTarXYWave10;
+    private boolean shootsFirstW10 = true;
 
     public LevelFour(float scrWidth, float scrHeight) {
         this.levelId = 3;
         this.bossChoice = 3;
         this.cantFairies = 18;
-        this.cantWaves = 7;
-        this.fairiesByWave = new int [] {2,4,2,4,3,2,1};
+        this.cantWaves = 10;
+        this.fairiesByWave = new int [] {2,1,1,4,4,3,3,1,2,3};
+        
+        // Create Mirror Spawning for this one
+        spawnPointWave1 = new Vector2(230, 1400);
+        firstTarXYWave1 = new Vector2(230, 700);
 
-        spawnPointWave1 = new Vector2(scrWidth - 16, 932);
-        firstTarXYWave1 = new Vector2(1000, 740);
+        spawnPointWave2 = new Vector2(412, 1200);
+        firstTarXYWave2 = new Vector2(412, 600);
 
-        spawnPointWave2 = new Vector2(0, 932);
-        firstTarXYWave2 = new Vector2(150, 890);
+        spawnPointWave3 = new Vector2(860, 1200);
+        firstTarXYWave3 = new Vector2(860, 700);
 
-        spawnPointWave3 = new Vector2((scrWidth / 2f) - 16, 932);
-        firstTarXYWave3 = new Vector2(584, 800);
+        spawnPointWave4 = new Vector2(360, 1200);
+        firstTarXYWave4 = new Vector2(690, 760);
 
-        spawnPointWave4 = new Vector2(scrWidth - 16, 932);
-        firstTarXYWave4 = new Vector2(198, 700);
+        spawnPointWave5 = new Vector2(scrWidth - 16, 1200);
+        firstTarXYWave5 = new Vector2(412, 760);
 
-        spawnPointWave5 = new Vector2(scrWidth - 16, 932);
-        firstTarXYWave5 = new Vector2(780, 600);
+        spawnPointWave6 = new Vector2(-600, 860);
+        firstTarXYWave6 = new Vector2(412, 860);
 
-        spawnPointWave6 = new Vector2(scrWidth - 16, 932);
-        firstTarXYWave6 = new Vector2(430, 790);
-
-        spawnPointWave7 = new Vector2(scrWidth - 16, 932);
-        firstTarXYWave7 = new Vector2(1060, 650);
+        spawnPointWave7 = new Vector2(scrWidth - 16, 1200);
+        firstTarXYWave7 = new Vector2(120, 650);
+        
+        spawnPointWave8 = new Vector2(-600, 1200);
+        firstTarXYWave8 = new Vector2(850, 650);
+        
+        spawnPointWave9 = new Vector2(scrWidth - 16, 1200);
+        firstTarXYWave9 = new Vector2(200, 790);
+        
+        spawnPointWave10 = new Vector2(412, 1200);
+        firstTarXYWave10 = new Vector2(412, 600);
     }
 
     @Override
@@ -80,6 +102,12 @@ public class LevelFour extends Level {
                                           (int)firstTarXYWave6.x, (int)firstTarXYWave6.y);
             case 6: return new FairySpawn((int)spawnPointWave7.x, (int)spawnPointWave7.y,
                                           (int)firstTarXYWave7.x, (int)firstTarXYWave7.y);
+            case 7: return new FairySpawn((int)spawnPointWave8.x, (int)spawnPointWave8.y,
+                    					  (int)firstTarXYWave8.x, (int)firstTarXYWave8.y);
+            case 8: return new FairySpawn((int)spawnPointWave9.x, (int)spawnPointWave9.y,
+                    					  (int)firstTarXYWave9.x, (int)firstTarXYWave9.y);
+            case 9: return new FairySpawn((int)spawnPointWave10.x, (int)spawnPointWave10.y,
+                    					  (int)firstTarXYWave10.x, (int)firstTarXYWave10.y);
             default: return new FairySpawn(600,600,600,600);
         }
     }
@@ -94,7 +122,15 @@ public class LevelFour extends Level {
 			case 4: return shootsFirstW5;
 			case 5: return shootsFirstW6;
 			case 6: return shootsFirstW7;
+			case 7: return shootsFirstW8;
+			case 8: return shootsFirstW9;
+			case 9: return shootsFirstW10;
 			default: return true;
 		}
+	}
+	
+	//IN CONSTRUCTION
+	public float getWaveCooldown(int currentWave) {
+		return 3f;
 	}
 }

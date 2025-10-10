@@ -2,15 +2,15 @@ package BulletHellPatterns;
 
 import Enemies.EnemyBullet;
 
-public class TargetedPattern extends BulletHellPattern implements PlayerTrackingPattern {
+public class FastTargetedPattern extends BulletHellPattern implements PlayerTrackingPattern {
     private float reimuX, reimuY;
 	
-	public TargetedPattern() {
-	 	speed = 300f;
+	public FastTargetedPattern() {
+	 	speed = 750f;
 	    cantBullet = 1;
 	    angle = 0f;
-	    maxShootingTime = 1.75f;
-	    bulletGenInterval = 0.25f;
+	    maxShootingTime = 0.35f;
+	    bulletGenInterval = 0.045f;
 	    currentBullet = 0;
 	}
 	
