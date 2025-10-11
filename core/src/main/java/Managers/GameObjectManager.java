@@ -15,7 +15,7 @@ import Reimu.Reimu;
 
 public class GameObjectManager {
 	private float scrWidth, scrHeight;
-    private int correctas;
+    private int correctas, intentosFallidos;
     
 	// Personajes y Objetos de Personaje
     private FitViewport viewport;
@@ -181,33 +181,76 @@ public class GameObjectManager {
 	}
 	
 	public void applyRewards() {
-		if (correctas == 0) {
-			System.out.println("correctas == 0");
-			return;
+		if (correctas < 5) { //4 correctas
+			System.out.println("correctas == 4");
+			//System.out.println(bossMng.getBoss().getHealthChoice());
+			//System.out.println(bossMng.getBoss().getSpeedChoice());
+			switch (intentosFallidos) {
+				case 0: for (int i = 0; i < 2; i++) {reimu.oneUp();} // 2 lives
+						reimu.addDamage(30);
+						bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						System.out.println("failures = "+intentosFallidos);
+						break;
+				case 1: reimu.oneUp(); // 1 live
+						reimu.addDamage(20);
+						bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						System.out.println("failures = "+intentosFallidos);
+						break;
+				case 2: reimu.addDamage(10);
+						bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						System.out.println("failures = "+intentosFallidos);
+						break;
+				default:reimu.addDamage(5);
+						System.out.println("failures = "+intentosFallidos);
+						break;
+			}
 		}
-		else if (correctas < 3) { // 1 o  2 correctas
-			System.out.println("correctas < 3");
-			reimu.addDamage(20);
-		}
-		else if (correctas < 4) { //3 correctas
-			System.out.println("correctas < 4");
-			reimu.oneUp();
-			reimu.addDamage(20);
-		}
-		else if (correctas < 6) { //4 o 5 correctas
-			System.out.println("correctas < 6");
-			for (int i = 0; i < 2; i++) {reimu.oneUp();}
-			reimu.addDamage(30);
-			bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
-			System.out.println(bossMng.getBoss().getHealthChoice());
-			System.out.println(bossMng.getBoss().getSpeedChoice());
-			System.out.println("correctas post pantalla juego = "+correctas);
+		else if (correctas == 5) {
+			System.out.println("correctas == 5");
+			switch (intentosFallidos) {
+				case 0: for (int i = 0; i < 3; i++) {reimu.oneUp();} // 3 lives
+						reimu.addDamage(40);
+						bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						System.out.println("failures = "+intentosFallidos);
+						break;
+				case 1: for (int i = 0; i < 2; i++) {reimu.oneUp();} // 2 lives
+						reimu.addDamage(30);
+						bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						System.out.println("failures = "+intentosFallidos);
+						break;
+				case 2: reimu.addDamage(15);
+						bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						System.out.println("failures = "+intentosFallidos);
+						break;
+				default:reimu.addDamage(10);
+						System.out.println("failures = "+intentosFallidos);
+						break;
+			}
 		}
 		else {
-			System.out.println("else");
-			for (int i = 0; i < 3; i++) {reimu.oneUp();}
-			reimu.addDamage(50);
-			bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+			System.out.println("correctas == 6");
+			switch (intentosFallidos) {
+				case 0: for (int i = 0; i < 4; i++) {reimu.oneUp();} // 4 lives
+						reimu.addDamage(50);
+						bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						System.out.println("failures = "+intentosFallidos);
+						break;
+				case 1: for (int i = 0; i < 3; i++) {reimu.oneUp();} // 3 lives
+						reimu.addDamage(40);
+						bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						System.out.println("failures = "+intentosFallidos);
+						break;
+				case 2: reimu.oneUp(); // 1 live
+						reimu.addDamage(20);
+						
+						bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						System.out.println("failures = "+intentosFallidos);
+						break;
+				default:reimu.addDamage(15);
+						System.out.println("failures = "+intentosFallidos);
+						break;
+				
+			}
 		}
 	}
 	
@@ -217,6 +260,7 @@ public class GameObjectManager {
     public void setScore(int score) {reimu.setScore(score);}
     public void setFightBoss(boolean b) {this.fightBoss = b;}
     public void setCorrectas(int c) {correctas = c;}
+    public void setIntentosFallidos(int i) {intentosFallidos = i;}
     
     public int getReimuVidas() {return reimu.getLives();}
     public int getScore() {return reimu.getScore();}

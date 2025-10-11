@@ -19,7 +19,7 @@ public class FairyManager extends EnemyManager{
 	private EnemyFactory eFactory = new TouhouEnemyFactory();
 	private int[] spawnSpeedOptions = {1600, 1700};
 	private int[] speedOptions = {450,550};
-	private int[] healthOptions = {160, 200, 250};
+	private int[] healthOptions = {30,35,40};
 	private Random random = new Random();
 	private ArrayList<Fairy> fairies = new ArrayList<>();
     private ArrayList<Fairy> pendingFairies = new ArrayList<>();

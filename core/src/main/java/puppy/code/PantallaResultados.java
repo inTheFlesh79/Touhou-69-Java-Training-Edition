@@ -264,12 +264,22 @@ public class PantallaResultados implements Screen {
                 	// pasar categoria ya que tuvo al menos 4 buenas
                 	Touhou.pasarCategoria();
                 	// resetear contador de intentos
+                	pantallaAnterior.setIntentosFallidos(Touhou.getIntentosRonda());
+                	
                 	Touhou.setIntentosRonda(0);
+                	Touhou.addRondasCompletadas();
+                	
                 	// si es retry+buff no será boss fight
                 	if (!retryAndBuff) {musicMng.playBossMusic();}
                     // volver al juego normal
-                    pantallaAnterior.setCorrectas(correctas);
-                    game.setScreen(pantallaAnterior);
+                	if (Touhou.getRondasCompletadas() == 3) {
+                		pantallaAnterior.setCorrectas(correctas);
+                		game.setScreen(new PantallaCodigo(Touhou.getInstance(), pantallaAnterior));
+                	}
+                	else {
+                		pantallaAnterior.setCorrectas(correctas);
+                		game.setScreen(pantallaAnterior);
+                	}
                 }
                 dispose();
             }
@@ -337,67 +347,210 @@ public class PantallaResultados implements Screen {
 	    intentosFallidos.setPosition(centerX - 140, recompensasY + 100);
 	    stage.addActor(intentosFallidos);
 
-	    if (correctas >= 4) {
-	    	switch (Touhou.getIntentosRonda()) {
-			    case 0:
-		    	case 1: {
-			    	// 3 recompensas: 2 arriba, 1 abajo centrada
-		            float x1 = centerX - rectWidth - 104;
-		            float x2 = centerX + 104;
-		            float yTop = recompensasY - spacingY;
-		            float yBottom = recompensasY - 2 * spacingY - rectHeightRec;
-	
-		            Label r1 = new Label(Touhou.getIntentosRonda() == 1 ? "1 Vida" : "2 Vidas", skin);
-		            r1.setAlignment(com.badlogic.gdx.utils.Align.center);
-		            r1.setWidth(rectWidth);
-		            r1.setPosition(x1, yTop + rectHeightRec / 2 - r1.getHeight() / 2);
-		            stage.addActor(r1);
-	
-		            Label r2 = new Label(Touhou.getIntentosRonda() == 1 ? "Incremento de 20 de Poder" : "Incremento de 30 de Poder", skin);
-		            r2.setAlignment(com.badlogic.gdx.utils.Align.center);
-		            r2.setWidth(rectWidth);
-		            r2.setPosition(x2, yTop + rectHeightRec / 2 - r2.getHeight() / 2);
-		            stage.addActor(r2);
-	
-		            Label r3 = new Label("Reduccion de Dificultad del Jefe Final", skin);
-		            r3.setAlignment(com.badlogic.gdx.utils.Align.center);
-		            r3.setWidth(rectWidth);
-		            r3.setPosition(centerX - rectWidth / 2f, (yBottom + rectHeightRec / 2 - r3.getHeight() / 2)+10);
-		            stage.addActor(r3);
-		            break;
-			    }
-		        case 2: {
-		        	float x1 = centerX - rectWidth - 104;
-		            float x2 = centerX + 104;
-		            float y = recompensasY - spacingY;
-	
-		            Label r1 = new Label("Reduccion de Dificultad del Jefe Final", skin);
-		            r1.setAlignment(com.badlogic.gdx.utils.Align.center);
-		            r1.setWidth(rectWidth);
-		            r1.setPosition(x1, y + rectHeightRec / 2 - r1.getHeight() / 2);
-		            stage.addActor(r1);
-	
-		            Label r2 = new Label("Incremento de 10 de Poder", skin);
-		            r2.setAlignment(com.badlogic.gdx.utils.Align.center);
-		            r2.setWidth(rectWidth);
-		            r2.setPosition(x2, y + rectHeightRec / 2 - r2.getHeight() / 2);
-		            stage.addActor(r2);
-		            break;
-		        }
-		        case 3: {
-		        	// 1 recompensa centrada
-		            float x = centerX - rectWidth / 2f;
-		            float y = recompensasY - spacingY;
-	
-		            Label r = new Label("Incremento de 5 de Poder", skin);
-		            r.setAlignment(com.badlogic.gdx.utils.Align.center);
-		            r.setWidth(rectWidth);
-		            r.setPosition(x, y + rectHeightRec / 2 - r.getHeight() / 2);
-		            stage.addActor(r);
-		            break;
-		        }
-	    	}
+	    if (correctas >= 4 && correctas < 5) {
+	    	cuatroCorrectas(centerX,rectWidth,recompensasY,spacingY, rectHeightRec);
+	    }
+	    else if (correctas == 5) {
+	    	cincoCorrectas(centerX,rectWidth,recompensasY,spacingY, rectHeightRec);
+	    }
+	    else if (correctas == 6){
+	    	seisCorrectas(centerX,rectWidth,recompensasY,spacingY, rectHeightRec);
 	    }
 	    shapeRenderer.end();
 	}
+	
+	public void cuatroCorrectas(float centerX, float rectWidth, float recompensasY, float spacingY, float rectHeightRec) {
+		switch (Touhou.getIntentosRonda()) {
+		    case 0:
+	    	case 1: {
+		    	// 3 recompensas: 2 arriba, 1 abajo centrada
+	            float x1 = centerX - rectWidth - 104;
+	            float x2 = centerX + 104;
+	            float yTop = recompensasY - spacingY;
+	            float yBottom = recompensasY - 2 * spacingY - rectHeightRec;
+	
+	            Label r1 = new Label(Touhou.getIntentosRonda() == 1 ? "1 Vida" : "2 Vidas", skin);
+	            r1.setAlignment(com.badlogic.gdx.utils.Align.center);
+	            r1.setWidth(rectWidth);
+	            r1.setPosition(x1, yTop + rectHeightRec / 2 - r1.getHeight() / 2);
+	            stage.addActor(r1);
+	
+	            Label r2 = new Label(Touhou.getIntentosRonda() == 1 ? "Incremento de 20 de Poder" : "Incremento de 30 de Poder", skin);
+	            r2.setAlignment(com.badlogic.gdx.utils.Align.center);
+	            r2.setWidth(rectWidth);
+	            r2.setPosition(x2, yTop + rectHeightRec / 2 - r2.getHeight() / 2);
+	            stage.addActor(r2);
+	
+	            Label r3 = new Label("Reduccion de Dificultad del Jefe Final", skin);
+	            r3.setAlignment(com.badlogic.gdx.utils.Align.center);
+	            r3.setWidth(rectWidth);
+	            r3.setPosition(centerX - rectWidth / 2f, (yBottom + rectHeightRec / 2 - r3.getHeight() / 2)+10);
+	            stage.addActor(r3);
+	            break;
+		    }
+	        case 2: {
+	        	float x1 = centerX - rectWidth - 104;
+	            float x2 = centerX + 104;
+	            float y = recompensasY - spacingY;
+	
+	            Label r1 = new Label("Reduccion de Dificultad del Jefe Final", skin);
+	            r1.setAlignment(com.badlogic.gdx.utils.Align.center);
+	            r1.setWidth(rectWidth);
+	            r1.setPosition(x1, y + rectHeightRec / 2 - r1.getHeight() / 2);
+	            stage.addActor(r1);
+	
+	            Label r2 = new Label("Incremento de 10 de Poder", skin);
+	            r2.setAlignment(com.badlogic.gdx.utils.Align.center);
+	            r2.setWidth(rectWidth);
+	            r2.setPosition(x2, y + rectHeightRec / 2 - r2.getHeight() / 2);
+	            stage.addActor(r2);
+	            break;
+	        }
+	        case 3: {
+	        	// 1 recompensa centrada
+	            float x = centerX - rectWidth / 2f;
+	            float y = recompensasY - spacingY;
+	
+	            Label r = new Label("Incremento de 5 de Poder", skin);
+	            r.setAlignment(com.badlogic.gdx.utils.Align.center);
+	            r.setWidth(rectWidth);
+	            r.setPosition(x, y + rectHeightRec / 2 - r.getHeight() / 2);
+	            stage.addActor(r);
+	            break;
+	        }
+		}
+	}
+	
+	public void cincoCorrectas(float centerX, float rectWidth, float recompensasY, float spacingY, float rectHeightRec) {
+		switch (Touhou.getIntentosRonda()) {
+		    case 0:
+	    	case 1: {
+		    	// 3 recompensas: 2 arriba, 1 abajo centrada
+	            float x1 = centerX - rectWidth - 104;
+	            float x2 = centerX + 104;
+	            float yTop = recompensasY - spacingY;
+	            float yBottom = recompensasY - 2 * spacingY - rectHeightRec;
+	
+	            Label r1 = new Label(Touhou.getIntentosRonda() == 1 ? "2 Vidas" : "3 Vidas", skin);
+	            r1.setAlignment(com.badlogic.gdx.utils.Align.center);
+	            r1.setWidth(rectWidth);
+	            r1.setPosition(x1, yTop + rectHeightRec / 2 - r1.getHeight() / 2);
+	            stage.addActor(r1);
+	
+	            Label r2 = new Label(Touhou.getIntentosRonda() == 1 ? "Incremento de 30 de Poder" : "Incremento de 40 de Poder", skin);
+	            r2.setAlignment(com.badlogic.gdx.utils.Align.center);
+	            r2.setWidth(rectWidth);
+	            r2.setPosition(x2, yTop + rectHeightRec / 2 - r2.getHeight() / 2);
+	            stage.addActor(r2);
+	
+	            Label r3 = new Label("Reduccion de Dificultad del Jefe Final", skin);
+	            r3.setAlignment(com.badlogic.gdx.utils.Align.center);
+	            r3.setWidth(rectWidth);
+	            r3.setPosition(centerX - rectWidth / 2f, (yBottom + rectHeightRec / 2 - r3.getHeight() / 2)+10);
+	            stage.addActor(r3);
+	            break;
+		    }
+	        case 2: {
+	        	float x1 = centerX - rectWidth - 104;
+	            float x2 = centerX + 104;
+	            float y = recompensasY - spacingY;
+	
+	            Label r1 = new Label("Reduccion de Dificultad del Jefe Final", skin);
+	            r1.setAlignment(com.badlogic.gdx.utils.Align.center);
+	            r1.setWidth(rectWidth);
+	            r1.setPosition(x1, y + rectHeightRec / 2 - r1.getHeight() / 2);
+	            stage.addActor(r1);
+	
+	            Label r2 = new Label("Incremento de 15 de Poder", skin);
+	            r2.setAlignment(com.badlogic.gdx.utils.Align.center);
+	            r2.setWidth(rectWidth);
+	            r2.setPosition(x2, y + rectHeightRec / 2 - r2.getHeight() / 2);
+	            stage.addActor(r2);
+	            break;
+	        }
+	        case 3: {
+	        	// 1 recompensa centrada
+	            float x = centerX - rectWidth / 2f;
+	            float y = recompensasY - spacingY;
+	
+	            Label r = new Label("Incremento de 10 de Poder", skin);
+	            r.setAlignment(com.badlogic.gdx.utils.Align.center);
+	            r.setWidth(rectWidth);
+	            r.setPosition(x, y + rectHeightRec / 2 - r.getHeight() / 2);
+	            stage.addActor(r);
+	            break;
+	        }
+		}
+	}
+	
+	public void seisCorrectas(float centerX, float rectWidth, float recompensasY, float spacingY, float rectHeightRec) {
+		switch (Touhou.getIntentosRonda()) {
+		    case 0:
+	    	case 1: {
+		    	// 3 recompensas: 2 arriba, 1 abajo centrada
+	    		float x1 = centerX - rectWidth - 104;
+	            float x2 = centerX + 104;
+	            float yTop = recompensasY - spacingY;
+	            float yBottom = recompensasY - 2 * spacingY - rectHeightRec;
+	
+	            Label r1 = new Label(Touhou.getIntentosRonda() == 1 ? "3 Vidas" : "4 Vidas", skin);
+	            r1.setAlignment(com.badlogic.gdx.utils.Align.center);
+	            r1.setWidth(rectWidth);
+	            r1.setPosition(x1, yTop + rectHeightRec / 2 - r1.getHeight() / 2);
+	            stage.addActor(r1);
+	
+	            Label r2 = new Label(Touhou.getIntentosRonda() == 1 ? "Incremento de 40 de Poder" : "Incremento de 50 de Poder", skin);
+	            r2.setAlignment(com.badlogic.gdx.utils.Align.center);
+	            r2.setWidth(rectWidth);
+	            r2.setPosition(x2, yTop + rectHeightRec / 2 - r2.getHeight() / 2);
+	            stage.addActor(r2);
+	
+	            Label r3 = new Label("Reduccion de Dificultad del Jefe Final", skin);
+	            r3.setAlignment(com.badlogic.gdx.utils.Align.center);
+	            r3.setWidth(rectWidth);
+	            r3.setPosition(centerX - rectWidth / 2f, (yBottom + rectHeightRec / 2 - r3.getHeight() / 2)+10);
+	            stage.addActor(r3);
+	            break;
+		    }
+	        case 2: {
+	        	float x1 = centerX - rectWidth - 104;
+	            float x2 = centerX + 104;
+	            float yTop = recompensasY - spacingY;
+	            float yBottom = recompensasY - 2 * spacingY - rectHeightRec;
+	
+	            Label r1 = new Label("1 Vida", skin);
+	            r1.setAlignment(com.badlogic.gdx.utils.Align.center);
+	            r1.setWidth(rectWidth);
+	            r1.setPosition(x1, yTop + rectHeightRec / 2 - r1.getHeight() / 2);
+	            stage.addActor(r1);
+	
+	            Label r2 = new Label("Incremento de 20 de Poder", skin);
+	            r2.setAlignment(com.badlogic.gdx.utils.Align.center);
+	            r2.setWidth(rectWidth);
+	            r2.setPosition(x2, yTop + rectHeightRec / 2 - r2.getHeight() / 2);
+	            stage.addActor(r2);
+	
+	            Label r3 = new Label("Reduccion de Dificultad del Jefe Final", skin);
+	            r3.setAlignment(com.badlogic.gdx.utils.Align.center);
+	            r3.setWidth(rectWidth);
+	            r3.setPosition(centerX - rectWidth / 2f, (yBottom + rectHeightRec / 2 - r3.getHeight() / 2)+10);
+	            stage.addActor(r3);
+	            break;
+	        	
+	        }
+	        case 3: {
+	        	// 1 recompensa centrada
+	            float x = centerX - rectWidth / 2f;
+	            float y = recompensasY - spacingY;
+	
+	            Label r = new Label("Incremento de 15 de Poder", skin);
+	            r.setAlignment(com.badlogic.gdx.utils.Align.center);
+	            r.setWidth(rectWidth);
+	            r.setPosition(x, y + rectHeightRec / 2 - r.getHeight() / 2);
+	            stage.addActor(r);
+	            break;
+	        }
+		}
+	}
+	
 }

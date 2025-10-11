@@ -22,6 +22,7 @@ public class Touhou extends Game {
     // para manejar rotacion de categorias e intentos de ronda en TODO el juego
     private static int categoriaActual = 1;
     private static int intentosRonda = 0;
+    private static int rondasCompletadas = 0;
 
     private Touhou() {}
 
@@ -84,12 +85,9 @@ public class Touhou extends Game {
         if (categoriaActual > 3) categoriaActual = 1;
     }
     
-    public static int getIntentosRonda() {
-        return intentosRonda;
-    }
+    public static int getIntentosRonda() {return intentosRonda;}
+    public static void setIntentosRonda(int n) {intentosRonda = n;}
     
-    public static void setIntentosRonda(int n) {
-        intentosRonda = n;
-    }
-
+    public static int getRondasCompletadas() {return rondasCompletadas;}
+    public static void addRondasCompletadas() {rondasCompletadas += 1;}
 }

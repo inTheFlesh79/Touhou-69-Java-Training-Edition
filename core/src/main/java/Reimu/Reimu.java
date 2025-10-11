@@ -21,7 +21,7 @@ import Managers.BulletManager;
 public class Reimu {
     private int lives;
     private int score;
-    private int damage = 10;
+    private int damage;
     private Sprite spr;
     private Circle sprHitbox;
     private Vector2 sprHitboxPos;
@@ -180,7 +180,7 @@ public class Reimu {
     	// Shoot bullet
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
         	if (bulletGenTimer >= bulletGenInterval) {
-	            Bullet bala = new Bullet(spr.getX() + spr.getWidth() / 2 - 5, spr.getY() + spr.getHeight() - 5, 0, 8, txBala);
+	            Bullet bala = new Bullet(spr.getX() + spr.getWidth() / 2 - 5, spr.getY() + spr.getHeight() - 5, 0, 8, txBala, damage);
 	            bulletMng.addReimuBullets(bala);
 	            bulletGenTimer = 0f;
         	}

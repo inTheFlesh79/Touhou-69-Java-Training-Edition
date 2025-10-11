@@ -20,6 +20,7 @@ public class PantallaJuego implements Screen {
     private HUD hud;
     private int nivel;
     private int cantCorrectas = -1;
+    private int cantFallas = -1;
     private float exerciseTimer = 0f;
     private boolean waitingForExercise = false;
     private boolean correctasSet = false;
@@ -48,9 +49,9 @@ public class PantallaJuego implements Screen {
 	    viewport.apply();
 	    batch.setProjectionMatrix(screenCamera.combined);
 	    
-	    // --- GAME AREA (0 → 920) ---
-	    if (correctasSet == false && cantCorrectas > -1) {
+	    if (correctasSet == false && cantCorrectas > -1 && cantFallas > -1) {
 			gameMng.setCorrectas(cantCorrectas);
+			gameMng.setIntentosFallidos(cantFallas);
 			System.out.println("correctas = "+cantCorrectas);
 			correctasSet = true;
 		}
@@ -170,6 +171,7 @@ public class PantallaJuego implements Screen {
 	}
 	
 	public void setCorrectas(int c) {cantCorrectas = c;}
+	public void setIntentosFallidos(int i) {cantFallas = i;}
 	
 	@Override
 	public void show() {}

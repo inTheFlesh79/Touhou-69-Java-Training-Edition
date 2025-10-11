@@ -9,13 +9,14 @@ public class Bullet {
 	private int ySpeed;
 	private boolean destroyed = false;
 	private Sprite spr;
-	private int bulletDamage = 2000;
+	private int bulletDamage;
 	    
-    public Bullet(float x, float y, int xSpeed, int ySpeed, Texture tx) {
+    public Bullet(float x, float y, int xSpeed, int ySpeed, Texture tx, int bulletDamage) {
     	spr = new Sprite(tx);
     	spr.setPosition(x, y);
         this.xSpeed = xSpeed;
         this.ySpeed = ySpeed;
+        this.bulletDamage = bulletDamage;
     }
     
     public void update(float scrWidth, float scrHeight) {
