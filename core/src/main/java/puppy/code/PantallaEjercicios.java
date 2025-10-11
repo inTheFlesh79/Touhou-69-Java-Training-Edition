@@ -41,7 +41,6 @@ public class PantallaEjercicios implements Screen {
     private int indicePregunta = 0;
     private int correctas = 0; // (era para ruteo)
     private PantallaJuego tempPJ;
-    private int intentosFallidos = 0;
     
     private boolean retryAndBuff;
 
@@ -131,7 +130,10 @@ public class PantallaEjercicios implements Screen {
 	                	mostrarPregunta(indicePregunta, game, musicMng, pantallaAnterior);
 	                } else {
 	                    System.out.println("Ronda finalizada. Correctas: " + correctas);
-	                    game.setScreen(new PantallaResultados(preguntasRonda, 1, intentosFallidos, musicMng, tempPJ, retryAndBuff));
+	                    if (correctas < 4) {
+	                    	Touhou.setIntentosRonda(Touhou.getIntentosRonda() + 1);
+	                    }
+	                    game.setScreen(new PantallaResultados(preguntasRonda, 1, musicMng, tempPJ, retryAndBuff));
 	                    dispose();
 	                }
 	            }
