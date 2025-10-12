@@ -36,7 +36,7 @@ public class PantallaResultados implements Screen {
     private MusicManager musicMng;
     private boolean retryAndBuff;
     
-    public PantallaResultados(ArrayList<Pregunta> preguntasRonda, int ronda, MusicManager musicMng, PantallaJuego pantallaAnterior, boolean retryAndBuff) {
+    public PantallaResultados(ArrayList<Pregunta> preguntasRonda, int ronda, int intentosFallidos, MusicManager musicMng, PantallaJuego pantallaAnterior, boolean retryAndBuff) {
         game = Touhou.getInstance();
         this.pantallaAnterior = pantallaAnterior;
         this.batch = game.getBatch();
@@ -263,16 +263,15 @@ public class PantallaResultados implements Screen {
                 } else {
                 	// pasar categoria ya que tuvo al menos 4 buenas
                 	Touhou.pasarCategoria();
-                	
+                	// resetear contador de intentos
                 	pantallaAnterior.setIntentosFallidos(Touhou.getIntentosRonda());
                 	
-                	// resetear contador de intentos ya que tuvo al menos 4 buenas
                 	Touhou.setIntentosRonda(0);
-                	
                 	Touhou.addRondasCompletadas();
                 	
                 	// si es retry+buff no será boss fight
                 	if (!retryAndBuff) {musicMng.playBossMusic();}
+                	else {pantallaAnterior.setRetryBuff(true);}
                     // volver al juego normal
                 	if (Touhou.getRondasCompletadas() == 3) {
                 		pantallaAnterior.setCorrectas(correctas);
@@ -554,5 +553,4 @@ public class PantallaResultados implements Screen {
 	        }
 		}
 	}
-	
 }

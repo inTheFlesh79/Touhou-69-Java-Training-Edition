@@ -184,6 +184,7 @@ public class PantallaRetryBuff implements Screen {
     private void executeOption(int index) {
         if (index == 0) {
         	// Continue (Retry + Buff)
+        	musicMng.resetMusicMng();
         	Screen ss = new PantallaEjercicios(game, musicMng, new PantallaJuego(1, 3, 0, 10), true);
         	ss.resize(1280, 960);
         	game.setScreen(ss);

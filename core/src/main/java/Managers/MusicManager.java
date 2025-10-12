@@ -13,22 +13,23 @@ public class MusicManager {
 	private ArrayList<Music> bossThemes;
 	private ArrayList<Music> fairiesThemes;
 	private Music lastPausedTrack = null;
-
+	private Music mainMenu;
 	
 	private Sound correct;
 	private Sound incorrect;
 	private Sound pause;
 	
-	public MusicManager(int level) {
+	public MusicManager() {
 		bossThemes = new ArrayList<>();
 		fairiesThemes = new ArrayList<>();
-		level -=1;
 		// sonidos correcto e incorrecto
 		correct = Gdx.audio.newSound(Gdx.files.internal("correcto.ogg"));
         incorrect = Gdx.audio.newSound(Gdx.files.internal("incorrecto.ogg"));
         
         // pause menu;
         pause = Gdx.audio.newSound(Gdx.files.internal("pauseSound.ogg"));
+        
+        mainMenu = Gdx.audio.newMusic(Gdx.files.internal("Imperishable Night - 1 - Eiyashou ~ Eastern Night.ogg"));
 		
 		// fairies
 		fairiesThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Imperishable Night - 2 - Genshi no Yoru ~ Ghostly Eyes.ogg"))));
@@ -41,7 +42,10 @@ public class MusicManager {
 		bossThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Imperishable Night - 10 - Koi-iro Master Spark.ogg"))));
 		bossThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Imperishable Night - 14 - Sennen Gensoukyou ~ History of the Moon.ogg"))));
 		bossThemes.add((Music) (Gdx.audio.newMusic(Gdx.files.internal("Imperishable Night - 18 - Tsuki Made Todoke, Fushi no Kemuri.ogg"))));
-		
+	}
+	
+	public void setupManager(int level) {
+		level -=1;
 		stageThemeChoice = level;
 	}
 	
@@ -90,6 +94,16 @@ public class MusicManager {
 		setPlayingBossTheme(true);
 	}
 	
+	public void playMainMenu() {
+		mainMenu.setVolume(0.4f);  // 40% volume
+	    mainMenu.play();
+	    mainMenu.setLooping(true);
+	}
+	
+	public void stopMainMenu() {
+		mainMenu.stop();
+	}
+	
 	public void pauseMusic() {
 	    if (bossThemes.get(stageThemeChoice).isPlaying()) {
 	        lastPausedTrack = bossThemes.get(stageThemeChoice);
@@ -133,6 +147,12 @@ public class MusicManager {
 	
 	public int getSizeFairiesTheme() {return fairiesThemes.size();}
 	public int getSizeBossTheme() {return bossThemes.size();}
+	
+	public void resetMusicMng() {
+		isPlayingFairyTheme = false;
+	    isPlayingBossTheme = false;
+	    lastPausedTrack = null;
+	}
 	
 	public void dispose() {
 		for (int i = 0; i < bossThemes.size(); i++) {

@@ -23,8 +23,10 @@ public class FairyManager extends EnemyManager{
 	private Random random = new Random();
 	private ArrayList<Fairy> fairies = new ArrayList<>();
     private ArrayList<Fairy> pendingFairies = new ArrayList<>();
-    private float spawnDelay = 0.35f; // seconds between spawns
-    private float spawnTimer = 0f;
+    private float fairySpawnDelay = 0.35f; // seconds between spawns
+    private float fairySpawnTimer = 0f;
+    private float waveSpawnDelay;
+    private float waveSpawnTimer;
 	private int spawnIndex = 0;        // total planned this wave
     private float baseSpacing = 12f;    // world units; we scale this from scrWidth in setup
 	private Texture spriteSheet;           // shared
@@ -35,32 +37,37 @@ public class FairyManager extends EnemyManager{
 		spriteRegions = TextureRegion.split(spriteSheet, 32, 32);
 	}
 	
-    // called from GOM	 each frame: fairyMng.fairiesDrawer(batch, scrWidth, scrHeight);
+    // called from GOM each frame: fairyMng.fairiesDrawer(batch, scrWidth, scrHeight);
     public void fairiesDrawer(SpriteBatch batch, float scrWidth, float scrHeight) {
         float delta = Gdx.graphics.getDeltaTime();
-
-        // spawn additional pending fairies according to spawnDelay
-        if (!pendingFairies.isEmpty()) {
-            spawnTimer += delta;
-            while (spawnTimer >= spawnDelay && !pendingFairies.isEmpty()) {
-                spawnNext(scrWidth, scrHeight);
-                spawnTimer = 0f;
-            }
+        if (waveSpawnTimer <= waveSpawnDelay) {
+        	waveSpawnTimer += delta;
         }
-
-        // update + draw active fairies; remove destroyed ones
-        for (int i = 0; i < fairies.size(); i++) {
-            Fairy f = fairies.get(i);
-            if (i == 0) f.setIsShootSoundAllowed(true);
-            f.enemyRoutine(batch, scrWidth, scrHeight);
-            //System.out.println("tp? ="+f.isTargetedPattern());
+        else {
+	        // spawn additional pending fairies according to spawnDelay
+	        if (!pendingFairies.isEmpty()) {
+	            fairySpawnTimer += delta;
+	            while (fairySpawnTimer >= fairySpawnDelay && !pendingFairies.isEmpty()) {
+	                spawnNext(scrWidth, scrHeight);
+	                fairySpawnTimer = 0f;
+	            }
+	        }
+	
+	        // update + draw active fairies; remove destroyed ones
+	        for (int i = 0; i < fairies.size(); i++) {
+	            Fairy f = fairies.get(i);
+	            if (i == 0) f.setIsShootSoundAllowed(true);
+	            f.enemyRoutine(batch, scrWidth, scrHeight);
+	        }
         }
     }
 	
     // --- called from GOM (modified to receive scrWidth/scrHeight) ---
-    public void fairySetup(int cantFairiesCurrentWave, FairySpawn spawn, boolean isShooting, BulletManager bulletMng, float scrWidth, float scrHeight) {
+    public void fairySetup(int cantFairiesCurrentWave, float waveSpawnCooldown, FairySpawn spawn, boolean isShooting, BulletManager bulletMng, float scrWidth, float scrHeight) {
         pendingFairies.clear();
         fairies.clear(); // optional: clear old wave entities if you want to wipe previous wave
+        waveSpawnDelay = waveSpawnCooldown;
+        waveSpawnTimer = 0f;
 
         // scale spacing relative to viewport so spread looks consistent across resolutions
         baseSpacing = Math.max(30f, scrWidth * 0.0125f); // ~1.25% of world width or 8 units min
@@ -87,7 +94,7 @@ public class FairyManager extends EnemyManager{
 
         // reset spawn counters/timers and spawn the first fairy immediately
         spawnIndex = 0;
-        spawnTimer = 0f;
+        fairySpawnTimer = 0f;
 
         // spawn first one immediately so GOM sees non-empty manager
         if (!pendingFairies.isEmpty()) {

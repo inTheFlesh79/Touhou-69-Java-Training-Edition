@@ -19,6 +19,11 @@ public class Level implements LevelFeatures {
 		return true;
 	}
 	
+	// To be Override
+	public float getWaveSpawnCooldown(int currentWave) {
+		return 0;
+	}
+	
 	public int getCantFairies() {return cantFairies;}
 	public int getCantWaves() {return cantWaves;}
 	public int getCantFairiesSpecificWave(int wave) {return fairiesByWave[wave];}

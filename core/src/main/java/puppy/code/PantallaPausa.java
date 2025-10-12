@@ -174,6 +174,8 @@ public class PantallaPausa implements Screen {
     @Override public void resume() {}
     @Override public void dispose() {
         pauseBackground.dispose();
+        pickingSound.dispose();
+        enterSound.dispose();
         fontPause.dispose();
         fontOptionBright.dispose();
         fontOptionDark.dispose();

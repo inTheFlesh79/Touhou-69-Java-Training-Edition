@@ -43,6 +43,7 @@ public class Fairy extends Enemy implements EnemyTools{
 	
 	@Override
 	public void draw(SpriteBatch batch) {
+		float deltaTime = Gdx.graphics.getDeltaTime();
 		animationTime += deltaTime;
         TextureRegion currentFrame = animation.getKeyFrame(animationTime, true); // Loop animation
         spr.setRegion(currentFrame);

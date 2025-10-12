@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import Managers.MusicManager;
+
 public class Touhou extends Game {
     private static Touhou instance;
     private SpriteBatch gameBatch;
@@ -16,6 +18,7 @@ public class Touhou extends Game {
     // global camera + viewport
     private OrthographicCamera camera;
     private FitViewport viewport;
+    private static MusicManager musicMng;
     private static final float VIRTUAL_WIDTH = 1280f;
     private static final float VIRTUAL_HEIGHT = 960f;
     private int highScore;
@@ -52,6 +55,7 @@ public class Touhou extends Game {
         viewport.apply();
         camera.position.set(VIRTUAL_WIDTH / 2f, VIRTUAL_HEIGHT / 2f, 0);
         camera.update();
+        musicMng = new MusicManager();
         
         Screen mainMenu = new PantallaMenu();
         this.setScreen(mainMenu);
@@ -72,6 +76,7 @@ public class Touhou extends Game {
     public BitmapFont getFont() {return font;}
     public FitViewport getViewport() { return viewport; }
     public OrthographicCamera getCamera() { return camera; }
+    public MusicManager getMusicMng() {return musicMng;}
     public int getHighScore() {return highScore;}
     
     public void setHighScore(int highScore) {this.highScore = highScore;}

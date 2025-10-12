@@ -81,7 +81,6 @@ public class PantallaEjercicios implements Screen {
         preguntasRonda = questions.getPreguntasPorCategoria(categoria);
         // mostrar preguntas
         mostrarPregunta(indicePregunta, game, musicMng, pantallaAnterior);
-        
 	}
 	
 	private void mostrarPregunta(int index, Touhou game, MusicManager musicMng, Screen pantallaAnterior) {
@@ -133,7 +132,7 @@ public class PantallaEjercicios implements Screen {
 	                    if (correctas < 4) {
 	                    	Touhou.setIntentosRonda(Touhou.getIntentosRonda() + 1);
 	                    }
-	                    game.setScreen(new PantallaResultados(preguntasRonda, 1, musicMng, tempPJ, retryAndBuff));
+	                    game.setScreen(new PantallaResultados(preguntasRonda, 1, Touhou.getIntentosRonda(), musicMng, tempPJ, retryAndBuff));
 	                    dispose();
 	                }
 	            }

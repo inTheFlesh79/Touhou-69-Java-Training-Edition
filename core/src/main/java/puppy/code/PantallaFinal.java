@@ -32,6 +32,7 @@ public class PantallaFinal implements Screen {
 
 		if (Gdx.input.isTouched() || Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
 			Screen ss = new PantallaJuego(1,3,0,6);
+			Touhou.getInstance().getMusicMng().resetMusicMng();
 			ss.resize(1200, 800);
 			game.setScreen(ss);
 			dispose();

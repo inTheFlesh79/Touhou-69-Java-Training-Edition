@@ -8,18 +8,22 @@ public class LevelOne extends Level {
     private Vector2 spawnPointWave1;
     private Vector2 firstTarXYWave1;
     private boolean shootsFirstW1 = true;
+    private float waveSpawnCooldown1 = 3f;
 
     private Vector2 spawnPointWave2;
     private Vector2 firstTarXYWave2;
     private boolean shootsFirstW2 = false;
+    private float waveSpawnCooldown2 = 0f;
 
     private Vector2 spawnPointWave3;
     private Vector2 firstTarXYWave3;
     private boolean shootsFirstW3 = false;
+    private float waveSpawnCooldown3 = 1.5f;
 
     private Vector2 spawnPointWave4;
     private Vector2 firstTarXYWave4;
     private boolean shootsFirstW4 = false;
+    private float waveSpawnCooldown4 = 1f;
 
     public LevelOne(float scrWidth, float scrHeight) {
         this.levelId = 0;
@@ -78,6 +82,17 @@ public class LevelOne extends Level {
 			case 2: return shootsFirstW3;
 			case 3: return shootsFirstW4;
 			default: return true;
+		}
+	}
+	
+	@Override
+	public float getWaveSpawnCooldown(int currentWave) {
+		switch (currentWave) {
+			case 0: return waveSpawnCooldown1;
+			case 1: return waveSpawnCooldown2;
+			case 2: return waveSpawnCooldown3;
+			case 3: return waveSpawnCooldown4;
+			default: return 0f;
 		}
 	}
 }

@@ -35,10 +35,11 @@ public class BossManager extends EnemyManager{
 	public int getCantHealthOptions() {return healthOptions.length;}
 	public Boss getBoss() {return boss;}
 	
-	public void lowerBossHealthNSpeed(int hChoice, int sChoice) {
+	public boolean lowerBossHealthNSpeed(int hChoice, int sChoice) {
 		int health  = healthOptions[hChoice];
 		float speed = (float) speedOptions[sChoice];
 		boss.lowerBossHealthNSpeed(health, speed);
+		return false;
 	}
 	
 	public void destroyBoss() {boss = null;}

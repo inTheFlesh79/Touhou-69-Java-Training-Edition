@@ -18,13 +18,12 @@ public class PantallaJuego implements Screen {
     private FitViewport viewport;
     private SpriteBatch batch;
     private HUD hud;
+    private boolean difficultyChange = false;
     private int nivel;
     private int cantCorrectas = -1;
     private int cantFallas = -1;
     private float exerciseTimer = 0f;
-    private boolean waitingForExercise = false;
-    private boolean correctasSet = false;
-    private boolean isPaused = false;
+    private boolean waitingForExercise = false, correctasSet = false, isPaused = false, retryBuff = false;
     // Managers
     private GameObjectManager gameMng;
     private MusicManager musicMng;
@@ -38,7 +37,8 @@ public class PantallaJuego implements Screen {
 	    hud = new HUD(batch, viewport);
 	    gameMng = new GameObjectManager(batch, viewport, nivel, vidas, score, power);
 	    sceneMng = new SceneManager(batch, nivel, viewport.getWorldWidth() - 360, viewport.getWorldHeight());
-	    musicMng = new MusicManager(nivel);
+	    musicMng = Touhou.getInstance().getMusicMng();
+	    musicMng.setupManager(nivel);
 	    this.nivel = nivel;
 	    gameMng.setScore(score);
 	}
@@ -55,9 +55,12 @@ public class PantallaJuego implements Screen {
 			System.out.println("correctas = "+cantCorrectas);
 			correctasSet = true;
 		}
+	    
 	    batch.begin();
 	    sceneMng.drawBg(viewport.getWorldWidth() - 360, viewport.getWorldHeight());
 	    gameMng.update();
+	    if (retryBuff) {gameMng.applyRewards(); retryBuff = false;}
+	    
 	    cooldownBeforeExercise(delta);//Does a cooldown before exercising of 5 seconds
 	    musicSetup();
 		
@@ -67,7 +70,7 @@ public class PantallaJuego implements Screen {
 			musicMng.stopFairiesMusic();
 			if (gameMng.getScore() > game.getHighScore())
 				game.setHighScore(gameMng.getScore());
-			Screen ss = new PantallaGameOver(musicMng);
+			Screen ss = new PantallaGameOver();
 			ss.resize(1280, 960);
 			game.setScreen(ss);
 			gameMng.disposeGOM();
@@ -75,6 +78,7 @@ public class PantallaJuego implements Screen {
 		}
 		
 		batch.end();
+		if (!gameMng.getHardMode() && !difficultyChange) {hud.setHardMode(false); difficultyChange = true;}
 		hud.drawHUD(gameMng.getReimuVidas(), nivel, gameMng.getScore(), gameMng.getReimuDamage());
 
 		//checkear si debemos pasar al siguiente nivel
@@ -143,14 +147,19 @@ public class PantallaJuego implements Screen {
 			gameMng.setExerciseDone(true);
 		}
 	}
-	
+
 	public void musicSetup() {
-		if (!gameMng.areWavesOver() && !musicMng.isPlayingFairyTheme()) {
-			musicMng.pickFairiesLvlMusic();
-		}
-		else if (!gameMng.AreFairiesAlive() && gameMng.areWavesOver() && !musicMng.isPlayingBossTheme() && !waitingForExercise){
-			musicMng.pickBossLvlMusic();
-		}
+	    boolean fairyCondition = !gameMng.areWavesOver() && !musicMng.isPlayingFairyTheme();
+	    boolean bossCondition = !gameMng.AreFairiesAlive() && gameMng.areWavesOver() && 
+	                            !musicMng.isPlayingBossTheme() && !waitingForExercise;
+	    if (fairyCondition) {
+	        System.out.println("→ MusicSetup: fairy music");
+	        musicMng.pickFairiesLvlMusic();
+	    } 
+	    else if (bossCondition) {
+	        System.out.println("→ MusicSetup: boss music");
+	        musicMng.pickBossLvlMusic();
+	    }
 	}
 	
 	public void cooldownBeforeExercise(float delta) {
@@ -158,28 +167,21 @@ public class PantallaJuego implements Screen {
 		    waitingForExercise = true;
 		    exerciseTimer = 0f; // reset timer
 		}
-		
 		if (waitingForExercise) {exerciseTimer += delta;}
 	}
 	
-	public void setPaused(boolean paused) {
-	    this.isPaused = paused;
-	}
-
-	public MusicManager getMusicManager() {
-	    return musicMng;
-	}
-	
+	public void setPaused(boolean paused) { this.isPaused = paused;	}
 	public void setCorrectas(int c) {cantCorrectas = c;}
 	public void setIntentosFallidos(int i) {cantFallas = i;}
+	public void setRetryBuff(boolean bool) {retryBuff = bool;}
+
+	public MusicManager getMusicManager() {return musicMng;}
 	
 	@Override
 	public void show() {}
 
 	@Override
-	public void resize(int width, int height) {
-	    viewport.update(width, height, true);
-	}
+	public void resize(int width, int height) {viewport.update(width, height, true);}
 
 	@Override
 	public void pause() {}

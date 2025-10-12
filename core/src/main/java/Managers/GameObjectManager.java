@@ -37,6 +37,7 @@ public class GameObjectManager {
 	private boolean exerciseDone = false;
 	private boolean fightBoss = false;
 	private boolean checkRewards = false;
+	private boolean hardMode = true;
 	
 	public GameObjectManager(SpriteBatch batch, FitViewport viewport, int nivel, int vidas, int score, int power) {
 		this.batch = batch;
@@ -91,7 +92,8 @@ public class GameObjectManager {
 	public void gameSetup() {
 		levelMng.whatLevelIsIt();
 		System.out.println("Current Wave: "+levelMng.getCurrentLvlWave());
-	    fairyMng.fairySetup(levelMng.getFairiesCurrentWave(), levelMng.getFairyStartingPoint(), levelMng.getFairyIsShooting(), bulletMng, scrWidth, scrHeight);
+	    fairyMng.fairySetup(levelMng.getFairiesCurrentWave(), levelMng.getWaveSpawnCooldown(), levelMng.getFairyStartingPoint(),
+	    					levelMng.getFairyIsShooting(), bulletMng, scrWidth, scrHeight);
 	    levelMng.changeCurrentWave();
 	    levelMng.areWavesOver();
 	    bossMng.createBoss(eFactory.craftBoss(levelMng.getLvlId(), scrWidth-360, scrHeight));
@@ -158,7 +160,8 @@ public class GameObjectManager {
 		}
 		else if (fairyMng.isFairiesEmpty() && !levelMng.areWavesOver()) {
 			System.out.println("Current Wave: "+levelMng.getCurrentLvlWave());
-			fairyMng.fairySetup(levelMng.getFairiesCurrentWave(), levelMng.getFairyStartingPoint(), levelMng.getFairyIsShooting(),bulletMng, scrWidth, scrHeight);
+			fairyMng.fairySetup(levelMng.getFairiesCurrentWave(), levelMng.getWaveSpawnCooldown(), levelMng.getFairyStartingPoint(),
+								levelMng.getFairyIsShooting(), bulletMng, scrWidth, scrHeight);
 			levelMng.changeCurrentWave();
 		    levelMng.areWavesOver();
 		    System.out.println("Fairies = "+fairyMng.getFairiesSize());
@@ -181,23 +184,21 @@ public class GameObjectManager {
 	}
 	
 	public void applyRewards() {
-		if (correctas < 5) { //4 correctas
+		if (correctas < 5) {
 			System.out.println("correctas == 4");
-			//System.out.println(bossMng.getBoss().getHealthChoice());
-			//System.out.println(bossMng.getBoss().getSpeedChoice());
 			switch (intentosFallidos) {
 				case 0: for (int i = 0; i < 2; i++) {reimu.oneUp();} // 2 lives
 						reimu.addDamage(30);
-						bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						hardMode = bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
 						System.out.println("failures = "+intentosFallidos);
 						break;
 				case 1: reimu.oneUp(); // 1 live
 						reimu.addDamage(20);
-						bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						hardMode = bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
 						System.out.println("failures = "+intentosFallidos);
 						break;
 				case 2: reimu.addDamage(10);
-						bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						hardMode = bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
 						System.out.println("failures = "+intentosFallidos);
 						break;
 				default:reimu.addDamage(5);
@@ -210,16 +211,16 @@ public class GameObjectManager {
 			switch (intentosFallidos) {
 				case 0: for (int i = 0; i < 3; i++) {reimu.oneUp();} // 3 lives
 						reimu.addDamage(40);
-						bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						hardMode = bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
 						System.out.println("failures = "+intentosFallidos);
 						break;
 				case 1: for (int i = 0; i < 2; i++) {reimu.oneUp();} // 2 lives
 						reimu.addDamage(30);
-						bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						hardMode = bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
 						System.out.println("failures = "+intentosFallidos);
 						break;
 				case 2: reimu.addDamage(15);
-						bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						hardMode = bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
 						System.out.println("failures = "+intentosFallidos);
 						break;
 				default:reimu.addDamage(10);
@@ -232,24 +233,22 @@ public class GameObjectManager {
 			switch (intentosFallidos) {
 				case 0: for (int i = 0; i < 4; i++) {reimu.oneUp();} // 4 lives
 						reimu.addDamage(50);
-						bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						hardMode = bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
 						System.out.println("failures = "+intentosFallidos);
 						break;
 				case 1: for (int i = 0; i < 3; i++) {reimu.oneUp();} // 3 lives
 						reimu.addDamage(40);
-						bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						hardMode = bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
 						System.out.println("failures = "+intentosFallidos);
 						break;
 				case 2: reimu.oneUp(); // 1 live
 						reimu.addDamage(20);
-						
-						bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						hardMode = bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
 						System.out.println("failures = "+intentosFallidos);
 						break;
 				default:reimu.addDamage(15);
 						System.out.println("failures = "+intentosFallidos);
 						break;
-				
 			}
 		}
 	}
@@ -265,6 +264,7 @@ public class GameObjectManager {
     public int getReimuVidas() {return reimu.getLives();}
     public int getScore() {return reimu.getScore();}
     public int getReimuDamage() {return reimu.getDamageBala();}
+    public boolean getHardMode() {return hardMode;}
     public boolean isReimuDead() {return reimu.isDead();}
     
     public boolean areWeFightingBoss() {return fightBoss;}
@@ -277,8 +277,6 @@ public class GameObjectManager {
     public void setExerciseDone(boolean s) {this.exerciseDone = s;}
     public boolean getExerciseState() { return exerciseDone; }
     
-    public void disposeGOM() {
-    	bulletMng.dispose();
-    	fairyMng.dispose();
-    }
+    public void disposeGOM() {bulletMng.dispose();
+    						  fairyMng.dispose();}
 }

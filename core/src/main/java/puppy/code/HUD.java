@@ -110,7 +110,7 @@ public class HUD {
         y -= 35;
 
         // Draw "Difficulty: " with main font
-        String diffLabel = "Difficulty: ";
+        String diffLabel = "Boss Difficulty: ";
         font.draw(gameBatch, diffLabel, textX, y);
 
         // Draw actual difficulty ("Normal" or "Hard") with the correct font

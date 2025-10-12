@@ -9,42 +9,52 @@ public class LevelFour extends Level {
     private Vector2 spawnPointWave1;
     private Vector2 firstTarXYWave1;
     private boolean shootsFirstW1 = true;
+    private float waveSpawnCooldown1 = 3f;
 
     private Vector2 spawnPointWave2;
     private Vector2 firstTarXYWave2;
     private boolean shootsFirstW2 = true;
+    private float waveSpawnCooldown2 = 0f;
 
     private Vector2 spawnPointWave3;
     private Vector2 firstTarXYWave3;
     private boolean shootsFirstW3 = true;
+    private float waveSpawnCooldown3 = 0.25f;
 
     private Vector2 spawnPointWave4;
     private Vector2 firstTarXYWave4;
     private boolean shootsFirstW4 = false;
+    private float waveSpawnCooldown4 = 1.5f;
 
     private Vector2 spawnPointWave5;
     private Vector2 firstTarXYWave5;
     private boolean shootsFirstW5 = false;
+    private float waveSpawnCooldown5 = 1f;
 
     private Vector2 spawnPointWave6;
     private Vector2 firstTarXYWave6;
     private boolean shootsFirstW6 = true;
+    private float waveSpawnCooldown6 = 0f;
 
     private Vector2 spawnPointWave7;
     private Vector2 firstTarXYWave7;
     private boolean shootsFirstW7 = true;
+    private float waveSpawnCooldown7 = 0.25f;
     
     private Vector2 spawnPointWave8;
     private Vector2 firstTarXYWave8;
     private boolean shootsFirstW8 = true;
+    private float waveSpawnCooldown8 = 1f;
     
     private Vector2 spawnPointWave9;
     private Vector2 firstTarXYWave9;
     private boolean shootsFirstW9 = true;
+    private float waveSpawnCooldown9 = 0.5f;
     
     private Vector2 spawnPointWave10;
     private Vector2 firstTarXYWave10;
     private boolean shootsFirstW10 = true;
+    private float waveSpawnCooldown10 = 1.5f;
 
     public LevelFour(float scrWidth, float scrHeight) {
         this.levelId = 3;
@@ -129,8 +139,20 @@ public class LevelFour extends Level {
 		}
 	}
 	
-	//IN CONSTRUCTION
-	public float getWaveCooldown(int currentWave) {
-		return 3f;
+	@Override
+	public float getWaveSpawnCooldown(int currentWave) {
+		switch (currentWave) {
+			case 0: return waveSpawnCooldown1;
+			case 1: return waveSpawnCooldown2;
+			case 2: return waveSpawnCooldown3;
+			case 3: return waveSpawnCooldown4;
+			case 4: return waveSpawnCooldown5;
+			case 5: return waveSpawnCooldown6;
+			case 6: return waveSpawnCooldown7;
+			case 7: return waveSpawnCooldown8;
+			case 8: return waveSpawnCooldown9;
+			case 9: return waveSpawnCooldown10;
+			default: return 0f;
+		}
 	}
 }

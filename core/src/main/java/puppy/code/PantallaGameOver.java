@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -19,62 +18,53 @@ import Managers.MusicManager;
 
 public class PantallaGameOver implements Screen {
     private Touhou game;
-    private OrthographicCamera camera;
     private FitViewport viewport;
     private SpriteBatch batch;
     private Texture background;
     private Sound pickingSound;
     private Sound enterSound;
 
-    // Fonts
     private BitmapFont fontTitle;
     private BitmapFont fontOptionBright;
     private BitmapFont fontOptionDark;
 
-    // Menu items
-    private String[] menuItems = {"Retry", "Retry + Buff", "Quit"};
+    private String[] menuItems = {"Retry", "Retry + Buff", "Main Menu", "Quit"};
     private int selectedIndex = 0;
 
     private GlyphLayout[] optionLayouts;
 
-    // Timer vars
     private boolean optionActivated = false;
     private float timer = 0f;
-    private int pendingOption = -1; // which option to execute after timer
+    private int pendingOption = -1;
     
     private MusicManager musicMng;
 
-    public PantallaGameOver(MusicManager musicMng) {
+    public PantallaGameOver() {
         game = Touhou.getInstance();
         batch = game.getBatch();
-        camera = Touhou.getInstance().getCamera();
         viewport = Touhou.getInstance().getViewport();
-        this.musicMng = musicMng;
+        this.musicMng = Touhou.getInstance().getMusicMng();
 
         background = new Texture(Gdx.files.internal("gameOverBg.png"));
         pickingSound = Gdx.audio.newSound(Gdx.files.internal("pickOption.ogg"));
         enterSound = Gdx.audio.newSound(Gdx.files.internal("enterSound.ogg"));
 
-        // Load fonts
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("thFont.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.borderColor = Color.RED;
         parameter.borderWidth = 1;
 
-        // Title font
         parameter.size = 36;
         fontTitle = generator.generateFont(parameter);
         fontTitle.getData().setScale(2f);
         fontTitle.getRegion().getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
-        // Option bright
         parameter.size = 18;
         parameter.color = Color.WHITE;
         fontOptionBright = generator.generateFont(parameter);
         fontOptionBright.getData().setScale(2f);
         fontOptionBright.getRegion().getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
-        // Option dark
         parameter.size = 18;
         parameter.color = new Color(0.6f, 0.6f, 0.6f, 1f);
         fontOptionDark = generator.generateFont(parameter);
@@ -92,13 +82,11 @@ public class PantallaGameOver implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0, 0, 0.1f, 1);
-
         viewport.apply();
-        batch.setProjectionMatrix(camera.combined);
+        batch.setProjectionMatrix(game.getCamera().combined);
 
-        if (!optionActivated) {
-            handleInput();
-        } else {
+        if (!optionActivated) handleInput();
+        else {
             timer += delta;
             if (timer >= 1f && pendingOption != -1) {
                 executeOption(pendingOption);
@@ -107,17 +95,13 @@ public class PantallaGameOver implements Screen {
         }
 
         batch.begin();
-
-        // Draw background filling viewport
         batch.draw(background, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
 
-        // Draw "Game Over" title
         GlyphLayout titleLayout = new GlyphLayout(fontTitle, "GAME OVER");
         float titleX = (viewport.getWorldWidth() - titleLayout.width) / 2f;
         float titleY = viewport.getWorldHeight() * 0.75f;
         fontTitle.draw(batch, titleLayout, titleX, titleY);
 
-        // Draw menu options
         for (int i = 0; i < menuItems.length; i++) {
             BitmapFont font = (i == selectedIndex) ? fontOptionBright : fontOptionDark;
             optionLayouts[i].setText(font, menuItems[i]);
@@ -130,7 +114,6 @@ public class PantallaGameOver implements Screen {
     }
 
     private void handleInput() {
-        // Keyboard navigation
         if (Gdx.input.isKeyJustPressed(Input.Keys.W) || Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             pickingSound.play(0.7f);
             selectedIndex = (selectedIndex - 1 + menuItems.length) % menuItems.length;
@@ -139,11 +122,8 @@ public class PantallaGameOver implements Screen {
             pickingSound.play(0.7f);
             selectedIndex = (selectedIndex + 1) % menuItems.length;
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            queueOption(selectedIndex);
-        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) queueOption(selectedIndex);
 
-        // Mouse hover & click
         Vector3 mouse = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
         viewport.unproject(mouse);
 
@@ -157,9 +137,7 @@ public class PantallaGameOver implements Screen {
                 if (selectedIndex != i) pickingSound.play(0.7f);
                 selectedIndex = i;
 
-                if (Gdx.input.justTouched()) {
-                    queueOption(i);
-                }
+                if (Gdx.input.justTouched()) queueOption(i);
             }
         }
     }
@@ -172,21 +150,31 @@ public class PantallaGameOver implements Screen {
     }
 
     private void executeOption(int index) {
-        if (index == 0) {
-            // Retry
-            Screen ss = new PantallaJuego(1, 3, 0, 10);
-            ss.resize(1280, 960);
-            game.setScreen(ss);
-            dispose();
-        } else if (index == 1) {
-        	// Retry + Buff
-        	Screen ss = new PantallaRetryBuff(musicMng);
-        	ss.resize(1280, 960);
-        	game.setScreen(ss);
-            dispose();
-        } else if (index == 2) {
-            // Quit
-            Gdx.app.exit();
+        switch (index) {
+            case 0: // Retry
+                Screen retry = new PantallaJuego(1, 1, 0, 10000);
+                musicMng.resetMusicMng();
+                retry.resize(1280, 960);
+                game.setScreen(retry);
+                dispose();
+                break;
+            case 1: // Retry + Buff
+                Screen buff = new PantallaRetryBuff(musicMng);
+                musicMng.resetMusicMng();
+                buff.resize(1280, 960);
+                game.setScreen(buff);
+                dispose();
+                break;
+            case 2: // Main Menu
+                Screen menu = new PantallaMenu();
+                musicMng.resetMusicMng();
+                menu.resize(1280, 960);
+                game.setScreen(menu);
+                dispose();
+                break;
+            case 3: // Quit
+                Gdx.app.exit();
+                break;
         }
     }
 
@@ -199,6 +187,7 @@ public class PantallaGameOver implements Screen {
     @Override public void hide() {}
     @Override public void pause() {}
     @Override public void resume() {}
+
     @Override
     public void dispose() {
         background.dispose();
