@@ -27,7 +27,7 @@ public class Boss extends Enemy implements EnemyTools{
     	spr.setPosition(initialPosX, initialPosY);
 		//spr.setBounds(initialPosX, initialPosY, 48, 48);
 		
-		maxIdleTime = 5.0f;
+		maxIdleTime = 15.0f;
 		
 		// Use proportional values based on viewport
 	    targetX = scrW / 2f - spr.getWidth() / 2f;
@@ -269,6 +269,7 @@ public class Boss extends Enemy implements EnemyTools{
 	
 	public void shootingCooldown() {
 		if (multiStage && bulletMng.getTSBHP(bhpChoice).hasDeceleration()) {
+			float decelRate = bulletMng.getTSBHP(bhpChoice).getDecelerationRate(); // gets called multiple times but whatever
 			if (bulletMng.isDecelerationOver()) {
 				if (!shiftSet) {
 					bulletMng.setShiftBullets(true);
@@ -287,7 +288,7 @@ public class Boss extends Enemy implements EnemyTools{
 				}
         	}
 			else {
-				bulletMng.decelerateBullets();
+				bulletMng.decelerateBullets(decelRate);
 			}
 		}
 		else {

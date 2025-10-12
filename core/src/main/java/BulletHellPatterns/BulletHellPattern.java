@@ -10,6 +10,7 @@ public abstract class BulletHellPattern {
 	protected float maxShootingTime;
 	protected float bulletGenInterval;
 	protected boolean isDecelerated;
+	protected float decelerationRate;
     
     public abstract void generateBulletInPattern(float x, float y, EnemyBullet eb);
     
@@ -20,5 +21,6 @@ public abstract class BulletHellPattern {
     public float getSpeed() {return this.speed;}
     public float getMaxShootingTime() {return this.maxShootingTime;}
     public float getBulletGenInterval() {return this.bulletGenInterval;}
+    public float getDecelerationRate() {return this.decelerationRate;}
     public boolean hasDeceleration() {return isDecelerated;}
 }

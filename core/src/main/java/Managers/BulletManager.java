@@ -33,7 +33,9 @@ public class BulletManager {
       	bhpTypes.add(new TargetedPattern());
       	bhpTypes.add(new FastTargetedPattern());
       	
-      	tsBhpTypes.add(new TargetedCirclePattern());
+      	//tsBhpTypes.add(new TargetedCirclePattern());
+      	//tsBhpTypes.add(new RandomHexaSpiralPattern());
+      	tsBhpTypes.add(new RotatingForkPattern());
 	}
 	
 	public void enemyBulletsDrawer(SpriteBatch batch, float scrWidth, float scrHeight) {
@@ -143,12 +145,12 @@ public class BulletManager {
 			if (shiftBullets) {shiftBullets();}
 	}
 	
-	public void decelerateBullets() {
+	public void decelerateBullets(float decelRate) {
 	    final float dt = Gdx.graphics.getDeltaTime();
 	    if (dt <= 0f) return;
 
 	    // Tunable: how many units of speed are removed per second
-	    final float DECEL_RATE = 60f; // tweak to taste
+	    final float DECEL_RATE = decelRate; // tweak to taste
 	    final float STOP_THRESHOLD = 1f; // below this speed we consider it stopped
 
 	    for (int i = 0; i < enemyBullets.size(); i++) {
