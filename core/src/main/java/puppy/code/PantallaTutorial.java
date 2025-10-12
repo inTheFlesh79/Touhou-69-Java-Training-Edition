@@ -49,8 +49,8 @@ public class PantallaTutorial implements Screen {
 
 		if (Gdx.input.isTouched() || Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
 			Screen ss = new PantallaJuego(1,2,0,1000);
-			game.setScreen(ss);
-			ss.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			ss.resize(1280, 960);
+			game.setScreen(new PantallaHint(game, ss));
 			dispose();
 		}
 	}

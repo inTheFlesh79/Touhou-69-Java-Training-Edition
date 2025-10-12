@@ -218,8 +218,8 @@ public class PantallaMenu implements Screen {
         switch (index) {
 	            // Play -> create PantallaJuego and set screen (same params as your GameOver example)
         	case 0: ss = new PantallaJuego(1, 1, 0, 10);
-	                ss.resize(1280, 960);
-	                game.setScreen(ss);
+        			ss.resize(1280, 960);
+	                game.setScreen(new PantallaHint(game, ss));
 	                musicMng.stopMainMenu();
 	                musicMng.resetMusicMng();
 	                dispose();

@@ -155,7 +155,7 @@ public class PantallaGameOver implements Screen {
                 Screen retry = new PantallaJuego(1, 1, 0, 10000);
                 musicMng.resetMusicMng();
                 retry.resize(1280, 960);
-                game.setScreen(retry);
+                game.setScreen(new PantallaHint(game, retry));
                 dispose();
                 break;
             case 1: // Retry + Buff

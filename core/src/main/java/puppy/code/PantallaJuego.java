@@ -123,12 +123,13 @@ public class PantallaJuego implements Screen {
 			// ANTES DE SALIR CAMBIAR ESTADO DE CONTROL PARA NO REPETIR PANTALLA
 			gameMng.setExerciseDone(true);
 		}
-		// DEV
+		/* DEV
 		if (Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
 			musicMng.stopFairiesMusic();
 			musicMng.stopBossMusic();
-			game.setScreen(new PantallaHint(game, this));
-		}
+			Screen pantallaDestino = new PantallaTutorial();
+			game.setScreen(new PantallaHint(game, pantallaDestino));
+		} */
 		// DEV
 		if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
 			musicMng.stopFairiesMusic();

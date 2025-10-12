@@ -19,7 +19,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 public class PantallaHint implements Screen {
     private Touhou game;
     private SpriteBatch batch;
-    private PantallaJuego pantallaAnterior;
     private OrthographicCamera camera;
     private FitViewport viewport;
     private Texture hintBackground;
@@ -29,11 +28,13 @@ public class PantallaHint implements Screen {
 
     private String randomHint;
     private float elapsedTime = 0f; // contador de tiempo
+    
+    private Screen pantallaDestino;
 
-    public PantallaHint(Touhou game, PantallaJuego pantallaAnterior) {
+    public PantallaHint(Touhou game, Screen pantallaDestino) {
         this.game = Touhou.getInstance();
         this.batch = game.getBatch();
-        this.pantallaAnterior = pantallaAnterior;
+        this.pantallaDestino = pantallaDestino;
 
         camera = Touhou.getInstance().getCamera();
         viewport = Touhou.getInstance().getViewport();
@@ -120,7 +121,9 @@ public class PantallaHint implements Screen {
     	elapsedTime += delta;
         if (elapsedTime >= 3f) {
             // aqui se define a que pantalla se vuelve
-        	game.setScreen(pantallaAnterior);
+            pantallaDestino.resize(1280, 960);
+            game.setScreen(pantallaDestino);
+            dispose();
         }
     }
 
