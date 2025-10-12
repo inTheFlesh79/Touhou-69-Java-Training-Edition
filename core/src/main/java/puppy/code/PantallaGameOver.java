@@ -162,7 +162,7 @@ public class PantallaGameOver implements Screen {
                 Screen buff = new PantallaRetryBuff(musicMng);
                 musicMng.resetMusicMng();
                 buff.resize(1280, 960);
-                game.setScreen(buff);
+                game.setScreen(new PantallaHint(game, buff));
                 dispose();
                 break;
             case 2: // Main Menu
