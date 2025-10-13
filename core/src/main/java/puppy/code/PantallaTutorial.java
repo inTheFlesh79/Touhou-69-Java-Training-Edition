@@ -3,79 +3,152 @@ package puppy.code;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 public class PantallaTutorial implements Screen {
-	private Touhou game;
-	private OrthographicCamera camera;
-	private final FitViewport screenViewport;
-	private Texture arrows;
-	private Texture shift;
-	private Texture space;
-	
-	public PantallaTutorial() {
-		game = Touhou.getInstance();
-		arrows = new Texture(Gdx.files.internal("Arrow_Keys.png") );
-		shift = new Texture (Gdx.files.internal("Shift_Key.png"));
-		space = new Texture(Gdx.files.internal("Space_Key.png"));
-		camera = Touhou.getInstance().getCamera();
-		screenViewport = Touhou.getInstance().getViewport();
-	}
+    private Touhou game;
+    private FitViewport viewport;
+    private SpriteBatch batch;
 
-	@Override
-	public void render(float delta) {
-		ScreenUtils.clear(0, 0, 0.2f, 1);
+    private Texture[] backgrounds;
+    private int currentIndex = 0; // 0..3 for tutorialBg1..tutorialBg4
 
-		//camera.update();
-		screenViewport.apply();
-		game.getBatch().setProjectionMatrix(camera.combined);
-		
-		game.getBatch().begin();
-		
-		game.getBatch().draw(arrows, 54, 480, 400, 200);
-		game.getBatch().draw(shift, 107, 348, 200, 100);
-		game.getBatch().draw(space, 107, 216, 400, 100);
-		game.getFont().draw(game.getBatch(), "Usa las flechas para moverte. ", 587, 516);
-		game.getFont().draw(game.getBatch(), "Presiona SHIFT para disminuir tu movimiento ", 587, 320);
-		game.getFont().draw(game.getBatch(), "Presiona SPACE para disparar ", 587, 252);
-		game.getFont().draw(game.getBatch(), "Bienvenido a Touhou 69: Absolutely Trash Night !", 342, 940);
-		game.getFont().draw(game.getBatch(), "Controles: ", 54, 840);
-		game.getFont().draw(game.getBatch(), "Pincha en cualquier lado o presiona cualquier tecla para comenzar ...", 54, 60);
-	
-		game.getBatch().end();
+    private Sound enterSound;
 
-		if (Gdx.input.isTouched() || Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
-			Screen ss = new PantallaJuego(1,2,0,1000);
-			ss.resize(1280, 960);
-			game.setScreen(new PantallaHint(game, ss));
-			dispose();
-		}
-	}
-	
-	
-	@Override
-	public void show() {
-		// TODO Auto-generated method stub
-		
-	}
+    private BitmapFont hintFont;
+    private GlyphLayout hintLayout;
 
-	@Override
-	public void resize(int width, int height) {
-		screenViewport.update(width, height, true);
-	}
+    // fading state for "Press ANY key to continue..."
+    private float hintAlpha = 0f;            // current alpha (0..1)
+    private float hintFadeTime = 0f;        // accumulator for time-based fade
+    private final float hintFadePeriod = 2f; // period in seconds for a full in-out cycle
 
-	@Override
-	public void pause() {}
+    // transition to game
+    private boolean transitionQueued = false;
+    private float transitionTimer = 0f;     // counts up to transitionDelay
+    private final float transitionDelay = 2f; // 2 seconds delay before switching to PantallaJuego
 
-	@Override
-	public void resume() {}
+    public PantallaTutorial() {
+        game = Touhou.getInstance();
+        batch = game.getBatch();
+        viewport = game.getViewport();
 
-	@Override
-	public void hide() {}
+        // load the four tutorial backgrounds (hardcoded filenames as requested)
+        backgrounds = new Texture[4];
+        backgrounds[0] = new Texture(Gdx.files.internal("tutorialBg1.png"));
+        backgrounds[1] = new Texture(Gdx.files.internal("tutorialBg2.png"));
+        backgrounds[2] = new Texture(Gdx.files.internal("tutorialBg3.png"));
+        backgrounds[3] = new Texture(Gdx.files.internal("tutorialBg4.png"));
 
-	@Override
-	public void dispose() {}
+        enterSound = Gdx.audio.newSound(Gdx.files.internal("enterSound.ogg"));
+
+        // Create hint font mimicking PantallaGameOver style
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("thFont.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.borderColor = Color.BLACK;
+        parameter.borderWidth = 1;
+
+        parameter.size = 14; // base size; we'll scale to make it readable on most viewports
+        parameter.color = Color.WHITE;
+        hintFont = generator.generateFont(parameter);
+        hintFont.getData().setScale(2f); // similar scaling used in PantallaGameOver
+        hintFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
+        generator.dispose();
+
+        hintLayout = new GlyphLayout(hintFont, "Press ANY key to continue...");
+    }
+
+    @Override
+    public void render(float delta) {
+        // update fading time (continuous regardless of transition state)
+        hintFadeTime += delta;
+        float t = (hintFadeTime % hintFadePeriod) / hintFadePeriod; // 0..1 over period
+        // triangle wave 0..1..0: 1 - |2t-1|
+        hintAlpha = 1f - Math.abs(2f * t - 1f);
+
+        // if transition is queued, advance timer and after delay perform screen switch
+        if (transitionQueued) {
+            transitionTimer += delta;
+            if (transitionTimer >= transitionDelay) {
+                Screen ss = new PantallaJuego(1, 1, 0, 10000);
+                Screen juego = new PantallaHint(game, ss);
+                juego.resize(1280, 960);
+                game.setScreen(juego);
+                dispose();
+                return; // avoid drawing after changing screen
+            }
+        } else {
+            // handle input (any key or touch) only when not already queued
+            if (anyKeyJustPressed() || Gdx.input.justTouched()) {
+                enterSound.play(0.7f);
+                // advance image or queue transition if last
+                if (currentIndex < backgrounds.length - 1) {
+                    currentIndex++;
+                } else {
+                    // queue transition to PantallaJuego with a small delay
+                    transitionQueued = true;
+                    transitionTimer = 0f;
+                }
+            }
+        }
+
+        ScreenUtils.clear(0, 0, 0, 1);
+        viewport.apply();
+        batch.setProjectionMatrix(game.getCamera().combined);
+
+        batch.begin();
+        // draw current background scaled to world size
+        Texture bg = backgrounds[currentIndex];
+        batch.draw(bg, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
+
+        // draw fading hint in bottom-right
+        hintLayout.setText(hintFont, "Press ANY key to continue...");
+        float x = viewport.getWorldWidth() - hintLayout.width - 20f;
+        float y = 20f + hintLayout.height; // 20 px margin from bottom
+
+        // set font color with current alpha (use new Color to avoid mutating shared color state unexpectedly)
+        hintFont.setColor(1f, 1f, 1f, hintAlpha);
+        hintFont.draw(batch, hintLayout, x, y);
+
+        batch.end();
+    }
+
+    // helper: check a reasonable range of keycodes for just-pressed keys
+    // LibGDX doesn't provide a single "ANY_KEY" constant, so we poll a range.
+    private boolean anyKeyJustPressed() {
+        // check keyboard keys in a reasonable range
+        for (int k = 0; k < 256; k++) {
+            if (Gdx.input.isKeyJustPressed(k)) return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height, true);
+    }
+
+    @Override
+    public void dispose() {
+        for (Texture t : backgrounds) {
+            if (t != null) t.dispose();
+        }
+        if (hintFont != null) hintFont.dispose();
+        if (enterSound != null) enterSound.dispose();
+    }
+
+    @Override public void show() {}
+    @Override public void hide() {}
+    @Override public void pause() {}
+    @Override public void resume() {}
 }

@@ -14,6 +14,7 @@ public class TargetedCirclePattern extends BulletHellPattern implements TwoStage
         bulletGenInterval = 0.25f;
         currentBullet = 0;
         isDecelerated = true;
+        decelerationRate = 200f;
         
         tsSpeed = 300f;
 	}

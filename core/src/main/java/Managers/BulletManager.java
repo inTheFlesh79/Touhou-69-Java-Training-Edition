@@ -33,8 +33,8 @@ public class BulletManager {
       	bhpTypes.add(new TargetedPattern());
       	bhpTypes.add(new FastTargetedPattern());
       	
-      	//tsBhpTypes.add(new TargetedCirclePattern());
-      	//tsBhpTypes.add(new RandomHexaSpiralPattern());
+      	tsBhpTypes.add(new TargetedCirclePattern());
+      	tsBhpTypes.add(new RandomHexaSpiralPattern());
       	tsBhpTypes.add(new RotatingForkPattern());
 	}
 	
