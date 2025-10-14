@@ -25,6 +25,7 @@ public class Boss extends Enemy implements EnemyTools{
 		bossSelectionAndAnimation(bossChoice);
 		
     	spr.setPosition(initialPosX, initialPosY);
+    	initHitbox();
 		//spr.setBounds(initialPosX, initialPosY, 48, 48);
 		
 		maxIdleTime = 15.0f;
@@ -95,6 +96,7 @@ public class Boss extends Enemy implements EnemyTools{
 	public void update(float scrWidth, float scrHeight) {
 		enemyMovement(scrWidth, scrHeight);
 		shootBulletHellPattern();
+		updateHitbox(); // Only for collision with Reimu
 	}
 	
 	/* FUNCIONES RELACIONADAS AL MOVIMIENTO DEL Boss

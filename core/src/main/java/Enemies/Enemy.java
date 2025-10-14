@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Circle;
 
 public abstract class Enemy {
 	protected boolean isDestroyed = false;
@@ -19,6 +20,7 @@ public abstract class Enemy {
 	protected int bhpChoice;
 	
 	protected Sprite spr;
+	protected Circle circleHitbox;
 	protected Sound sonidoHerido;
 	
 	protected Sound soundBala;
@@ -73,7 +75,36 @@ public abstract class Enemy {
 	    if (spr.getY() + spr.getHeight() > scrHeight) 
 	        spr.setY(scrHeight - spr.getHeight());
 	}
+	
+	protected void initHitbox() {
+        if (spr == null) return;
 
+        float width = spr.getWidth();
+        float height = spr.getHeight();
+
+        // Center of sprite
+        float centerX = spr.getX() + width / 2f;
+        float centerY = spr.getY() + height / 2f;
+
+        // Make radius smaller depending on shape
+        // For more rectangular shapes (bosses), shrink more
+        float aspectRatio = width / height;
+        float sizeFactor = (aspectRatio > 1.3f || aspectRatio < 0.7f) ? 0.35f : 0.45f;
+
+        float radius = Math.min(width, height) * sizeFactor;
+
+        circleHitbox = new Circle(centerX, centerY, radius);
+    }
+
+    // --- NEW: keep hitbox updated each frame ---
+    protected void updateHitbox() {
+        if (circleHitbox == null || spr == null) return;
+
+        circleHitbox.setPosition(
+            spr.getX() + spr.getWidth() / 2f,
+            spr.getY() + spr.getHeight() / 2f
+        );
+    }
 	
 	public int getHealth() {return health;}
 	
@@ -92,6 +123,7 @@ public abstract class Enemy {
 	public float getSpeed() { return speed; }
 	public int getBhpChoice() { return bhpChoice; }
 	public Sprite getSpr() {return spr;}
+    public Circle getCircleHitbox() {return circleHitbox;}
 	public boolean isShooting() {return isShooting;}
 
 	public void playExplosionSound() {explosionSound.play(0.2f);}

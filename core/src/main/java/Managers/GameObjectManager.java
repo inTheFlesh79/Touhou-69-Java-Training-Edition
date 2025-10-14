@@ -63,12 +63,13 @@ public class GameObjectManager {
 	public void update() {
 		scrWidth = viewport.getWorldWidth();
 		scrHeight = viewport.getWorldHeight();
+		dropMng.drawDrops(batch);
 		bulletMng.reimuBulletsDrawer(batch, scrWidth, scrHeight);
 		bulletMng.enemyBulletsDrawer(batch, scrWidth, scrHeight);
 		fairyDrawer();
 		bossDrawer();
-		dropMng.drawDrops(batch);
 		enemyDropsCollisionManager();
+		reimuEnemiesCollisionManager();
 		reimu.draw(batch, bulletMng, scrWidth, scrHeight);
 		reimu.drawReimuHitbox(batch, (OrthographicCamera) viewport.getCamera());
 		propMng.drawProps(batch);
@@ -132,6 +133,22 @@ public class GameObjectManager {
 			        }
 			    }
 			}
+		}
+	}
+	
+	public void reimuEnemiesCollisionManager() {
+		if (collisionMng.chkColReimuVsEnemy(reimu, bossMng.getBoss())) {
+			
+		}
+		
+		for (int j = 0; j < fairyMng.getFairiesSize(); j++) {
+		    if (collisionMng.chkColReimuVsEnemy(reimu, fairyMng.getFairy(j))) {
+	            fairyMng.getFairy(j).playExplosionSound();
+	            propMng.createExplosionRing(fairyMng.getFairy(j).getSpr().getX() + 13, fairyMng.getFairy(j).getSpr().getY()+ 34);
+	            propMng.createSparkles(fairyMng.getFairy(j).getSpr().getX()+ 13, fairyMng.getFairy(j).getSpr().getY()+ 34);
+	            fairyMng.removeFairy(j);
+	            j--;  // Adjust the index after removing a fairy
+		    }
 		}
 	}
 	

@@ -5,15 +5,15 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 public class PantallaPausa implements Screen {
     private Touhou game;
@@ -25,17 +25,19 @@ public class PantallaPausa implements Screen {
     private Sound pickingSound;
     private Sound enterSound;
 
-    // Fonts
     private BitmapFont fontPause;
     private BitmapFont fontOptionBright;
     private BitmapFont fontOptionDark;
 
-    // Menu items
-    private String[] menuItems = {"Return to the Game", "Quit"};
-    private int selectedIndex = 0; // 0 = Return, 1 = Quit
+    private String[] menuItems = {"Return to the Game", "Return to Main Menu", "Quit"};
+    private int selectedIndex = 0;
 
-    // Layout cache for options (for hitboxes)
     private GlyphLayout[] optionLayouts;
+
+    // Delay system
+    private boolean optionSelected = false;
+    private float optionDelayTimer = 0f;
+    private final float OPTION_DELAY = 1f;
 
     public PantallaPausa(Touhou game, PantallaJuego pantallaAnterior) {
         this.game = Touhou.getInstance();
@@ -49,28 +51,24 @@ public class PantallaPausa implements Screen {
         pickingSound = Gdx.audio.newSound(Gdx.files.internal("pickOption.ogg"));
         enterSound = Gdx.audio.newSound(Gdx.files.internal("enterSound.ogg"));
 
-        // Load font with outline
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("thFont.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.borderColor = Color.MAGENTA;
         parameter.borderWidth = 1;
 
-        // Big "Pause" font (pixel-art style)
-        parameter.size = 36; // half of 72
+        parameter.size = 36;
         fontPause = generator.generateFont(parameter);
         fontPause.getData().setScale(2f);
         fontPause.getRegion().getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
-        // Bright option font (pixel-art style)
-        parameter.size = 18; // half of 36
+        parameter.size = 18;
         parameter.color = Color.WHITE;
         fontOptionBright = generator.generateFont(parameter);
         fontOptionBright.getData().setScale(2f);
         fontOptionBright.getRegion().getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
-        // Darker option font (pixel-art style)
-        parameter.size = 18; // half of 36
-        parameter.color = new Color(0.6f, 0.6f, 0.6f, 1f); // greyed out
+        parameter.size = 18;
+        parameter.color = new Color(0.6f, 0.6f, 0.6f, 1f);
         fontOptionDark = generator.generateFont(parameter);
         fontOptionDark.getData().setScale(2f);
         fontOptionDark.getRegion().getTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
@@ -86,22 +84,25 @@ public class PantallaPausa implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0.0f, 0.08f, 0.16f, 1f);
-
         viewport.apply();
         batch.setProjectionMatrix(camera.combined);
 
-        handleInput();
+        if (!optionSelected) {
+            handleInput();
+        } else {
+            optionDelayTimer += delta;
+            if (optionDelayTimer >= OPTION_DELAY) {
+                performAction(selectedIndex);
+            }
+        }
 
         batch.begin();
-        // Draw background filling viewport
         batch.draw(pauseBackground, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
 
-        // Draw "Pause" centered at 3/4 height
         float titleY = viewport.getWorldHeight() * 0.75f;
         GlyphLayout layout = new GlyphLayout(fontPause, "Pause");
         fontPause.draw(batch, layout, (viewport.getWorldWidth() - layout.width) / 2f, titleY);
 
-        // Draw options
         for (int i = 0; i < menuItems.length; i++) {
             BitmapFont font = (i == selectedIndex) ? fontOptionBright : fontOptionDark;
             optionLayouts[i].setText(font, menuItems[i]);
@@ -114,7 +115,6 @@ public class PantallaPausa implements Screen {
     }
 
     private void handleInput() {
-        // Keyboard input
         if (Gdx.input.isKeyJustPressed(Input.Keys.W) || Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             pickingSound.play(0.7f);
             selectedIndex = (selectedIndex - 1 + menuItems.length) % menuItems.length;
@@ -124,10 +124,9 @@ public class PantallaPausa implements Screen {
             selectedIndex = (selectedIndex + 1) % menuItems.length;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            activateOption(selectedIndex);
+            triggerDelay(selectedIndex);
         }
 
-        // Mouse hover
         Vector3 mouse = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
         viewport.unproject(mouse);
         for (int i = 0; i < menuItems.length; i++) {
@@ -143,22 +142,36 @@ public class PantallaPausa implements Screen {
                 selectedIndex = i;
 
                 if (Gdx.input.justTouched()) {
-                    activateOption(i);
+                    triggerDelay(i);
                 }
             }
         }
     }
 
-    private void activateOption(int index) {
-        enterSound.play(0.7f);
+    private void triggerDelay(int index) {
+        if (!optionSelected) {
+            optionSelected = true;
+            optionDelayTimer = 0f;
+            enterSound.play(0.7f);
+        }
+    }
+
+    private void performAction(int index) {
         if (index == 0) {
-            // Return
             pantallaAnterior.setPaused(false);
             pantallaAnterior.getMusicManager().unpauseMusic();
             game.setScreen(pantallaAnterior);
             dispose();
         } else if (index == 1) {
-            // Quit
+            if (Touhou.getInstance().getMusicMng() != null) {
+                Touhou.getInstance().getMusicMng().resetMusicMng();
+            }
+            Screen menu = new PantallaMenu();
+            menu.resize(1280, 960);
+            game.setScreen(menu);
+            pantallaAnterior.dispose();
+            dispose();
+        } else if (index == 2) {
             Gdx.app.exit();
         }
     }
@@ -172,7 +185,8 @@ public class PantallaPausa implements Screen {
     @Override public void hide() {}
     @Override public void pause() {}
     @Override public void resume() {}
-    @Override public void dispose() {
+    @Override
+    public void dispose() {
         pauseBackground.dispose();
         pickingSound.dispose();
         enterSound.dispose();

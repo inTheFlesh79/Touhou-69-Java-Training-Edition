@@ -118,7 +118,7 @@ public class PantallaCodigo implements Screen {
         fontTitle.draw(batch, layoutTitle, titleX, titleY);
 
         // Texto
-        String text = "Completaste lo necesario para continuar al primer cuestionario Post-Interaccion." + "\nTu codigo es: XXXXXXX";
+        String text = "Completaste lo necesario para continuar al primer cuestionario Post-Interaccion." + "\nTu codigo es: 5d1f0ed85105";
         GlyphLayout layoutText = new GlyphLayout(fontText, text);
         layoutText.setText(fontText, text, Color.WHITE, viewport.getWorldWidth() * 0.8f, 1, true);
         float textX = (viewport.getWorldWidth() - layoutText.width) / 2f;

@@ -36,6 +36,19 @@ public class CollisionManager {
 		return (d.getHitbox().overlaps(r.getSpr().getBoundingRectangle()));
 	}
 	
+	public boolean chkColReimuVsEnemy(Reimu r, Enemy e) {
+		if(!r.isHurt() && r.getSprHitbox().overlaps(e.getCircleHitbox()) && !r.isShielded()){
+			r.oneDown();;
+            r.setHurt(true);;
+  		    r.setHurtTime(r.getMaxHurtTime());
+  		    r.playHurtSound();
+            if (r.getLives()<=0) 
+          	    r.setDead(true);
+            return true;
+		}
+		return false;
+	}
+	
 	public boolean chkColShieldVsEBullet(EnemyBullet eb, Reimu r) {
 		return eb.getHitbox().overlaps(r.getShieldHitbox());
 	}

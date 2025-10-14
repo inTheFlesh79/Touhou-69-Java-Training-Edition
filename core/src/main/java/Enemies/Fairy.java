@@ -12,7 +12,6 @@ import Managers.BulletManager;
 import java.util.Random;
 
 public class Fairy extends Enemy implements EnemyTools{
-	private float deltaTime = Gdx.graphics.getDeltaTime();
 	private static final Random random = new Random();
 	private float targetX, targetY;
 	private BulletManager bulletMng;
@@ -32,6 +31,8 @@ public class Fairy extends Enemy implements EnemyTools{
     	spr = new Sprite(animationFrames[0]);
     	//spr.setPosition(initialPosX, initialPosY);
 		spr.setBounds(initialPosX, initialPosY, 48, 48);
+		
+		initHitbox();
 		
 		maxIdleTime = 3f;
 		
@@ -55,6 +56,7 @@ public class Fairy extends Enemy implements EnemyTools{
 		//System.out.println("Fairy Health = "+this.getHealth());
 		enemyMovement(scrWidth, scrHeight);
 		shootBulletHellPattern();
+		updateHitbox(); // Only for collision with Reimu
 	}
 	
 	/* FUNCIONES RELACIONADAS AL DISPARO DE PATRONES DE BALA DEL FAIRY
