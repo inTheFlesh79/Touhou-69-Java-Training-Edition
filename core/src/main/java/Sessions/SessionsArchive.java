@@ -13,7 +13,6 @@ import java.util.List;
 public class SessionsArchive {
     public int nextGameId = 1; // starts at 1
     public List<GameSessionData> sessions = new ArrayList<>();
-
     public SessionsArchive() {}
 }
 

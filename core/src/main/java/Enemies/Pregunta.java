@@ -9,7 +9,7 @@ public class Pregunta {
     private String[] respuestas;
     private int indiceCorrecto;
     private String rutaImagen;
-    private boolean respondidaCorrecta;
+    private boolean respondidaCorrecta = false;
 
     public Pregunta(String id, int categoria, String enunciado, String[] respuestas, int indiceCorrecto) {
     	this.id = id;
@@ -26,6 +26,8 @@ public class Pregunta {
         }
         
     }
+   
+    public Pregunta() {};
 
     public String getID() { return id; }
     public int getCategoria() { return categoria; }

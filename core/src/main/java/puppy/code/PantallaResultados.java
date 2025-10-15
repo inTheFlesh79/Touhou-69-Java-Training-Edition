@@ -21,6 +21,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import Enemies.Pregunta;
 import Managers.MusicManager;
+import Sessions.SessionDataManager;
+import Sessions.TestRound;
 
 
 public class PantallaResultados implements Screen {
@@ -35,6 +37,7 @@ public class PantallaResultados implements Screen {
     private int correctas;
     private MusicManager musicMng;
     private boolean retryAndBuff;
+	private TestRound tempTestRound;
     
     public PantallaResultados(ArrayList<Pregunta> preguntasRonda, int ronda, int intentosFallidos, MusicManager musicMng, PantallaJuego pantallaAnterior, boolean retryAndBuff) {
         game = Touhou.getInstance();
@@ -66,6 +69,8 @@ public class PantallaResultados implements Screen {
         skin.add("default", buttonStyle);
 
         shapeRenderer = new ShapeRenderer();
+        
+        tempTestRound = SessionDataManager.getInstance().createNewTestRound(preguntasRonda);
 
         // posiciones para labels de preguntas y resultados
         float startY = 780;    // posición inicial vertical
@@ -261,6 +266,7 @@ public class PantallaResultados implements Screen {
                     // repetir ejercicios con la misma categoría
                     game.setScreen(new PantallaEjercicios(game, musicMng, pantallaAnterior, retryAndBuff));
                 } else {
+                	SessionDataManager.getInstance().addTestRound(tempTestRound);
                 	// pasar categoria ya que tuvo al menos 4 buenas
                 	Touhou.pasarCategoria();
                 	// resetear contador de intentos

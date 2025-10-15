@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import Managers.MusicManager;
+import Sessions.SessionDataManager;
 
 public class PantallaGameOver implements Screen {
     private Touhou game;
@@ -29,6 +30,7 @@ public class PantallaGameOver implements Screen {
     private BitmapFont fontOptionDark;
 
     private String[] menuItems = {"Retry", "Retry + Buff", "Main Menu", "Quit"};
+    private String tempPlayerTag;
     private int selectedIndex = 0;
 
     private GlyphLayout[] optionLayouts;
@@ -48,6 +50,9 @@ public class PantallaGameOver implements Screen {
         background = new Texture(Gdx.files.internal("gameOverBg.png"));
         pickingSound = Gdx.audio.newSound(Gdx.files.internal("pickOption.ogg"));
         enterSound = Gdx.audio.newSound(Gdx.files.internal("enterSound.ogg"));
+        
+        tempPlayerTag = SessionDataManager.getInstance().getCurrentSession().getPlayerTag();
+        SessionDataManager.getInstance().finalizeAndSaveSession(SessionDataManager.getInstance().getCurrentSession().getPlayerTag());
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("thFont.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -152,6 +157,7 @@ public class PantallaGameOver implements Screen {
     private void executeOption(int index) {
         switch (index) {
             case 0: // Retry
+            	SessionDataManager.getInstance().startRecordingSession(tempPlayerTag);
                 Screen retry = new PantallaJuego(1, 10, 0, 1000);
                 musicMng.resetMusicMng();
                 retry.resize(1280, 960);
@@ -159,6 +165,7 @@ public class PantallaGameOver implements Screen {
                 dispose();
                 break;
             case 1: // Retry + Buff
+            	SessionDataManager.getInstance().startRecordingSession(tempPlayerTag);
                 Screen buff = new PantallaRetryBuff(musicMng);
                 musicMng.resetMusicMng();
                 buff.resize(1280, 960);

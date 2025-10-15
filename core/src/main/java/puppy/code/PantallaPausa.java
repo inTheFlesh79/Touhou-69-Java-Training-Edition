@@ -13,6 +13,9 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+
+import Sessions.SessionDataManager;
+
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 public class PantallaPausa implements Screen {
@@ -166,12 +169,14 @@ public class PantallaPausa implements Screen {
             if (Touhou.getInstance().getMusicMng() != null) {
                 Touhou.getInstance().getMusicMng().resetMusicMng();
             }
+            SessionDataManager.getInstance().discardCurrentSession();
             Screen menu = new PantallaMenu();
             menu.resize(1280, 960);
             game.setScreen(menu);
             pantallaAnterior.dispose();
             dispose();
         } else if (index == 2) {
+        	SessionDataManager.getInstance().discardCurrentSession();
             Gdx.app.exit();
         }
     }

@@ -1,0 +1,768 @@
+{
+nextGameId: 12
+sessions: [
+	{
+		gameId: 1
+		playerTag: asf a sf asfasf
+		date: 2025-10-14
+		time: 20:35
+		finishedLevels: 1
+	}
+	{
+		gameId: 2
+		playerTag: maincra
+		date: 2025-10-14
+		time: 20:36
+		finishedLevels: 1
+	}
+	{
+		gameId: 3
+		playerTag: kkck
+		date: 2025-10-14
+		time: 20:40
+		finishedLevels: 1
+	}
+	{
+		gameId: 4
+		playerTag: kkck
+		date: 2025-10-14
+		time: 20:41
+		finishedLevels: 1
+		rounds: [
+			{
+				gameId: 4
+				testRoundId: 1
+				questions: [
+					{
+						id: 36
+						categoria: 1
+						enunciado: Respecto al uso de herencia. Indique las afirmaciones correctas:
+						respuestas: [
+							En ningún caso es posible heredar variables protegidas con modificador de visibilidad protected
+							Para utilizar las variables de instancia de la superclase es necesario declararlas en la subclase
+							Los constructores públicos son heredados por las subclases
+							Si existen variables con modificador protected pueden ser utilizadas en la subclase como si hubieran sido declaradas en ella
+						]
+						indiceCorrecto: 3
+						respondidaCorrecta: false
+					}
+					{
+						id: 26
+						categoria: 1
+						enunciado: ¿Cuál de las siguientes afirmaciones describe correctamente la herencia soportada en Java?
+						respuestas: [
+							Java permite herencia simple de clases y múltiple de interfaces
+							Java permite herencia múltiple de clases e interfaces
+							Java solo permite herencia múltiple de clases
+							Java no soporta herencia en absoluto
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 27
+						categoria: 1
+						enunciado: ¿Qué significa sobrescribir (override) un método en Java?
+						respuestas: [
+							Redefinir un método heredado en la subclase con la misma firma pero con un comportamiento distinto
+							Copiar un método de la superclase a la subclase sin cambios
+							Crear un método con el mismo nombre pero diferente número de parámetros
+							Borrar un método de la superclase desde la subclase
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 35
+						categoria: 1
+						enunciado: Si se utiliza el modificador de visibilidad protected en variables de instancia y métodos podemos decir que:
+						respuestas: [
+							Son sólo accesibles desde la misma clase.
+							Son sólo accesibles desde cualquier subclase de ella
+							Son accesibles desde la misma clase o cualquier subclase de ella
+							Son accesibles desde la misma clase o cualquier clase que la instancie
+						]
+						indiceCorrecto: 2
+						respondidaCorrecta: false
+					}
+					{
+						id: 22
+						categoria: 1
+						enunciado: ¿Qué es la herencia en Java?
+						respuestas: [
+							Un mecanismo que permite que una clase adquiera atributos y métodos de otra
+							Una forma de copiar automáticamente todo el código de una clase a otra
+							Un proceso exclusivo para heredar solo variables estáticas
+							Una técnica que se usa únicamente con interfaces
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 30
+						categoria: 1
+						enunciado: ¿Para qué se utiliza la palabra clave super en herencia?
+						respuestas: [
+							Para acceder a los miembros de la superclase desde la subclase
+							Para definir que una clase es la clase principal del programa
+							Para acceder a los miembros de la subclase
+							Para crear una nueva clase independiente
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+				]
+			}
+		]
+	}
+	{
+		gameId: 5
+		playerTag: uyiedht67
+		date: 2025-10-14
+		time: 20:47
+		finishedLevels: 1
+		rounds: [
+			{
+				gameId: 5
+				testRoundId: 1
+				questions: [
+					{
+						id: 28
+						categoria: 1
+						enunciado: ¿Cómo se invoca el constructor de una superclase desde la subclase?
+						respuestas: [
+							Usando la palabra clave super()
+							Usando la palabra clave base()
+							Usando la palabra clave extends()
+							Llamando directamente al nombre de la superclase
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 25
+						categoria: 1
+						enunciado: ¿Qué limitación tiene Java respecto a la herencia de clases?
+						respuestas: [
+							No permite herencia múltiple de clases
+							No permite heredar constructores
+							No permite heredar métodos públicos
+							No permite heredar variables de instancia
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 30
+						categoria: 1
+						enunciado: ¿Para qué se utiliza la palabra clave super en herencia?
+						respuestas: [
+							Para acceder a los miembros de la superclase desde la subclase
+							Para definir que una clase es la clase principal del programa
+							Para acceder a los miembros de la subclase
+							Para crear una nueva clase independiente
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: false
+					}
+					{
+						id: 26
+						categoria: 1
+						enunciado: ¿Cuál de las siguientes afirmaciones describe correctamente la herencia soportada en Java?
+						respuestas: [
+							Java permite herencia simple de clases y múltiple de interfaces
+							Java permite herencia múltiple de clases e interfaces
+							Java solo permite herencia múltiple de clases
+							Java no soporta herencia en absoluto
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 22
+						categoria: 1
+						enunciado: ¿Qué es la herencia en Java?
+						respuestas: [
+							Un mecanismo que permite que una clase adquiera atributos y métodos de otra
+							Una forma de copiar automáticamente todo el código de una clase a otra
+							Un proceso exclusivo para heredar solo variables estáticas
+							Una técnica que se usa únicamente con interfaces
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: false
+					}
+					{
+						id: 32
+						categoria: 1
+						enunciado: En relación con la herencia en Java selecciona la única afirmación correcta:
+						respuestas: [
+							Java soporta herencia multinivel
+							La clase debe ser de caracter final
+							Java soporta herencia múltiple
+							La superclase es quien hereda las propiedades de una subclase
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+				]
+			}
+			{
+				gameId: 5
+				testRoundId: 2
+				questions: [
+					{
+						id: 10
+						categoria: 2
+						enunciado: Al ejecutar el siguiente programa ¿qué salida se obtiene en consola?
+						respuestas: [
+							"\"Soy un coche\""
+							"\"Soy un vehículo\""
+							Error de compilación
+							No imprime nada
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 1
+						categoria: 2
+						enunciado: ¿Qué línea falta para completar correctamente la herencia entre las clases?
+						respuestas: [
+							class Gato extends Animal
+							class Gato implements Animal
+							class Animal extends Gato
+							class Gato inherits Animal
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 12
+						categoria: 2
+						enunciado: ¿Cuál es el error en el siguiente código que define una clase base Animal y una clase hija Perro?
+						respuestas: [
+							Falta usar extends en la clase hija
+							Falta un constructor vacío en la clase base
+							No se pueden definir atributos privados en la clase padre
+							El método main debe ser estático en la clase padre
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 7
+						categoria: 2
+						enunciado: Dado el siguiente extracto de código: ¿Qué cosa podemos asumir?
+						respuestas: [
+							Spin tiene al menos un constructor donde ingresan tres parámetros float
+							La variable angle solo puede ser private ya que de lo contrario el código no compilaría
+							Los métodos 'translate' 'rotate' y 'popMatrix' provienen de una interface
+							La variable speed siempre será null porque no se muestra su inicialización en el código
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 5
+						categoria: 2
+						enunciado: Si consideramos que las siguientes clases: A implementa los métodos protegidos ejecutar(int proceso) y finalizar() B implementa el método protegido ejecutar(String proceso) y hereda de clase A Dado el siguiente código: ¿Que ocurre?
+						respuestas: [
+							Invoca método ejecutar implementado en la clase B debido a que sobrescribe el método de clase A
+							Error de compilación ya que no es posible ejecutar método de clase B porque está protegido
+							Invoca método ejecutar implementado en la clase A debido a que hereda de esa clase
+							Error en tiempo de ejecución ya que no es posible instanciar un objeto de tipo B en variable de tipo A
+						]
+						indiceCorrecto: 2
+						respondidaCorrecta: false
+					}
+					{
+						id: 2
+						categoria: 2
+						enunciado: En el siguiente código falta una implementación. ¿Cuál es la opción correcta?
+						respuestas: [
+							Implementar el método hacerSonido() en la clase Perro
+							Hacer abstracto el método hacerSonido() en Animal
+							Quitar el constructor de Animal
+							Declarar Perro como abstracto
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+				]
+			}
+		]
+	}
+	{
+		gameId: 6
+		playerTag: kjsdgjhbddgjslsd
+		date: 2025-10-14
+		time: 20:48
+		score: 6700
+		finishedLevels: 1
+		rounds: [
+			{
+				gameId: 6
+				testRoundId: 1
+				questions: [
+					{
+						id: 24
+						categoria: 1
+						enunciado: ¿Cómo se llama la clase de la cual se heredan atributos y métodos?
+						respuestas: [
+							Superclase
+							Subclase
+							Interface
+							Clase abstracta obligatoriamente
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 29
+						categoria: 1
+						enunciado: ¿Qué relación existe entre herencia y polimorfismo en Java?
+						respuestas: [
+							El polimorfismo permite usar un objeto de la subclase como si fuera de la superclase
+							El polimorfismo no depende de la herencia
+							La herencia y el polimorfismo son exactamente lo mismo
+							El polimorfismo elimina la necesidad de herencia
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 31
+						categoria: 1
+						enunciado: En un método de una subclase es posible invocar métodos de la superclase. Sin embargo esto depende de los modificadores de acceso y de la forma en que se invoquen dichos métodos. Considerando esto ¿cuál de las siguientes no permitiria a una hija acceder a los metodos de su padre?
+						respuestas: [
+							Los métodos de la clase padre sean public
+							Los métodos de la clase padre sean protected
+							Los métodos de la clase padre sean private
+							Los métodos sean invocados con la palabra reservada super()
+						]
+						indiceCorrecto: 2
+						respondidaCorrecta: false
+					}
+					{
+						id: 27
+						categoria: 1
+						enunciado: ¿Qué significa sobrescribir (override) un método en Java?
+						respuestas: [
+							Redefinir un método heredado en la subclase con la misma firma pero con un comportamiento distinto
+							Copiar un método de la superclase a la subclase sin cambios
+							Crear un método con el mismo nombre pero diferente número de parámetros
+							Borrar un método de la superclase desde la subclase
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 34
+						categoria: 1
+						enunciado: Marque la afirmación correcta:
+						respuestas: [
+							Los constructores son heredados de la clase padre
+							Para invocar el constructor de la clase padre se debe realizar utilizando el nombre de la clase
+							Las clases que no declaran extender a otras extienden de la clase Object
+							El método super permite invocar métodos de la clase padre
+						]
+						indiceCorrecto: 2
+						respondidaCorrecta: false
+					}
+					{
+						id: 23
+						categoria: 1
+						enunciado: ¿Qué palabra reservada se utiliza en Java para heredar de otra clase?
+						respuestas: [
+							extends
+							inherits
+							superclass
+							derive
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+				]
+			}
+		]
+	}
+	{
+		gameId: 7
+		playerTag: awfsf
+		date: 2025-10-14
+		time: 22:19
+		finishedLevels: 1
+		rounds: [
+			{
+				gameId: 7
+				testRoundId: 1
+				questions: [
+					{
+						id: 32
+						categoria: 1
+						enunciado: En relación con la herencia en Java selecciona la única afirmación correcta:
+						respuestas: [
+							Java soporta herencia multinivel
+							La clase debe ser de caracter final
+							Java soporta herencia múltiple
+							La superclase es quien hereda las propiedades de una subclase
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 23
+						categoria: 1
+						enunciado: ¿Qué palabra reservada se utiliza en Java para heredar de otra clase?
+						respuestas: [
+							extends
+							inherits
+							superclass
+							derive
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 27
+						categoria: 1
+						enunciado: ¿Qué significa sobrescribir (override) un método en Java?
+						respuestas: [
+							Redefinir un método heredado en la subclase con la misma firma pero con un comportamiento distinto
+							Copiar un método de la superclase a la subclase sin cambios
+							Crear un método con el mismo nombre pero diferente número de parámetros
+							Borrar un método de la superclase desde la subclase
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 22
+						categoria: 1
+						enunciado: ¿Qué es la herencia en Java?
+						respuestas: [
+							Un mecanismo que permite que una clase adquiera atributos y métodos de otra
+							Una forma de copiar automáticamente todo el código de una clase a otra
+							Un proceso exclusivo para heredar solo variables estáticas
+							Una técnica que se usa únicamente con interfaces
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 34
+						categoria: 1
+						enunciado: Marque la afirmación correcta:
+						respuestas: [
+							Los constructores son heredados de la clase padre
+							Para invocar el constructor de la clase padre se debe realizar utilizando el nombre de la clase
+							Las clases que no declaran extender a otras extienden de la clase Object
+							El método super permite invocar métodos de la clase padre
+						]
+						indiceCorrecto: 2
+						respondidaCorrecta: false
+					}
+					{
+						id: 28
+						categoria: 1
+						enunciado: ¿Cómo se invoca el constructor de una superclase desde la subclase?
+						respuestas: [
+							Usando la palabra clave super()
+							Usando la palabra clave base()
+							Usando la palabra clave extends()
+							Llamando directamente al nombre de la superclase
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+				]
+			}
+		]
+	}
+	{
+		gameId: 8
+		playerTag: sledgnsldg
+		date: 2025-10-14
+		time: 22:24
+		finishedLevels: 1
+		rounds: [
+			{
+				gameId: 8
+				testRoundId: 1
+				questions: [
+					{
+						id: 28
+						categoria: 1
+						enunciado: ¿Cómo se invoca el constructor de una superclase desde la subclase?
+						respuestas: [
+							Usando la palabra clave super()
+							Usando la palabra clave base()
+							Usando la palabra clave extends()
+							Llamando directamente al nombre de la superclase
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 22
+						categoria: 1
+						enunciado: ¿Qué es la herencia en Java?
+						respuestas: [
+							Un mecanismo que permite que una clase adquiera atributos y métodos de otra
+							Una forma de copiar automáticamente todo el código de una clase a otra
+							Un proceso exclusivo para heredar solo variables estáticas
+							Una técnica que se usa únicamente con interfaces
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 26
+						categoria: 1
+						enunciado: ¿Cuál de las siguientes afirmaciones describe correctamente la herencia soportada en Java?
+						respuestas: [
+							Java permite herencia simple de clases y múltiple de interfaces
+							Java permite herencia múltiple de clases e interfaces
+							Java solo permite herencia múltiple de clases
+							Java no soporta herencia en absoluto
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 36
+						categoria: 1
+						enunciado: Respecto al uso de herencia. Indique las afirmaciones correctas:
+						respuestas: [
+							En ningún caso es posible heredar variables protegidas con modificador de visibilidad protected
+							Para utilizar las variables de instancia de la superclase es necesario declararlas en la subclase
+							Los constructores públicos son heredados por las subclases
+							Si existen variables con modificador protected pueden ser utilizadas en la subclase como si hubieran sido declaradas en ella
+						]
+						indiceCorrecto: 3
+						respondidaCorrecta: false
+					}
+					{
+						id: 33
+						categoria: 1
+						enunciado: Una clase derivada no hereda:
+						respuestas: [
+							Propiedades protegidas y constructores
+							Propiedades privadas y constructores
+							Propiedades tanto privadas como protegidas y constructores
+							Propiedades independiente del modificador de visibilidad y constructores
+						]
+						indiceCorrecto: 1
+						respondidaCorrecta: false
+					}
+					{
+						id: 24
+						categoria: 1
+						enunciado: ¿Cómo se llama la clase de la cual se heredan atributos y métodos?
+						respuestas: [
+							Superclase
+							Subclase
+							Interface
+							Clase abstracta obligatoriamente
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+				]
+			}
+		]
+	}
+	{
+		gameId: 9
+		playerTag: KK BKN
+		date: 2025-10-14
+		time: 22:31
+		finishedLevels: 1
+	}
+	{
+		gameId: 10
+		playerTag: wnbkn
+		date: 2025-10-14
+		time: 22:31
+		finishedLevels: 1
+		rounds: [
+			{
+				gameId: 10
+				testRoundId: 1
+				questions: [
+					{
+						id: 27
+						categoria: 1
+						enunciado: ¿Qué significa sobrescribir (override) un método en Java?
+						respuestas: [
+							Redefinir un método heredado en la subclase con la misma firma pero con un comportamiento distinto
+							Copiar un método de la superclase a la subclase sin cambios
+							Crear un método con el mismo nombre pero diferente número de parámetros
+							Borrar un método de la superclase desde la subclase
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 36
+						categoria: 1
+						enunciado: Respecto al uso de herencia. Indique las afirmaciones correctas:
+						respuestas: [
+							En ningún caso es posible heredar variables protegidas con modificador de visibilidad protected
+							Para utilizar las variables de instancia de la superclase es necesario declararlas en la subclase
+							Los constructores públicos son heredados por las subclases
+							Si existen variables con modificador protected pueden ser utilizadas en la subclase como si hubieran sido declaradas en ella
+						]
+						indiceCorrecto: 3
+						respondidaCorrecta: false
+					}
+					{
+						id: 29
+						categoria: 1
+						enunciado: ¿Qué relación existe entre herencia y polimorfismo en Java?
+						respuestas: [
+							El polimorfismo permite usar un objeto de la subclase como si fuera de la superclase
+							El polimorfismo no depende de la herencia
+							La herencia y el polimorfismo son exactamente lo mismo
+							El polimorfismo elimina la necesidad de herencia
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 23
+						categoria: 1
+						enunciado: ¿Qué palabra reservada se utiliza en Java para heredar de otra clase?
+						respuestas: [
+							extends
+							inherits
+							superclass
+							derive
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 22
+						categoria: 1
+						enunciado: ¿Qué es la herencia en Java?
+						respuestas: [
+							Un mecanismo que permite que una clase adquiera atributos y métodos de otra
+							Una forma de copiar automáticamente todo el código de una clase a otra
+							Un proceso exclusivo para heredar solo variables estáticas
+							Una técnica que se usa únicamente con interfaces
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 35
+						categoria: 1
+						enunciado: Si se utiliza el modificador de visibilidad protected en variables de instancia y métodos podemos decir que:
+						respuestas: [
+							Son sólo accesibles desde la misma clase.
+							Son sólo accesibles desde cualquier subclase de ella
+							Son accesibles desde la misma clase o cualquier subclase de ella
+							Son accesibles desde la misma clase o cualquier clase que la instancie
+						]
+						indiceCorrecto: 2
+						respondidaCorrecta: false
+					}
+				]
+			}
+			{
+				gameId: 10
+				testRoundId: 2
+				questions: [
+					{
+						id: 13
+						categoria: 2
+						enunciado: Observa el código. ¿Cuál de las siguientes opciones es correcta?
+						respuestas: [
+							El código no tiene errores y logra compilar y ejecutar correctamente
+							La clase padre debería ser abstracta
+							Es obligatorio que los métodos de la clase padre sean final
+							La clase hija no puede tener métodos propios
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 12
+						categoria: 2
+						enunciado: ¿Cuál es el error en el siguiente código que define una clase base Animal y una clase hija Perro?
+						respuestas: [
+							Falta usar extends en la clase hija
+							Falta un constructor vacío en la clase base
+							No se pueden definir atributos privados en la clase padre
+							El método main debe ser estático en la clase padre
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 4
+						categoria: 2
+						enunciado: Si consideramos que las siguientes clases: - Persona implementa los métodos públicos hablar() y caminar() - Profesor implementa los métodos enseñar() y hereda de clase Persona - Futbolista implementa los métodos jugar() y hereda de clase Persona Dado el siguiente código: ¿Que ocurre con la línea indicada?
+						respuestas: [
+							Error del compilador ya que no encuentra el método jugar() en clase Persona
+							Ejecuta la implementación del método jugar() de la clase Futbolista
+							Ejecuta método jugar() vacío
+							Error de compilación ya que no es posible instanciar Futbolista en variable de tipo Persona
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 10
+						categoria: 2
+						enunciado: Al ejecutar el siguiente programa ¿qué salida se obtiene en consola?
+						respuestas: [
+							"\"Soy un coche\""
+							"\"Soy un vehículo\""
+							Error de compilación
+							No imprime nada
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 2
+						categoria: 2
+						enunciado: En el siguiente código falta una implementación. ¿Cuál es la opción correcta?
+						respuestas: [
+							Implementar el método hacerSonido() en la clase Perro
+							Hacer abstracto el método hacerSonido() en Animal
+							Quitar el constructor de Animal
+							Declarar Perro como abstracto
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 9
+						categoria: 2
+						enunciado: Considere la siguiente implementación (imagen izq.). En método main se realiza(imagen der.): ¿Que imprime por pantalla?
+						respuestas: [
+							INICIAR
+							FIN-AHORA
+							SALIR-AHORA
+							Error de compilación
+						]
+						indiceCorrecto: 2
+						respondidaCorrecta: false
+					}
+				]
+			}
+		]
+	}
+	{
+		gameId: 11
+		playerTag: semen seco
+		date: 2025-10-14
+		time: 23:06
+		score: 1800
+		finishedLevels: 1
+	}
+]
+}

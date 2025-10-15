@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import Managers.MusicManager;
 import Managers.SceneManager;
+import Sessions.SessionDataManager;
 import Managers.GameObjectManager;
 
 public class PantallaJuego implements Screen {
@@ -65,17 +66,7 @@ public class PantallaJuego implements Screen {
 	    musicSetup();
 		
 		//SUJETO A CAMBIO: REGISTRAR PROGRESO
-		if (gameMng.isReimuDead()) {
-			musicMng.stopBossMusic();
-			musicMng.stopFairiesMusic();
-			if (gameMng.getScore() > game.getHighScore())
-				game.setHighScore(gameMng.getScore());
-			Screen ss = new PantallaGameOver();
-			ss.resize(1280, 960);
-			game.setScreen(ss);
-			gameMng.disposeGOM();
-			dispose();
-		}
+		if (gameMng.isReimuDead()) {gameOver();}
 		
 		batch.end();
 		if (!gameMng.getHardMode() && !difficultyChange) {hud.setHardMode(false); difficultyChange = true;}
@@ -96,6 +87,9 @@ public class PantallaJuego implements Screen {
 				dispose();
 			}
 			else {
+				SessionDataManager.getInstance().getCurrentSession().setFinishedLevels(nivel);
+				SessionDataManager.getInstance().setScore(gameMng.getScore());
+				SessionDataManager.getInstance().finalizeAndSaveSession(SessionDataManager.getInstance().getCurrentSession().getPlayerTag());
 				game.setHighScore(gameMng.getScore());
 				Screen ss = new PantallaFinal();
 				ss.resize(1280, 960);
@@ -171,6 +165,20 @@ public class PantallaJuego implements Screen {
 		if (waitingForExercise) {exerciseTimer += delta;}
 	}
 	
+	public void gameOver() {
+		SessionDataManager.getInstance().getCurrentSession().setFinishedLevels(nivel);
+		SessionDataManager.getInstance().setScore(gameMng.getScore());
+		musicMng.stopBossMusic();
+		musicMng.stopFairiesMusic();
+		if (gameMng.getScore() > game.getHighScore())
+			game.setHighScore(gameMng.getScore());
+		Screen ss = new PantallaGameOver();
+		ss.resize(1280, 960);
+		game.setScreen(ss);
+		gameMng.disposeGOM();
+		dispose();
+	}
+	
 	public void setPaused(boolean paused) { this.isPaused = paused;	}
 	public void setCorrectas(int c) {cantCorrectas = c;}
 	public void setIntentosFallidos(int i) {cantFallas = i;}
@@ -180,19 +188,14 @@ public class PantallaJuego implements Screen {
 	
 	@Override
 	public void show() {}
-
 	@Override
 	public void resize(int width, int height) {viewport.update(width, height, true);}
-
 	@Override
 	public void pause() {}
-
 	@Override
 	public void resume() {}
-
 	@Override
 	public void hide() {}
-
 	@Override
 	public void dispose() {
 		sceneMng.dispose();

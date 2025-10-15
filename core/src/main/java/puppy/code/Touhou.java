@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import Managers.MusicManager;
+import Sessions.SessionDataManager;
 
 public class Touhou extends Game {
     private static Touhou instance;
