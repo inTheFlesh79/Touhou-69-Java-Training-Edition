@@ -63,6 +63,19 @@ public class PantallaSesiones implements Screen {
 
     // temp layout used for measurement
     private final GlyphLayout tmpLayout = new GlyphLayout();
+    
+    // --- Overlay detail view state ---
+    private boolean showingDetail = false;
+    private GameSessionData selectedSession = null;
+    private float overlayAlpha = 0f;
+    // --- Overlay detail state (new) ---
+    private boolean showingRoundDetail = false; // true = viendo preguntas dentro de una ronda
+    private int selectedRoundIndex = 0;         // qué ronda está seleccionada
+	// --- Scroll para detalle de preguntas ---
+    private float roundScrollOffset = 0f;     // desplazamiento vertical
+    private int roundScrollAccumulator = 0;   // para el scroll con rueda del mouse
+    private float roundScrollSpeed = 30f;     // velocidad del scroll por paso
+
 
     public PantallaSesiones(Screen previousScreen) {
         this.game = Touhou.getInstance();
@@ -108,7 +121,16 @@ public class PantallaSesiones implements Screen {
             @Override
             public boolean scrolled(float amountX, float amountY) {
                 int delta = Math.abs(amountY) > 1e-4f ? (int) -Math.signum(amountY) : (int) -Math.signum(amountX);
-                scrollAccumulator += delta;
+                //scrollAccumulator += delta;
+                
+                if (showingDetail && showingRoundDetail) {
+                    // Scroll dentro del detalle de preguntas
+                    roundScrollAccumulator += delta;
+                } else {
+                    // Scroll normal entre sesiones
+                    scrollAccumulator += delta;
+                }
+                
                 return true;
             }
 
@@ -140,7 +162,20 @@ public class PantallaSesiones implements Screen {
         ScreenUtils.clear(0, 0, 0, 1);
 
         handleInput(delta);
+        
+        // Procesar scroll en detalle de preguntas
+        if (showingDetail && showingRoundDetail && roundScrollAccumulator != 0) {
+            int steps = roundScrollAccumulator;
+            roundScrollAccumulator = 0;
+            roundScrollOffset += steps * roundScrollSpeed;
 
+
+            // límite inferior: no dejar subir más allá del inicio
+            if (roundScrollOffset < 0f) roundScrollOffset = 0f;
+
+            // límite superior: se calcula más adelante (luego de dibujar preguntas)
+        }
+        
         // process mouse wheel accumulated steps (each step moves selection)
         if (scrollAccumulator != 0) {
             int steps = scrollAccumulator;
@@ -283,11 +318,199 @@ public class PantallaSesiones implements Screen {
             GlyphLayout bottom = new GlyphLayout(bottomFont, "Press ESC to return to Main Menu");
             bottomFont.draw(batch, bottom, 50f, bottomMargin - 20f);
         }
+        
+        // add 
+        // --- Overlay: session detail ---
+        if (showingDetail && selectedSession != null) {
+            // Fade in
+            if (overlayAlpha < 0.9f) overlayAlpha += delta * 1.5f;
+            if (overlayAlpha > 0.9f) overlayAlpha = 0.9f;
+
+            // Fondo semitransparente
+            batch.setColor(0f, 0f, 0f, overlayAlpha);
+            batch.draw(pixel, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
+            batch.setColor(1f, 1f, 1f, 1f);
+
+            float cx = viewport.getWorldWidth() / 2f;
+            float cy = viewport.getWorldHeight() / 2f;
+
+            if (!showingRoundDetail) {
+                // --- vista general de rondas ---
+                String title = "Detalles de la Sesion";
+                GlyphLayout titleL = new GlyphLayout(titleFont, title);
+                titleFont.draw(batch, titleL, cx - titleL.width / 2f, cy + 220f);
+
+                String player = "Jugador: " + selectedSession.getPlayerTag();
+                String date = "Fecha: " + selectedSession.getDate() + " " + selectedSession.getTime();
+                String score = "Puntaje: " + selectedSession.getScore();
+                rowFont.draw(batch, player, cx - 300f, cy + 150f);
+                rowFont.draw(batch, date,   cx - 300f, cy + 110f);
+                rowFont.draw(batch, score,  cx - 300f, cy + 70f);
+
+                List<Sessions.TestRound> rounds = selectedSession.getRounds();
+                if (rounds != null && !rounds.isEmpty()) {
+                    float startY = cy + 10f;
+                    for (int i = 0; i < rounds.size(); i++) {
+                        Sessions.TestRound r = rounds.get(i);
+                        List<Enemies.Pregunta> questions = r.getQuestions();
+                        int total = questions.size();
+                        int correct = 0;
+                        for (Enemies.Pregunta q : questions)
+                            if (q.getRespondidaCorrecta() != null && q.getRespondidaCorrecta()) correct++;
+
+                        float y = startY - i * 40f;
+
+                        // highlight de ronda seleccionada
+                        if (i == selectedRoundIndex) {
+                            batch.setColor(0.2f, 0.35f, 0.9f, 0.45f);
+                            batch.draw(pixel, cx - 320f, y - 28f, 640f, 36f);
+                            batch.setColor(1f, 1f, 1f, 1f);
+                        }
+
+                        String text = "Ronda " + (i + 1) + ": " + correct + "/" + total;
+                        rowFont.draw(batch, text, cx - 300f, y);
+                    }
+
+                    GlyphLayout footer = new GlyphLayout(bottomFont, "ENTER para ver ronda | ESC para volver");
+                    bottomFont.draw(batch, footer, cx - footer.width / 2f, cy - 220f);
+                } else {
+                    GlyphLayout msg = new GlyphLayout(rowFont, "Esta sesion no contiene rondas registradas");
+                    rowFont.draw(batch, msg, cx - msg.width / 2f, cy);
+                    
+                    GlyphLayout footer = new GlyphLayout(bottomFont, "ESC para volver");
+                    bottomFont.draw(batch, footer, cx - footer.width / 2f, cy - 220f);
+                }
+            } else {
+                // --- detalle de preguntas ---
+                List<Sessions.TestRound> rounds = selectedSession.getRounds();
+                if (rounds == null || rounds.isEmpty()) return;
+                Sessions.TestRound round = rounds.get(selectedRoundIndex);
+                List<Enemies.Pregunta> questions = round.getQuestions();
+
+                String title = "Ronda " + (selectedRoundIndex + 1);
+                GlyphLayout titleL = new GlyphLayout(titleFont, title);
+                titleFont.draw(batch, titleL, cx - titleL.width / 2f, cy + 400f);
+
+                float visibleTop = cy + 320f;
+                float visibleBottom = cy - 410f;
+
+                float y = visibleTop - roundScrollOffset;
+                float totalContentHeight = 0f;
+
+                for (int i = 0; i < questions.size(); i++) {
+                    Enemies.Pregunta q = questions.get(i);
+
+                    // Saltar si fuera de área visible
+                    if (y < visibleBottom) break;          // ya no dibujar más abajo
+                    if (y > visibleTop) { y -= 30f; continue; } // todavía arriba, saltar
+
+                    float maxWidth = 1200f; // ancho máximo del texto
+                    GlyphLayout enunciadoLayout = new GlyphLayout();
+                    enunciadoLayout.setText(rowFont, (i + 1) + ". " + q.getEnunciado(), Color.WHITE, maxWidth, com.badlogic.gdx.utils.Align.left, true);
+                    float enunciadoHeight = enunciadoLayout.height;
+                    rowFont.draw(batch, enunciadoLayout, cx - 620f, y);
+                    y -= enunciadoHeight + 8f; // espacio extra después del enunciado
+
+                    String[] opciones = q.getRespuestas();
+                    for (int j = 0; j < opciones.length; j++) {
+                        if (y < visibleBottom) break;
+                        if (y > visibleTop) { y -= 24f; continue; }
+
+                        String textoRespuesta = "   " + (char)('A' + j) + ") " + opciones[j];
+                        GlyphLayout respuestaLayout = new GlyphLayout(rowFont, textoRespuesta, Color.WHITE, maxWidth - 20f, com.badlogic.gdx.utils.Align.left, true);
+                        float respuestaHeight = respuestaLayout.height;
+                        Color colorRespuesta;
+
+                        if (q.getRespondidaCorrecta() != null && q.getRespondidaCorrecta()) {
+                            // la respuesta seleccionada fue correcta
+                            colorRespuesta = (q.getIndiceCorrecto() == j) ? Color.GREEN : Color.WHITE;
+                        } else {
+                            // la respuesta seleccionada fue incorrecta
+                            colorRespuesta = (q.getIndiceCorrecto() == j) ? Color.RED : Color.WHITE;
+                        }
+                        // dibujar con wrap y color
+
+                        rowFont.setColor(colorRespuesta);
+                        rowFont.draw(batch, textoRespuesta, cx - 600f, y, maxWidth - 20f, com.badlogic.gdx.utils.Align.left, true);
+                        y -= respuestaHeight + 14f; // espacio entre respuestas
+                        // resetear color para no afectar el siguiente texto
+                        rowFont.setColor(Color.WHITE);
+                    }
+                    y -= 15f;
+                }
+
+                // guardar altura total del contenido para limitar el scroll
+                totalContentHeight = visibleTop - y;
+                float maxScroll = Math.max(0f, totalContentHeight - (visibleTop - visibleBottom));
+                if (roundScrollOffset > maxScroll) roundScrollOffset = maxScroll;
+
+                GlyphLayout footer = new GlyphLayout(bottomFont, "ESC para volver");
+                bottomFont.draw(batch, footer, cx - footer.width / 2f, cy - 440f);
+            }
+        }
+
 
         batch.end();
     }
 
     private void handleInput(float delta) {
+    	
+    	// 🔹 --- BLOQUE NUEVO: control del overlay de detalle ---
+    	if (showingDetail) {
+    	    // 🔸 Si estamos viendo las preguntas de una ronda
+    	    if (showingRoundDetail) {
+    	    	if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
+    	    	    roundScrollOffset += 10f;  // subir (mover el texto hacia abajo)
+    	    	}
+    	    	if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
+    	    	    roundScrollOffset -= 10f;  // bajar (mover el texto hacia arriba)
+    	    	    //if (roundScrollOffset < 0f) roundScrollOffset = 0f;
+    	    	}
+
+
+    	        // ESC -> volver al detalle de rondas
+    	        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+    	            enterSound.play(0.7f);
+    	            showingRoundDetail = false;
+    	            roundScrollOffset = 0f; // resetear scroll
+    	        }
+
+    	        return; // mientras estamos en preguntas, no procesar nada más
+    	    }
+
+    	    // 🔸 Si estamos viendo la lista de rondas
+    	    if (!showingRoundDetail) {
+    	        if (Gdx.input.isKeyJustPressed(Input.Keys.W) || Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+    	            if (selectedRoundIndex > 0) { selectedRoundIndex--; pickSound.play(0.7f); }
+    	        }
+    	        if (Gdx.input.isKeyJustPressed(Input.Keys.S) || Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+    	            List<Sessions.TestRound> rounds = selectedSession.getRounds();
+    	            if (rounds != null && selectedRoundIndex < rounds.size() - 1) {
+    	                selectedRoundIndex++; pickSound.play(0.7f);
+    	            }
+    	        }
+    	        // ENTER -> abrir detalle de preguntas
+    	        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+    	            List<Sessions.TestRound> rounds = selectedSession.getRounds();
+    	            if (rounds != null && !rounds.isEmpty()) {
+    	                enterSound.play(0.7f);
+    	                showingRoundDetail = true;
+    	                roundScrollOffset = 0f;
+    	            }
+    	        }
+
+    	        // ESC -> salir al listado de previous runs
+    	        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+    	            enterSound.play(0.7f);
+    	            showingDetail = false; // cerrar overlay completo
+    	            selectedRoundIndex = 0;
+    	            roundScrollOffset = 0f;
+    	        }
+
+    	        return; // ⛔ mientras estamos en overlay (cualquier modo), no procesar más entradas
+    	    }
+    	}
+    	
         // keys up / down
         if (Gdx.input.isKeyJustPressed(Input.Keys.W) || Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             if (selectedIndex > 0) {
@@ -363,12 +586,28 @@ public class PantallaSesiones implements Screen {
 
         // Enter placeholder
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            enterSound.play(0.7f);
+            //enterSound.play(0.7f);
+        	
+        	if (!showingDetail && !sessions.isEmpty()) {
+                enterSound.play(0.7f);
+                selectedSession = sessions.get(selectedIndex);
+                showingDetail = true;
+                overlayAlpha = 0f;
+            } else if (showingDetail) {
+                // optional: could trigger something else if desired
+            }
+        	
         }
 
         // Escape -> back
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             enterSound.play(0.7f);
+            
+            if (showingDetail) {
+                showingDetail = false;  // close overlay
+                return;
+            }
+            
             if (previousProcessor != null) Gdx.input.setInputProcessor(previousProcessor);
             game.setScreen(previousScreen);
             dispose();

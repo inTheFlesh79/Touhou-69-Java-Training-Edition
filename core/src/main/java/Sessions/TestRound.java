@@ -48,6 +48,9 @@ public class TestRound {
 	public void setGameId(Integer gameId) {
 		this.gameId = gameId;
 	}
+	
+	public List<Pregunta> getQuestions() { return questions; }
+	public void setQuestions(ArrayList<Pregunta> questions) { this.questions = questions; }
 }
 
 

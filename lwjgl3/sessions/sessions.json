@@ -1,5 +1,5 @@
 {
-nextGameId: 16
+nextGameId: 17
 sessions: [
 	{
 		gameId: 1
@@ -958,6 +958,99 @@ sessions: [
 							La clase padre debería ser abstracta
 							Es obligatorio que los métodos de la clase padre sean final
 							La clase hija no puede tener métodos propios
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+				]
+			}
+		]
+	}
+	{
+		gameId: 16
+		playerTag: cacacaca
+		date: 2025-10-15
+		time: 14:45
+		finishedLevels: 1
+		rounds: [
+			{
+				gameId: 16
+				testRoundId: 1
+				questions: [
+					{
+						id: 33
+						categoria: 1
+						enunciado: Una clase derivada no hereda:
+						respuestas: [
+							Propiedades protegidas y constructores
+							Propiedades privadas y constructores
+							Propiedades tanto privadas como protegidas y constructores
+							Propiedades independiente del modificador de visibilidad y constructores
+						]
+						indiceCorrecto: 1
+						respondidaCorrecta: false
+					}
+					{
+						id: 26
+						categoria: 1
+						enunciado: ¿Cuál de las siguientes afirmaciones describe correctamente la herencia soportada en Java?
+						respuestas: [
+							Java permite herencia simple de clases y múltiple de interfaces
+							Java permite herencia múltiple de clases e interfaces
+							Java solo permite herencia múltiple de clases
+							Java no soporta herencia en absoluto
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 34
+						categoria: 1
+						enunciado: Marque la afirmación correcta:
+						respuestas: [
+							Los constructores son heredados de la clase padre
+							Para invocar el constructor de la clase padre se debe realizar utilizando el nombre de la clase
+							Las clases que no declaran extender a otras extienden de la clase Object
+							El método super permite invocar métodos de la clase padre
+						]
+						indiceCorrecto: 2
+						respondidaCorrecta: false
+					}
+					{
+						id: 30
+						categoria: 1
+						enunciado: ¿Para qué se utiliza la palabra clave super en herencia?
+						respuestas: [
+							Para acceder a los miembros de la superclase desde la subclase
+							Para definir que una clase es la clase principal del programa
+							Para acceder a los miembros de la subclase
+							Para crear una nueva clase independiente
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 25
+						categoria: 1
+						enunciado: ¿Qué limitación tiene Java respecto a la herencia de clases?
+						respuestas: [
+							No permite herencia múltiple de clases
+							No permite heredar constructores
+							No permite heredar métodos públicos
+							No permite heredar variables de instancia
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 27
+						categoria: 1
+						enunciado: ¿Qué significa sobrescribir (override) un método en Java?
+						respuestas: [
+							Redefinir un método heredado en la subclase con la misma firma pero con un comportamiento distinto
+							Copiar un método de la superclase a la subclase sin cambios
+							Crear un método con el mismo nombre pero diferente número de parámetros
+							Borrar un método de la superclase desde la subclase
 						]
 						indiceCorrecto: 0
 						respondidaCorrecta: true
