@@ -74,7 +74,7 @@ public class PantallaSesiones implements Screen {
 	// --- Scroll para detalle de preguntas ---
     private float roundScrollOffset = 0f;     // desplazamiento vertical
     private int roundScrollAccumulator = 0;   // para el scroll con rueda del mouse
-    private float roundScrollSpeed = 30f;     // velocidad del scroll por paso
+    private float roundScrollSpeed = 1f;     // velocidad del scroll por paso
 
 
     public PantallaSesiones(Screen previousScreen) {
@@ -392,7 +392,7 @@ public class PantallaSesiones implements Screen {
                 titleFont.draw(batch, titleL, cx - titleL.width / 2f, cy + 400f);
 
                 float visibleTop = cy + 320f;
-                float visibleBottom = cy - 410f;
+                float visibleBottom = cy - 360f;
 
                 float y = visibleTop - roundScrollOffset;
                 float totalContentHeight = 0f;
@@ -460,10 +460,10 @@ public class PantallaSesiones implements Screen {
     	    // 🔸 Si estamos viendo las preguntas de una ronda
     	    if (showingRoundDetail) {
     	    	if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
-    	    	    roundScrollOffset += 10f;  // subir (mover el texto hacia abajo)
+    	    	    roundScrollOffset += 1f;  // subir (mover el texto hacia abajo)
     	    	}
     	    	if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
-    	    	    roundScrollOffset -= 10f;  // bajar (mover el texto hacia arriba)
+    	    	    roundScrollOffset -= 1f;  // bajar (mover el texto hacia arriba)
     	    	    //if (roundScrollOffset < 0f) roundScrollOffset = 0f;
     	    	}
 
