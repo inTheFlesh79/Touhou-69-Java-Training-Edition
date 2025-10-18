@@ -112,6 +112,7 @@ public class PantallaEjercicios implements Screen {
 	        areaClick.addListener(new ClickListener() {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
+	            	preguntaActual.setIndiceSeleccionado(opcion);
 	                if (opcion == preguntaActual.getIndiceCorrecto()) {
 	                	musicMng.playCorrect();
 	                	System.out.println("¡Correcto!");

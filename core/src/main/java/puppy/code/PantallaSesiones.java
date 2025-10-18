@@ -421,15 +421,17 @@ public class PantallaSesiones implements Screen {
                         float respuestaHeight = respuestaLayout.height;
                         Color colorRespuesta;
 
-                        if (q.getRespondidaCorrecta() != null && q.getRespondidaCorrecta()) {
-                            // la respuesta seleccionada fue correcta
-                            colorRespuesta = (q.getIndiceCorrecto() == j) ? Color.GREEN : Color.WHITE;
-                        } else {
-                            // la respuesta seleccionada fue incorrecta
-                            colorRespuesta = (q.getIndiceCorrecto() == j) ? Color.RED : Color.WHITE;
-                        }
-                        // dibujar con wrap y color
+                        int seleccion = q.getIndiceSeleccionado();
+                        boolean correcta = q.getRespondidaCorrecta() != null && q.getRespondidaCorrecta();
 
+                        if (j == seleccion) {
+                            // Esta es la que el jugador eligió
+                            colorRespuesta = correcta ? Color.GREEN : Color.RED;
+                        } else {
+                            colorRespuesta = Color.WHITE;
+                        }
+
+                        // dibujar con wrap y color
                         rowFont.setColor(colorRespuesta);
                         rowFont.draw(batch, textoRespuesta, cx - 600f, y, maxWidth - 20f, com.badlogic.gdx.utils.Align.left, true);
                         y -= respuestaHeight + 14f; // espacio entre respuestas

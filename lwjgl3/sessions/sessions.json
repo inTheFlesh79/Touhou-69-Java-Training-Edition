@@ -3,10 +3,282 @@ nextGameId: 2
 sessions: [
 	{
 		gameId: 1
-		playerTag: sdf
-		date: 2025-10-17
-		time: 21:33
+		playerTag: test
+		date: 2025-10-18
+		time: 11:04
 		finishedLevels: 1
+		rounds: [
+			{
+				gameId: 1
+				testRoundId: 1
+				questions: [
+					{
+						id: 31
+						categoria: 1
+						enunciado: En un metodo de una subclase es posible invocar metodos de la superclase. Sin embargo esto depende de los modificadores de acceso y de la forma en que se invoquen dichos metodos. Considerando esto ¿cual de las siguientes no permitiria a una hija acceder a los metodos de su padre?
+						respuestas: [
+							Los metodos de la clase padre sean public
+							Los metodos de la clase padre sean protected
+							Los metodos de la clase padre sean private
+							Los metodos sean invocados con la palabra reservada super()
+						]
+						indiceCorrecto: 2
+						respondidaCorrecta: false
+						indiceSeleccionado: 0
+					}
+					{
+						id: 36
+						categoria: 1
+						enunciado: Respecto al uso de herencia. Indique las afirmaciones correctas:
+						respuestas: [
+							En ningun caso es posible heredar variables protegidas con modificador de visibilidad protected
+							Para utilizar las variables de instancia de la superclase es necesario declararlas en la subclase
+							Los constructores publicos son heredados por las subclases
+							Si existen variables con modificador protected pueden ser utilizadas en la subclase como si hubieran sido declaradas en ella
+						]
+						indiceCorrecto: 3
+						respondidaCorrecta: false
+						indiceSeleccionado: 0
+					}
+					{
+						id: 23
+						categoria: 1
+						enunciado: ¿Que palabra reservada se utiliza en Java para heredar de otra clase?
+						respuestas: [
+							extends
+							inherits
+							superclass
+							derive
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+					{
+						id: 29
+						categoria: 1
+						enunciado: ¿Que relacion existe entre herencia y polimorfismo en Java?
+						respuestas: [
+							El polimorfismo permite usar un objeto de la subclase como si fuera de la superclase
+							El polimorfismo no depende de la herencia
+							La herencia y el polimorfismo son exactamente lo mismo
+							El polimorfismo elimina la necesidad de herencia
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+					{
+						id: 28
+						categoria: 1
+						enunciado: ¿Como se invoca el constructor de una superclase desde la subclase?
+						respuestas: [
+							Usando la palabra clave super()
+							Usando la palabra clave base()
+							Usando la palabra clave extends()
+							Llamando directamente al nombre de la superclase
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+					{
+						id: 22
+						categoria: 1
+						enunciado: ¿Que es la herencia en Java?
+						respuestas: [
+							Un mecanismo que permite que una clase adquiera atributos y metodos de otra
+							Una forma de copiar automaticamente todo el codigo de una clase a otra
+							Un proceso exclusivo para heredar solo variables estaticas
+							Una tecnica que se usa unicamente con interfaces
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+				]
+			}
+			{
+				gameId: 1
+				testRoundId: 2
+				questions: [
+					{
+						id: 11
+						categoria: 2
+						enunciado: ¿Que muestra en pantalla el siguiente codigo de herencia?
+						respuestas: [
+							"\"El perro ladra\""
+							"\"El animal hace un sonido\""
+							Error por metodo duplicado
+							NullPointerException
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+					{
+						id: 10
+						categoria: 2
+						enunciado: Al ejecutar el siguiente programa ¿que salida se obtiene en consola?
+						respuestas: [
+							"\"Soy un coche\""
+							"\"Soy un vehiculo\""
+							Error de compilacion
+							No imprime nada
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+					{
+						id: 1
+						categoria: 2
+						enunciado: ¿Que linea falta para completar correctamente la herencia entre las clases?
+						respuestas: [
+							class Gato extends Animal
+							class Gato implements Animal
+							class Animal extends Gato
+							class Gato inherits Animal
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+					{
+						id: 9
+						categoria: 2
+						enunciado: Considere la siguiente implementacion (imagen izq.). En metodo main se realiza(imagen der.): ¿Que imprime por pantalla?
+						respuestas: [
+							INICIAR
+							FIN-AHORA
+							SALIR-AHORA
+							Error de compilacion
+						]
+						indiceCorrecto: 2
+						respondidaCorrecta: false
+						indiceSeleccionado: 0
+					}
+					{
+						id: 12
+						categoria: 2
+						enunciado: ¿Cual es el error en el siguiente codigo que define una clase base Animal y una clase hija Perro?
+						respuestas: [
+							Falta usar extends en la clase hija
+							Falta un constructor vacio en la clase base
+							No se pueden definir atributos privados en la clase padre
+							El metodo main debe ser estatico en la clase padre
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+					{
+						id: 8
+						categoria: 2
+						enunciado: Considere la siguiente implementacion para detectar errores de codigo. Indique en que lineas se produce error de compilacion
+						respuestas: [
+							3 y 5
+							3 y 6
+							5 y 6
+							Solo 6
+						]
+						indiceCorrecto: 3
+						respondidaCorrecta: false
+						indiceSeleccionado: 0
+					}
+				]
+			}
+			{
+				gameId: 1
+				testRoundId: 3
+				questions: [
+					{
+						id: 21
+						categoria: 3
+						enunciado: En un programa de Java se tiene una superclase llamada Persona y dos subclases llamadas Alumno y Profesor. Tanto Alumno como Profesor heredan de Persona. Selecciona la unica declaracion/instanciacion que refleja correctamente el uso de herencia y polimorfismo:
+						respuestas: [
+							Persona p = new Persona();
+							Profesor p = new Persona();
+							Profesor p = new Alumno();
+							Persona p = new Alumno();
+						]
+						indiceCorrecto: 3
+						respondidaCorrecta: false
+						indiceSeleccionado: 0
+					}
+					{
+						id: 19
+						categoria: 3
+						enunciado: ¿Como se relacionan 'Paciente' 'Medico' y 'Cita'?
+						respuestas: [
+							Cada Paciente puede tener multiples Citas y cada Cita esta asociada a un Medico
+							Cada Paciente hereda de Cita y Medico
+							Cada Medico implementa la interfaz Paciente
+							Cita es clase abstracta que controla Paciente y Medico
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+					{
+						id: 20
+						categoria: 3
+						enunciado: Si se considera que la clase Automovil hereda de la clase Vehiculo. ¿Cual de las siguientes afirmaciones es correcta?
+						respuestas: [
+							Vehiculo es subclase de Automovil
+							Automovil es clase hija de Vehiculo
+							Automovil es superclase de Vehiculo
+							Vehiculo no puede ser clase base
+						]
+						indiceCorrecto: 1
+						respondidaCorrecta: false
+						indiceSeleccionado: 0
+					}
+					{
+						id: 15
+						categoria: 3
+						enunciado: ¿Por que la clase Empleado se define como abstracta?
+						respuestas: [
+							Para obligar a las subclases a implementar el metodo calcularPago()
+							Para poder instanciar Empleado directamente
+							Porque Empleado no tiene atributos
+							Para indicar que Empleado es una interfaz
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+					{
+						id: 14
+						categoria: 3
+						enunciado: ¿Cual es la relacion entre 'Material' 'Libro' y 'Revista'?
+						respuestas: [
+							Material es la clase padre de la que heredan Libro y Revista
+							Material es una interfaz implementada por Libro y Revista
+							Libro y Revista son clases abstractas de las que hereda Material
+							Libro y Revista son clases independientes sin relacion con Material
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+					{
+						id: 18
+						categoria: 3
+						enunciado: ¿Cual es la funcion de la clase Vehiculo?
+						respuestas: [
+							Es una clase padre que comparte atributos y metodos con Bus y Taxi
+							Es una interfaz que Bus y Taxi implementan
+							Es una clase que depende de Bus y Taxi para funcionar
+							Es una clase abstracta que no tiene metodos ni atributos
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+				]
+			}
+		]
 	}
 ]
 }
