@@ -1,5 +1,5 @@
 {
-nextGameId: 2
+nextGameId: 3
 sessions: [
 	{
 		gameId: 1
@@ -7,6 +7,100 @@ sessions: [
 		date: 2025-10-17
 		time: 21:33
 		finishedLevels: 1
+	}
+	{
+		gameId: 2
+		playerTag: eegfswedf
+		date: 2025-10-17
+		time: 22:38
+		score: 1200
+		finishedLevels: 1
+		rounds: [
+			{
+				gameId: 2
+				testRoundId: 1
+				questions: [
+					{
+						id: 36
+						categoria: 1
+						enunciado: Respecto al uso de herencia. Indique las afirmaciones correctas:
+						respuestas: [
+							En ningun caso es posible heredar variables protegidas con modificador de visibilidad protected
+							Para utilizar las variables de instancia de la superclase es necesario declararlas en la subclase
+							Los constructores publicos son heredados por las subclases
+							Si existen variables con modificador protected pueden ser utilizadas en la subclase como si hubieran sido declaradas en ella
+						]
+						indiceCorrecto: 3
+						respondidaCorrecta: false
+					}
+					{
+						id: 23
+						categoria: 1
+						enunciado: ¿Que palabra reservada se utiliza en Java para heredar de otra clase?
+						respuestas: [
+							extends
+							inherits
+							superclass
+							derive
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 22
+						categoria: 1
+						enunciado: ¿Que es la herencia en Java?
+						respuestas: [
+							Un mecanismo que permite que una clase adquiera atributos y metodos de otra
+							Una forma de copiar automaticamente todo el codigo de una clase a otra
+							Un proceso exclusivo para heredar solo variables estaticas
+							Una tecnica que se usa unicamente con interfaces
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 34
+						categoria: 1
+						enunciado: Marque la afirmacion correcta:
+						respuestas: [
+							Los constructores son heredados de la clase padre
+							Para invocar el constructor de la clase padre se debe realizar utilizando el nombre de la clase
+							Las clases que no declaran extender a otras extienden de la clase Object
+							El metodo super permite invocar metodos de la clase padre
+						]
+						indiceCorrecto: 2
+						respondidaCorrecta: false
+					}
+					{
+						id: 30
+						categoria: 1
+						enunciado: ¿Para que se utiliza la palabra clave super en herencia?
+						respuestas: [
+							Para acceder a los miembros de la superclase desde la subclase
+							Para definir que una clase es la clase principal del programa
+							Para acceder a los miembros de la subclase
+							Para crear una nueva clase independiente
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 28
+						categoria: 1
+						enunciado: ¿Como se invoca el constructor de una superclase desde la subclase?
+						respuestas: [
+							Usando la palabra clave super()
+							Usando la palabra clave base()
+							Usando la palabra clave extends()
+							Llamando directamente al nombre de la superclase
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+				]
+			}
+		]
 	}
 ]
 }
