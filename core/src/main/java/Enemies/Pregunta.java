@@ -10,6 +10,7 @@ public class Pregunta {
     private int indiceCorrecto;
     private String rutaImagen;
     private boolean respondidaCorrecta = false;
+    private int indiceSeleccionado = -1; // índice de la alternativa elegida (0-3)
 
     public Pregunta(String id, int categoria, String enunciado, String[] respuestas, int indiceCorrecto) {
     	this.id = id;
@@ -38,4 +39,6 @@ public class Pregunta {
     public boolean tieneImagen() { return rutaImagen != null; }
     public void setRespondidaCorrecta(boolean correcta) { this.respondidaCorrecta = correcta; }
     public Boolean getRespondidaCorrecta() { return respondidaCorrecta; }
+    public void setIndiceSeleccionado(int indice) { this.indiceSeleccionado = indice; }
+    public int getIndiceSeleccionado() { return indiceSeleccionado; }
 }

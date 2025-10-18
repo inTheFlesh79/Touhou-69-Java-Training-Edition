@@ -59,6 +59,7 @@ public class SessionDataManager {
                 // ensure boolean is always written (default false if null)
                 Boolean rc = object.getRespondidaCorrecta();
                 json.writeValue("respondidaCorrecta", rc != null ? rc.booleanValue() : false);
+                json.writeValue("indiceSeleccionado", object.getIndiceSeleccionado());
                 json.writeObjectEnd();
             }
 
@@ -90,7 +91,10 @@ public class SessionDataManager {
                     // set respondidaCorrecta if present
                     boolean rc = jsonData.getBoolean("respondidaCorrecta", false);
                     p.setRespondidaCorrecta(rc);
-
+                    
+                    if (jsonData.has("indiceSeleccionado"))
+                        p.setIndiceSeleccionado(jsonData.getInt("indiceSeleccionado", -1));
+                    
                     return p;
                 } catch (Exception e) {
                     Gdx.app.error("SessionDataManager", "Failed to deserialize Pregunta from JSON; returning default Pregunta", e);

@@ -112,6 +112,7 @@ public class PantallaEjercicios implements Screen {
 	        areaClick.addListener(new ClickListener() {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
+	            	preguntaActual.setIndiceSeleccionado(opcion);
 	                if (opcion == preguntaActual.getIndiceCorrecto()) {
 	                	musicMng.playCorrect();
 	                	System.out.println("¡Correcto!");
@@ -152,7 +153,7 @@ public class PantallaEjercicios implements Screen {
 
 	        // variables para crear el area apta para mostrar imagen
 	        float rectX = 0;
-	        float rectY = 292;
+	        float rectY = 335;
 	        float rectWidth = 1200;
 	        float rectHeight = 412;
 	        float posX = rectX + (rectWidth - imgWidth) / 2f;
