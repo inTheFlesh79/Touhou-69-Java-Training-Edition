@@ -292,12 +292,15 @@ public class PantallaMenu implements Screen {
 
     private void executeOption(int index) {
         Screen ss;
+        String playerName = nameBuffer.toString().trim();
         switch (index) {
             case 0: // Play -> go to hint -> game
-                ss = new PantallaJuego(1, 10, 0, 1000);
+                ss = new PantallaJuego(1, 3, 0, 10);
                 ss.resize(1280, 960);
-                // start provisional session without playerTag if we somehow skipped name
-                SessionDataManager.getInstance().startRecordingSession();
+                playerName = nameBuffer.toString().trim();
+                if (playerName.isEmpty()) playerName = "Player"; // fallback
+                // start provisional session with playerName
+                SessionDataManager.getInstance().startRecordingSession(playerName);
                 game.setScreen(new PantallaHint(game, ss));
                 musicMng.stopMainMenu();
                 musicMng.resetMusicMng();
@@ -306,7 +309,10 @@ public class PantallaMenu implements Screen {
             case 1: // Tutorial
                 ss = new PantallaTutorial();
                 ss.resize(1280, 960);
-                SessionDataManager.getInstance().startRecordingSession();
+                playerName = nameBuffer.toString().trim();
+                if (playerName.isEmpty()) playerName = "Player"; // fallback
+                // start provisional session with playerName
+                SessionDataManager.getInstance().startRecordingSession(playerName);
                 game.setScreen(ss);
                 musicMng.stopMainMenu();
                 musicMng.resetMusicMng();
@@ -419,26 +425,8 @@ public class PantallaMenu implements Screen {
 
         // Enter => confirm
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            String playerName = nameBuffer.toString().trim();
-            if (playerName.isEmpty()) playerName = "Player"; // fallback
-            // start provisional session with playerName
-            SessionDataManager.getInstance().startRecordingSession(playerName);
 
-            // proceed to the selected option (Play or Tutorial)
-            if (optionToProceed == 0) {
-                // Play -> create PantallaJuego / hint as you had before
-                Screen ss = new PantallaJuego(1, 3, 0, 1000);
-                ss.resize(1280, 960);
-                game.setScreen(new PantallaHint(game, ss));
-            } else if (optionToProceed == 1) {
-                Screen ss = new PantallaTutorial();
-                ss.resize(1280, 960);
-                game.setScreen(ss);
-            }
-
-            musicMng.stopMainMenu();
-            musicMng.resetMusicMng();
-            dispose();
+            executeOption(optionToProceed);
             return;
         }
 

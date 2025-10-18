@@ -80,7 +80,7 @@ public class PantallaTutorial implements Screen {
         if (transitionQueued) {
             transitionTimer += delta;
             if (transitionTimer >= transitionDelay) {
-                Screen ss = new PantallaJuego(1, 1, 0, 10000);
+                Screen ss = new PantallaJuego(1, 3, 0, 10);
                 Screen juego = new PantallaHint(game, ss);
                 juego.resize(1280, 960);
                 game.setScreen(juego);

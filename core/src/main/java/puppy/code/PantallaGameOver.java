@@ -158,7 +158,7 @@ public class PantallaGameOver implements Screen {
         switch (index) {
             case 0: // Retry
             	SessionDataManager.getInstance().startRecordingSession(tempPlayerTag);
-                Screen retry = new PantallaJuego(1, 10, 0, 1000);
+                Screen retry = new PantallaJuego(1, 3, 0, 10);
                 musicMng.resetMusicMng();
                 retry.resize(1280, 960);
                 game.setScreen(new PantallaHint(game, retry));

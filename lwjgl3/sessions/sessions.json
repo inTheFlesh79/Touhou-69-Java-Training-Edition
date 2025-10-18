@@ -1,5 +1,5 @@
 {
-nextGameId: 16
+nextGameId: 20
 sessions: [
 	{
 		gameId: 1
@@ -17,14 +17,14 @@ sessions: [
 	}
 	{
 		gameId: 3
-		playerTag: kkck
+		playerTag: holasi
 		date: 2025-10-14
 		time: 20:40
 		finishedLevels: 1
 	}
 	{
 		gameId: 4
-		playerTag: kkck
+		playerTag: zoom
 		date: 2025-10-14
 		time: 20:41
 		finishedLevels: 1
@@ -117,7 +117,7 @@ sessions: [
 	}
 	{
 		gameId: 5
-		playerTag: uyiedht67
+		playerTag: MeHizoPensar
 		date: 2025-10-14
 		time: 20:47
 		finishedLevels: 1
@@ -574,14 +574,14 @@ sessions: [
 	}
 	{
 		gameId: 9
-		playerTag: KK BKN
+		playerTag: super BKN
 		date: 2025-10-14
 		time: 22:31
 		finishedLevels: 1
 	}
 	{
 		gameId: 10
-		playerTag: wnbkn
+		playerTag: locoBkn
 		date: 2025-10-14
 		time: 22:31
 		finishedLevels: 1
@@ -758,7 +758,7 @@ sessions: [
 	}
 	{
 		gameId: 11
-		playerTag: semen seco
+		playerTag: un loco seco
 		date: 2025-10-14
 		time: 23:06
 		score: 1800
@@ -965,6 +965,374 @@ sessions: [
 				]
 			}
 		]
+	}
+	{
+		gameId: 16
+		date: 2025-10-17
+		time: 18:10
+		score: 1400
+		finishedLevels: 1
+	}
+	{
+		gameId: 17
+		date: 2025-10-17
+		time: 18:12
+		score: 7900
+		finishedLevels: 1
+		rounds: [
+			{
+				gameId: 17
+				testRoundId: 1
+				questions: [
+					{
+						id: 26
+						categoria: 1
+						enunciado: ¿Cuál de las siguientes afirmaciones describe correctamente la herencia soportada en Java?
+						respuestas: [
+							Java permite herencia simple de clases y múltiple de interfaces
+							Java permite herencia múltiple de clases e interfaces
+							Java solo permite herencia múltiple de clases
+							Java no soporta herencia en absoluto
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 30
+						categoria: 1
+						enunciado: ¿Para qué se utiliza la palabra clave super en herencia?
+						respuestas: [
+							Para acceder a los miembros de la superclase desde la subclase
+							Para definir que una clase es la clase principal del programa
+							Para acceder a los miembros de la subclase
+							Para crear una nueva clase independiente
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 22
+						categoria: 1
+						enunciado: ¿Qué es la herencia en Java?
+						respuestas: [
+							Un mecanismo que permite que una clase adquiera atributos y métodos de otra
+							Una forma de copiar automáticamente todo el código de una clase a otra
+							Un proceso exclusivo para heredar solo variables estáticas
+							Una técnica que se usa únicamente con interfaces
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 35
+						categoria: 1
+						enunciado: Si se utiliza el modificador de visibilidad protected en variables de instancia y métodos podemos decir que:
+						respuestas: [
+							Son sólo accesibles desde la misma clase.
+							Son sólo accesibles desde cualquier subclase de ella
+							Son accesibles desde la misma clase o cualquier subclase de ella
+							Son accesibles desde la misma clase o cualquier clase que la instancie
+						]
+						indiceCorrecto: 2
+						respondidaCorrecta: false
+					}
+					{
+						id: 31
+						categoria: 1
+						enunciado: En un método de una subclase es posible invocar métodos de la superclase. Sin embargo esto depende de los modificadores de acceso y de la forma en que se invoquen dichos métodos. Considerando esto ¿cuál de las siguientes no permitiria a una hija acceder a los metodos de su padre?
+						respuestas: [
+							Los métodos de la clase padre sean public
+							Los métodos de la clase padre sean protected
+							Los métodos de la clase padre sean private
+							Los métodos sean invocados con la palabra reservada super()
+						]
+						indiceCorrecto: 2
+						respondidaCorrecta: false
+					}
+					{
+						id: 32
+						categoria: 1
+						enunciado: En relación con la herencia en Java selecciona la única afirmación correcta:
+						respuestas: [
+							Java soporta herencia multinivel
+							La clase debe ser de caracter final
+							Java soporta herencia múltiple
+							La superclase es quien hereda las propiedades de una subclase
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+				]
+			}
+		]
+	}
+	{
+		gameId: 18
+		date: 2025-10-17
+		time: 18:19
+		score: 30300
+		finishedLevels: 3
+		rounds: [
+			{
+				gameId: 18
+				testRoundId: 1
+				questions: [
+					{
+						id: 29
+						categoria: 1
+						enunciado: ¿Qué relación existe entre herencia y polimorfismo en Java?
+						respuestas: [
+							El polimorfismo permite usar un objeto de la subclase como si fuera de la superclase
+							El polimorfismo no depende de la herencia
+							La herencia y el polimorfismo son exactamente lo mismo
+							El polimorfismo elimina la necesidad de herencia
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 27
+						categoria: 1
+						enunciado: ¿Qué significa sobrescribir (override) un método en Java?
+						respuestas: [
+							Redefinir un método heredado en la subclase con la misma firma pero con un comportamiento distinto
+							Copiar un método de la superclase a la subclase sin cambios
+							Crear un método con el mismo nombre pero diferente número de parámetros
+							Borrar un método de la superclase desde la subclase
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 22
+						categoria: 1
+						enunciado: ¿Qué es la herencia en Java?
+						respuestas: [
+							Un mecanismo que permite que una clase adquiera atributos y métodos de otra
+							Una forma de copiar automáticamente todo el código de una clase a otra
+							Un proceso exclusivo para heredar solo variables estáticas
+							Una técnica que se usa únicamente con interfaces
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 28
+						categoria: 1
+						enunciado: ¿Cómo se invoca el constructor de una superclase desde la subclase?
+						respuestas: [
+							Usando la palabra clave super()
+							Usando la palabra clave base()
+							Usando la palabra clave extends()
+							Llamando directamente al nombre de la superclase
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 23
+						categoria: 1
+						enunciado: ¿Qué palabra reservada se utiliza en Java para heredar de otra clase?
+						respuestas: [
+							extends
+							inherits
+							superclass
+							derive
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 25
+						categoria: 1
+						enunciado: ¿Qué limitación tiene Java respecto a la herencia de clases?
+						respuestas: [
+							No permite herencia múltiple de clases
+							No permite heredar constructores
+							No permite heredar métodos públicos
+							No permite heredar variables de instancia
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+				]
+			}
+			{
+				gameId: 18
+				testRoundId: 2
+				questions: [
+					{
+						id: 11
+						categoria: 2
+						enunciado: ¿Qué muestra en pantalla el siguiente código de herencia?
+						respuestas: [
+							"\"El perro ladra\""
+							"\"El animal hace un sonido\""
+							Error por método duplicado
+							NullPointerException
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 13
+						categoria: 2
+						enunciado: Observa el código. ¿Cuál de las siguientes opciones es correcta?
+						respuestas: [
+							El código no tiene errores y logra compilar y ejecutar correctamente
+							La clase padre debería ser abstracta
+							Es obligatorio que los métodos de la clase padre sean final
+							La clase hija no puede tener métodos propios
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 8
+						categoria: 2
+						enunciado: Considere la siguiente implementación para detectar errores de código. Indique en que líneas se produce error de compilación
+						respuestas: [
+							3 y 5
+							3 y 6
+							5 y 6
+							Solo 6
+						]
+						indiceCorrecto: 3
+						respondidaCorrecta: false
+					}
+					{
+						id: 2
+						categoria: 2
+						enunciado: En el siguiente código falta una implementación. ¿Cuál es la opción correcta?
+						respuestas: [
+							Implementar el método hacerSonido() en la clase Perro
+							Hacer abstracto el método hacerSonido() en Animal
+							Quitar el constructor de Animal
+							Declarar Perro como abstracto
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 10
+						categoria: 2
+						enunciado: Al ejecutar el siguiente programa ¿qué salida se obtiene en consola?
+						respuestas: [
+							"\"Soy un coche\""
+							"\"Soy un vehículo\""
+							Error de compilación
+							No imprime nada
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 12
+						categoria: 2
+						enunciado: ¿Cuál es el error en el siguiente código que define una clase base Animal y una clase hija Perro?
+						respuestas: [
+							Falta usar extends en la clase hija
+							Falta un constructor vacío en la clase base
+							No se pueden definir atributos privados en la clase padre
+							El método main debe ser estático en la clase padre
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+				]
+			}
+			{
+				gameId: 18
+				testRoundId: 3
+				questions: [
+					{
+						id: 16
+						categoria: 3
+						enunciado: ¿Qué significa que la clase PagoTarjeta implemente la interfaz Pago?
+						respuestas: [
+							PagoTarjeta debe definir el método procesarPago() como lo declara Pago
+							PagoTarjeta hereda todos los atributos de Pago
+							PagoTarjeta no puede usar procesarPago()
+							Pago es una clase abstracta y PagoTarjeta la instancia directamente
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 15
+						categoria: 3
+						enunciado: ¿Por qué la clase Empleado se define como abstracta?
+						respuestas: [
+							Para obligar a las subclases a implementar el método calcularPago()
+							Para poder instanciar Empleado directamente
+							Porque Empleado no tiene atributos
+							Para indicar que Empleado es una interfaz
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 14
+						categoria: 3
+						enunciado: ¿Cuál es la relación entre 'Material' 'Libro' y 'Revista'?
+						respuestas: [
+							Material es la clase padre de la que heredan Libro y Revista
+							Material es una interfaz implementada por Libro y Revista
+							Libro y Revista son clases abstractas de las que hereda Material
+							Libro y Revista son clases independientes sin relación con Material
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+					{
+						id: 20
+						categoria: 3
+						enunciado: Si se considera que la clase Automovil hereda de la clase Vehículo. ¿Cuál de las siguientes afirmaciones es correcta?
+						respuestas: [
+							Vehículo es subclase de Automóvil
+							Automóvil es clase hija de Vehículo
+							Automóvil es superclase de Vehículo
+							Vehículo no puede ser clase base
+						]
+						indiceCorrecto: 1
+						respondidaCorrecta: false
+					}
+					{
+						id: 17
+						categoria: 3
+						enunciado: ¿Qué tipo de relación existe entre Universidad y Facultad?
+						respuestas: [
+							Asociación "uno a muchos" donde una universidad tiene varias facultades
+							Herencia simple
+							Implementación de interfaz
+							Dependencia débil que no se muestra en el diagrama
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: false
+					}
+					{
+						id: 19
+						categoria: 3
+						enunciado: ¿Cómo se relacionan 'Paciente' 'Medico' y 'Cita'?
+						respuestas: [
+							Cada Paciente puede tener múltiples Citas y cada Cita está asociada a un Medico
+							Cada Paciente hereda de Cita y Medico
+							Cada Medico implementa la interfaz Paciente
+							Cita es clase abstracta que controla Paciente y Medico
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+					}
+				]
+			}
+		]
+	}
+	{
+		gameId: 19
+		playerTag: holasi
+		date: 2025-10-17
+		time: 21:24
+		finishedLevels: 1
 	}
 ]
 }
