@@ -47,4 +47,7 @@ public class GameSessionData {
     public void addTestRound(TestRound round) { rounds.add(round); }
     public int getTestRoundsCount() { return rounds.size(); }
     
+    public List<TestRound> getRounds() { return rounds; }
+    public void setRounds(List<TestRound> rounds) { this.rounds = rounds; }
+    
 }
