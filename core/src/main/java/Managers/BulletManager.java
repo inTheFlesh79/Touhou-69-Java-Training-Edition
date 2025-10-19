@@ -26,12 +26,14 @@ public class BulletManager {
 	public BulletManager () {
 		enemyBulletSheet = new Texture(Gdx.files.internal("bulletTypes.png"));
         enemyBulletRegions = TextureRegion.split(enemyBulletSheet, 24, 30);
-        bhpTypes.add(new SpiralPattern());
-        bhpTypes.add(new DynamicSpiralPattern());
-      	bhpTypes.add(new CirclePattern());
-      	bhpTypes.add(new ForkPattern());
-      	bhpTypes.add(new TargetedPattern());
-      	bhpTypes.add(new FastTargetedPattern());
+        bhpTypes.add(new SpiralPattern()); // 0
+        bhpTypes.add(new DynamicSpiralPattern()); // 1
+      	bhpTypes.add(new CirclePattern()); // 2
+      	bhpTypes.add(new ForkPattern()); // 3
+      	bhpTypes.add(new TargetedPattern()); // 4
+      	bhpTypes.add(new FastTargetedPattern()); // 5
+      	bhpTypes.add(new HeptaSprayPattern()); // 6
+      	bhpTypes.add(new SlowTargetedPattern()); //7
       	
       	tsBhpTypes.add(new TargetedCirclePattern());
       	tsBhpTypes.add(new RandomHexaSpiralPattern());

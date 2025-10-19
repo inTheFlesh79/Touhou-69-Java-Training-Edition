@@ -24,6 +24,10 @@ public class Level implements LevelFeatures {
 		return 0;
 	}
 	
+	public int getBhpCurrentWave(int currentWave) {
+		return 0;
+	}
+	
 	public int getCantFairies() {return cantFairies;}
 	public int getCantWaves() {return cantWaves;}
 	public int getCantFairiesSpecificWave(int wave) {return fairiesByWave[wave];}

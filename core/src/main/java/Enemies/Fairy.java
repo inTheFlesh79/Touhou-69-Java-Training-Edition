@@ -15,17 +15,18 @@ public class Fairy extends Enemy implements EnemyTools{
 	private static final Random random = new Random();
 	private float targetX, targetY;
 	private BulletManager bulletMng;
-	private boolean isShootSoundAllowed = false;
+	private boolean isShootSoundAllowed = false, firstMovement = true;
 
 	public Fairy (float initialPosX, float initialPosY, int firstTargetX, int firstTargetY, BulletManager bulletMng, TextureRegion[][] spriteRegions) {
-		explosionSound.setVolume(1,0.3f);
-		shootingSound.setVolume(1,0.14f);
-		int randomRow = random.nextInt(4);//Elige entre 4 estilos de Fairy distintos
+		explosionSound.setVolume(1,0.2f);
+		shootingSound.setVolume(1,0.1f);
+		int randomRow = random.nextInt(4);//Elige stentre 4 estilos de Fairy distintos
 		
 		TextureRegion[] animationFrames = new TextureRegion[4];
     	for (int i = 0; i < 4; i++) {
     		TextureRegion currentSprite = spriteRegions[randomRow][i];
             animationFrames[i] = currentSprite;
+            
         }
     	animation = new Animation<TextureRegion>(0.1f, animationFrames);
     	spr = new Sprite(animationFrames[0]);
@@ -84,7 +85,7 @@ public class Fairy extends Enemy implements EnemyTools{
 	            //System.out.println("This Fairy is Allowed to Sound When Shooting? "+isShootSoundAllowed);
 	            //System.out.println("SOUND PLAYED!")
 	            bulletMng.generateEBullets(bhpChoice, spr.getX(), spr.getY(), false);
-	            if (isShootSoundAllowed) {shootingSound.play(0.2f);}
+	            if (isShootSoundAllowed) {shootingSound.play(0.1f);}
 	        }
 	        if (shootingTime >= bulletMng.getBHP(bhpChoice).getMaxShootingTime()) {
 	            isShooting = false;
@@ -121,16 +122,23 @@ public class Fairy extends Enemy implements EnemyTools{
 		    
 		}
 		else {
-			if (!inTrack) {
-				idleTime += deltaTime;
-			}
+			if (!inTrack) {idleTime += deltaTime;}
             
-            if (idleTime >= maxIdleTime) {
-            	//System.out.println("In Movement");
-            	inTrack = true;
-                selectNewArea(scrWidth, scrHeight); 
-                
-            }
+			if (!firstMovement) {
+	            if (idleTime >= maxIdleTime) {
+	            	//System.out.println("In Movement");
+	            	inTrack = true;
+	                selectNewArea(scrWidth, scrHeight);
+	            }
+			}
+			else {
+				if (idleTime >= ((maxIdleTime)-2f)) {
+	            	//System.out.println("In Movement");
+	            	inTrack = true;
+	                selectNewArea(scrWidth, scrHeight);
+	                firstMovement = false;
+	            }
+			}
             
             fairyTrack(deltaTime);
             
@@ -166,7 +174,7 @@ public class Fairy extends Enemy implements EnemyTools{
 	    if (distance > 2.0f) {
 	        directionX /= distance;
 	        directionY /= distance;
-
+	        
 	        speed *= 0.99f;
 	        if (speed < 100.0f) speed = 100.0f;
 
@@ -219,4 +227,6 @@ public class Fairy extends Enemy implements EnemyTools{
 	public void getSpawnSpeedChoice() {}
 	public float getTargetX() {return targetX;}
 	public float getTargetY() {return targetY;}
+	public float getShootingTime() {return shootingTime;}
+	public boolean shootBurst() {return bulletGenTimer >= bulletMng.getBHP(bhpChoice).getBulletGenInterval();}
 }

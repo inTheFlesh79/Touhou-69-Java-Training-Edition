@@ -60,6 +60,7 @@ public class LevelManager {
 	public int getFairiesCurrentWave() {return currentLvl.getCantFairiesSpecificWave(currentLvlWave);}
 	public int getCurrentLvlWave() {return currentLvlWave;}
 	public float getWaveSpawnCooldown() {return currentLvl.getWaveSpawnCooldown(currentLvlWave);}
+	public int getWaveFairiesBhp() {return currentLvl.getBhpCurrentWave(currentLvlWave);}
 	public boolean getAreWavesOverState() {return areWavesOver;}
 	
 	public void whatLevelIsIt() {

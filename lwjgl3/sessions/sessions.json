@@ -1,0 +1,375 @@
+{
+nextGameId: 2
+sessions: [
+	{
+		gameId: 1
+		playerTag: asfasf
+		date: 2025-10-19
+		time: 16:58
+		score: 116200
+		finishedLevels: 4
+		rounds: [
+			{
+				gameId: 1
+				testRoundId: 1
+				questions: [
+					{
+						id: 30
+						categoria: 1
+						enunciado: ¿Para que se utiliza la palabra clave super en herencia?
+						respuestas: [
+							Para acceder a los miembros de la superclase desde la subclase
+							Para definir que una clase es la clase principal del programa
+							Para acceder a los miembros de la subclase
+							Para crear una nueva clase independiente
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+					{
+						id: 25
+						categoria: 1
+						enunciado: ¿Que limitacion tiene Java respecto a la herencia de clases?
+						respuestas: [
+							No permite herencia multiple de clases
+							No permite heredar constructores
+							No permite heredar metodos publicos
+							No permite heredar variables de instancia
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+					{
+						id: 24
+						categoria: 1
+						enunciado: ¿Como se llama la clase de la cual se heredan atributos y metodos?
+						respuestas: [
+							Superclase
+							Subclase
+							Interface
+							Clase abstracta obligatoriamente
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+					{
+						id: 29
+						categoria: 1
+						enunciado: ¿Que relacion existe entre herencia y polimorfismo en Java?
+						respuestas: [
+							El polimorfismo permite usar un objeto de la subclase como si fuera de la superclase
+							El polimorfismo no depende de la herencia
+							La herencia y el polimorfismo son exactamente lo mismo
+							El polimorfismo elimina la necesidad de herencia
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+					{
+						id: 33
+						categoria: 1
+						enunciado: Una clase derivada no hereda:
+						respuestas: [
+							Propiedades protegidas y constructores
+							Propiedades privadas y constructores
+							Propiedades tanto privadas como protegidas y constructores
+							Propiedades independiente del modificador de visibilidad y constructores
+						]
+						indiceCorrecto: 1
+						respondidaCorrecta: false
+						indiceSeleccionado: 0
+					}
+					{
+						id: 32
+						categoria: 1
+						enunciado: En relacion con la herencia en Java selecciona la unica afirmacion correcta:
+						respuestas: [
+							Java soporta herencia multinivel
+							La clase debe ser de caracter final
+							Java soporta herencia multiple
+							La superclase es quien hereda las propiedades de una subclase
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+				]
+			}
+			{
+				gameId: 1
+				testRoundId: 2
+				questions: [
+					{
+						id: 8
+						categoria: 2
+						enunciado: Considere la siguiente implementacion para detectar errores de codigo. Indique en que lineas se produce error de compilacion
+						respuestas: [
+							3 y 5
+							3 y 6
+							5 y 6
+							Solo 6
+						]
+						indiceCorrecto: 3
+						respondidaCorrecta: false
+						indiceSeleccionado: 0
+					}
+					{
+						id: 6
+						categoria: 2
+						enunciado: Si se considera que la clase Perro hereda de la clase Mascota. En el metodo main() se plantea lo siguiente: ¿Que ocurre?
+						respuestas: [
+							Realiza casting de instancia de Perro a variable de tipo Perro pero pierde propiedades de Mascota
+							Realiza casting de variable de tipo Mascota que referencia a instancia de tipo Perro
+							Error de compilacion ya que el casting es invalido
+							Error en tiempo de ejecucion ya que el casting esta mal aplicado
+						]
+						indiceCorrecto: 1
+						respondidaCorrecta: false
+						indiceSeleccionado: 0
+					}
+					{
+						id: 2
+						categoria: 2
+						enunciado: En el siguiente codigo falta una implementacion. ¿Cual es la opcion correcta?
+						respuestas: [
+							Implementar el metodo hacerSonido() en la clase Perro
+							Hacer abstracto el metodo hacerSonido() en Animal
+							Quitar el constructor de Animal
+							Declarar Perro como abstracto
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+					{
+						id: 7
+						categoria: 2
+						enunciado: Dado el siguiente extracto de codigo: ¿Que cosa podemos asumir?
+						respuestas: [
+							Spin tiene al menos un constructor donde ingresan tres parametros float
+							La variable angle solo puede ser private ya que de lo contrario el codigo no compilaria
+							Los metodos 'translate' 'rotate' y 'popMatrix' provienen de una interface
+							La variable speed siempre sera null porque no se muestra su inicializacion en el codigo
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+					{
+						id: 13
+						categoria: 2
+						enunciado: Observa el codigo. ¿Cual de las siguientes opciones es correcta?
+						respuestas: [
+							El codigo no tiene errores y logra compilar y ejecutar correctamente
+							La clase padre deberia ser abstracta
+							Es obligatorio que los metodos de la clase padre sean final
+							La clase hija no puede tener metodos propios
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+					{
+						id: 1
+						categoria: 2
+						enunciado: ¿Que linea falta para completar correctamente la herencia entre las clases?
+						respuestas: [
+							class Gato extends Animal
+							class Gato implements Animal
+							class Animal extends Gato
+							class Gato inherits Animal
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+				]
+			}
+			{
+				gameId: 1
+				testRoundId: 3
+				questions: [
+					{
+						id: 14
+						categoria: 3
+						enunciado: ¿Cual es la relacion entre 'Material' 'Libro' y 'Revista'?
+						respuestas: [
+							Material es la clase padre de la que heredan Libro y Revista
+							Material es una interfaz implementada por Libro y Revista
+							Libro y Revista son clases abstractas de las que hereda Material
+							Libro y Revista son clases independientes sin relacion con Material
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+					{
+						id: 21
+						categoria: 3
+						enunciado: En un programa de Java se tiene una superclase llamada Persona y dos subclases llamadas Alumno y Profesor. Tanto Alumno como Profesor heredan de Persona. Selecciona la unica declaracion/instanciacion que refleja correctamente el uso de herencia y polimorfismo:
+						respuestas: [
+							Persona p = new Persona();
+							Profesor p = new Persona();
+							Profesor p = new Alumno();
+							Persona p = new Alumno();
+						]
+						indiceCorrecto: 3
+						respondidaCorrecta: false
+						indiceSeleccionado: 0
+					}
+					{
+						id: 20
+						categoria: 3
+						enunciado: Si se considera que la clase Automovil hereda de la clase Vehiculo. ¿Cual de las siguientes afirmaciones es correcta?
+						respuestas: [
+							Vehiculo es subclase de Automovil
+							Automovil es clase hija de Vehiculo
+							Automovil es superclase de Vehiculo
+							Vehiculo no puede ser clase base
+						]
+						indiceCorrecto: 1
+						respondidaCorrecta: false
+						indiceSeleccionado: 0
+					}
+					{
+						id: 18
+						categoria: 3
+						enunciado: ¿Cual es la funcion de la clase Vehiculo?
+						respuestas: [
+							Es una clase padre que comparte atributos y metodos con Bus y Taxi
+							Es una interfaz que Bus y Taxi implementan
+							Es una clase que depende de Bus y Taxi para funcionar
+							Es una clase abstracta que no tiene metodos ni atributos
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+					{
+						id: 17
+						categoria: 3
+						enunciado: ¿Que tipo de relacion existe entre Universidad y Facultad?
+						respuestas: [
+							Asociacion "uno a muchos" donde una universidad tiene varias facultades
+							Herencia simple
+							Implementacion de interfaz
+							Dependencia debil que no se muestra en el diagrama
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+					{
+						id: 15
+						categoria: 3
+						enunciado: ¿Por que la clase Empleado se define como abstracta?
+						respuestas: [
+							Para obligar a las subclases a implementar el metodo calcularPago()
+							Para poder instanciar Empleado directamente
+							Porque Empleado no tiene atributos
+							Para indicar que Empleado es una interfaz
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+				]
+			}
+			{
+				gameId: 1
+				testRoundId: 4
+				questions: [
+					{
+						id: 28
+						categoria: 1
+						enunciado: ¿Como se invoca el constructor de una superclase desde la subclase?
+						respuestas: [
+							Usando la palabra clave super()
+							Usando la palabra clave base()
+							Usando la palabra clave extends()
+							Llamando directamente al nombre de la superclase
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+					{
+						id: 27
+						categoria: 1
+						enunciado: ¿Que significa sobrescribir (override) un metodo en Java?
+						respuestas: [
+							Redefinir un metodo heredado en la subclase con la misma firma pero con un comportamiento distinto
+							Copiar un metodo de la superclase a la subclase sin cambios
+							Crear un metodo con el mismo nombre pero diferente numero de parametros
+							Borrar un metodo de la superclase desde la subclase
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+					{
+						id: 23
+						categoria: 1
+						enunciado: ¿Que palabra reservada se utiliza en Java para heredar de otra clase?
+						respuestas: [
+							extends
+							inherits
+							superclass
+							derive
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+					{
+						id: 31
+						categoria: 1
+						enunciado: En un metodo de una subclase es posible invocar metodos de la superclase. Sin embargo esto depende de los modificadores de acceso y de la forma en que se invoquen dichos metodos. Considerando esto ¿cual de las siguientes no permitiria a una hija acceder a los metodos de su padre?
+						respuestas: [
+							Los metodos de la clase padre sean public
+							Los metodos de la clase padre sean protected
+							Los metodos de la clase padre sean private
+							Los metodos sean invocados con la palabra reservada super()
+						]
+						indiceCorrecto: 2
+						respondidaCorrecta: false
+						indiceSeleccionado: 0
+					}
+					{
+						id: 33
+						categoria: 1
+						enunciado: Una clase derivada no hereda:
+						respuestas: [
+							Propiedades protegidas y constructores
+							Propiedades privadas y constructores
+							Propiedades tanto privadas como protegidas y constructores
+							Propiedades independiente del modificador de visibilidad y constructores
+						]
+						indiceCorrecto: 1
+						respondidaCorrecta: false
+						indiceSeleccionado: 0
+					}
+					{
+						id: 24
+						categoria: 1
+						enunciado: ¿Como se llama la clase de la cual se heredan atributos y metodos?
+						respuestas: [
+							Superclase
+							Subclase
+							Interface
+							Clase abstracta obligatoriamente
+						]
+						indiceCorrecto: 0
+						respondidaCorrecta: true
+						indiceSeleccionado: 0
+					}
+				]
+			}
+		]
+	}
+]
+}

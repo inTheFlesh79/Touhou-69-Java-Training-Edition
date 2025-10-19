@@ -6,8 +6,9 @@ import Enemies.Enemy;
 
 public class BossManager extends EnemyManager{
 	private final Random random = new Random();
-	private float[] speedOptions = {600,550,500,300,350,400};
+	private float[] speedOptions = {700,650,750,300,350,400};
 	private int[] healthOptions = {36000,38000,40000,17500, 18500, 19000};
+	private float[] idleTimeOptions = {10f, 5f};
 	private Boss boss;
 	
 	public BossManager() {}
@@ -38,7 +39,7 @@ public class BossManager extends EnemyManager{
 	public boolean lowerBossHealthNSpeed(int hChoice, int sChoice) {
 		int health  = healthOptions[hChoice];
 		float speed = (float) speedOptions[sChoice];
-		boss.lowerBossHealthNSpeed(health, speed);
+		boss.lowerBossHealthNSpeed(health, speed, idleTimeOptions[0]);
 		return false;
 	}
 	

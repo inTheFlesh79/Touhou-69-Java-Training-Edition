@@ -93,8 +93,8 @@ public class GameObjectManager {
 	public void gameSetup() {
 		levelMng.whatLevelIsIt();
 		System.out.println("Current Wave: "+levelMng.getCurrentLvlWave());
-	    fairyMng.fairySetup(levelMng.getFairiesCurrentWave(), levelMng.getWaveSpawnCooldown(), levelMng.getFairyStartingPoint(),
-	    					levelMng.getFairyIsShooting(), bulletMng, scrWidth, scrHeight);
+		fairyMng.fairySetup(levelMng.getFairiesCurrentWave(), levelMng.getWaveSpawnCooldown(), levelMng.getFairyStartingPoint(),
+							levelMng.getFairyIsShooting(), levelMng.getWaveFairiesBhp(), levelMng.getLvlId(), bulletMng, scrWidth, scrHeight);
 	    levelMng.changeCurrentWave();
 	    levelMng.areWavesOver();
 	    bossMng.createBoss(eFactory.craftBoss(levelMng.getLvlId(), scrWidth-360, scrHeight));
@@ -106,7 +106,7 @@ public class GameObjectManager {
 	public void reimuBulletsCollisionManager() {
 		// COLISION DE BOSS VS BULLETS
 		for (int i = 0; i < bulletMng.getReimuBulletsSize(); i++) {
-			if (collisionMng.chkColEnemyVsBullet(bulletMng.getReimuBullet(i), bossMng.getBoss())) {
+			if (bossMng.getBoss() != null && collisionMng.chkColEnemyVsBullet(bulletMng.getReimuBullet(i), bossMng.getBoss())) {
 				propMng.getBossHPBar().setHealth(bossMng.getBoss().getHealth());
 			    //System.out.println("Boss Health: "+boss.getHealth());
 				if (collisionMng.isAliveAfterLastCol(bossMng.getBoss()) == null) {
@@ -120,7 +120,7 @@ public class GameObjectManager {
 		
 			// COLISION DE FAIRIES VS BULLETS
 			for (int j = 0; j < fairyMng.getFairiesSize(); j++) {
-			    if (collisionMng.chkColEnemyVsBullet(bulletMng.getReimuBullet(i),fairyMng.getFairy(j))) {
+			    if (fairyMng.getFairy(j) != null && collisionMng.chkColEnemyVsBullet(bulletMng.getReimuBullet(i),fairyMng.getFairy(j))) {
 			        // If the fairy's health reaches zero, remove it and play sound
 			        if (collisionMng.isAliveAfterLastCol(fairyMng.getFairy(j)) == null) {
 			            fairyMng.getFairy(j).playExplosionSound();
@@ -137,12 +137,10 @@ public class GameObjectManager {
 	}
 	
 	public void reimuEnemiesCollisionManager() {
-		if (collisionMng.chkColReimuVsEnemy(reimu, bossMng.getBoss())) {
-			
-		}
+		if (bossMng.getBoss() != null && collisionMng.chkColReimuVsEnemy(reimu, bossMng.getBoss())) {}
 		
 		for (int j = 0; j < fairyMng.getFairiesSize(); j++) {
-		    if (collisionMng.chkColReimuVsEnemy(reimu, fairyMng.getFairy(j))) {
+		    if (fairyMng.getFairy(j) != null && collisionMng.chkColReimuVsEnemy(reimu, fairyMng.getFairy(j))) {
 	            fairyMng.getFairy(j).playExplosionSound();
 	            propMng.createExplosionRing(fairyMng.getFairy(j).getSpr().getX() + 13, fairyMng.getFairy(j).getSpr().getY()+ 34);
 	            propMng.createSparkles(fairyMng.getFairy(j).getSpr().getX()+ 13, fairyMng.getFairy(j).getSpr().getY()+ 34);
@@ -178,7 +176,7 @@ public class GameObjectManager {
 		else if (fairyMng.isFairiesEmpty() && !levelMng.areWavesOver()) {
 			System.out.println("Current Wave: "+levelMng.getCurrentLvlWave());
 			fairyMng.fairySetup(levelMng.getFairiesCurrentWave(), levelMng.getWaveSpawnCooldown(), levelMng.getFairyStartingPoint(),
-								levelMng.getFairyIsShooting(), bulletMng, scrWidth, scrHeight);
+								levelMng.getFairyIsShooting(), levelMng.getWaveFairiesBhp(), levelMng.getLvlId(), bulletMng, scrWidth, scrHeight);
 			levelMng.changeCurrentWave();
 		    levelMng.areWavesOver();
 		    System.out.println("Fairies = "+fairyMng.getFairiesSize());
@@ -194,9 +192,11 @@ public class GameObjectManager {
 				checkRewards = true;
 			}
 		 	//UNLEASH THE BOSS
-			bossMng.getBoss().enemyRoutine(batch, scrWidth-360, scrHeight);
-			propMng.drawBossHPBar(batch);
-			//System.out.println("Boss Speed ="+bossMng.getBoss().getSpeed());
+			if (bossMng.getBoss() != null) {
+				bossMng.getBoss().enemyRoutine(batch, scrWidth-360, scrHeight);
+				propMng.drawBossHPBar(batch);
+				//System.out.println("Boss Speed ="+bossMng.getBoss().getSpeed());
+			}
 		}
 	}
 	

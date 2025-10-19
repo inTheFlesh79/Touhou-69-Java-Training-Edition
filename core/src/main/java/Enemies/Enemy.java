@@ -116,6 +116,7 @@ public abstract class Enemy {
 	public void setSpeedChoice(int speedChoice) { this.speedChoice = speedChoice; }
 	public void setBhpChoice(int bhpChoice) { this.bhpChoice = bhpChoice; }
 	public void setIsShooting (boolean is) {this.isShooting = is;}
+	public void setMaxIdleTime (float time) {this.maxIdleTime = time;}
 
 	public int getHealthChoice() { return healthChoice; }
 	public int getSpeedChoice() { return speedChoice; }
@@ -125,6 +126,7 @@ public abstract class Enemy {
 	public Sprite getSpr() {return spr;}
     public Circle getCircleHitbox() {return circleHitbox;}
 	public boolean isShooting() {return isShooting;}
+	public float getMaxIdleTime() {return this.maxIdleTime;}
 
 	public void playExplosionSound() {explosionSound.play(0.2f);}
 	public Sound getShootingSound() {return shootingSound;}

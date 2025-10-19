@@ -28,7 +28,7 @@ public class Boss extends Enemy implements EnemyTools{
     	initHitbox();
 		//spr.setBounds(initialPosX, initialPosY, 48, 48);
 		
-		maxIdleTime = 15.0f;
+		maxIdleTime = 5.0f;
 		
 		// Use proportional values based on viewport
 	    targetX = scrW / 2f - spr.getWidth() / 2f;
@@ -321,12 +321,14 @@ public class Boss extends Enemy implements EnemyTools{
 		}
 	}
 	
-	public void lowerBossHealthNSpeed(int health, float speed) {
+	public void lowerBossHealthNSpeed(int health, float speed, float maxIdleTime) {
 		setHealth(health);
 		setSpeed(speed);
 		setDefaultSpeed(speed);
+		setMaxIdleTime(maxIdleTime);
 		System.out.println("Default Speed = "+defaultSpeed);
-		System.out.println("Speed = "+speed);
+		System.out.println("Speed = "+this.speed);
+		System.out.println("IdleTime = "+this.maxIdleTime);
 	}
 	
 	public void setMultiStage(boolean bool) {multiStage = bool;}

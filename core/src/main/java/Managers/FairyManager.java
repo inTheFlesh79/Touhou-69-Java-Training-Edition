@@ -19,7 +19,7 @@ public class FairyManager extends EnemyManager{
 	private EnemyFactory eFactory = new TouhouEnemyFactory();
 	private int[] spawnSpeedOptions = {1600, 1700};
 	private int[] speedOptions = {450,550};
-	private int[] healthOptions = {30,35,40};
+	private int[] healthOptions = {40, 180, 320, 420};
 	private Random random = new Random();
 	private ArrayList<Fairy> fairies = new ArrayList<>();
     private ArrayList<Fairy> pendingFairies = new ArrayList<>();
@@ -56,14 +56,28 @@ public class FairyManager extends EnemyManager{
 	        // update + draw active fairies; remove destroyed ones
 	        for (int i = 0; i < fairies.size(); i++) {
 	            Fairy f = fairies.get(i);
-	            if (i == 0) f.setIsShootSoundAllowed(true);
+	            if (multiSoundAllowed(f)) f.setIsShootSoundAllowed(true);
 	            f.enemyRoutine(batch, scrWidth, scrHeight);
 	        }
         }
     }
+    
+    public boolean multiSoundAllowed(Fairy currentFairy) {
+    	if (currentFairy.getIsShootSoundAllowed()) {return false;}
+    	
+    	for (int i = 0; i < fairies.size(); i++) {
+    		if (!currentFairy.getIsShootSoundAllowed() &&
+    			currentFairy.shootBurst() && 
+    			fairies.get(i).shootBurst()) {
+    			return false;
+    		}
+    	}
+    	return true;
+    }
 	
     // --- called from GOM (modified to receive scrWidth/scrHeight) ---
-    public void fairySetup(int cantFairiesCurrentWave, float waveSpawnCooldown, FairySpawn spawn, boolean isShooting, BulletManager bulletMng, float scrWidth, float scrHeight) {
+    public void fairySetup(int cantFairiesCurrentWave, float waveSpawnCooldown, FairySpawn spawn, boolean isShooting, 
+    					   int bhpChoice, int level, BulletManager bulletMng, float scrWidth, float scrHeight) {
         pendingFairies.clear();
         fairies.clear(); // optional: clear old wave entities if you want to wipe previous wave
         waveSpawnDelay = waveSpawnCooldown;
@@ -80,16 +94,14 @@ public class FairyManager extends EnemyManager{
         }
 
         // apply manager settings for the whole wave (same as before)
-        int bhpChoice = random.nextInt(bulletMng.getBhpArrSize()	);
         int speedChoice = random.nextInt(getCantSpeedOptions());
         int spawnSpeedChoice = random.nextInt(getCantSpawnSpeedOptions());
-        int healthChoice = random.nextInt(getCantHealthOptions());
 
         for (Fairy f : pendingFairies) {
             f.setSpeedChoice(speedChoice);
             manageSpawnSpeed(f, spawnSpeedChoice);
             f.setBhpChoice(bhpChoice);
-            manageHealth(f, healthChoice);
+            manageHealth(f, level);
         }
 
         // reset spawn counters/timers and spawn the first fairy immediately

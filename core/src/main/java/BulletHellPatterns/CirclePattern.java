@@ -7,7 +7,7 @@ public class CirclePattern extends BulletHellPattern {
     public CirclePattern() {
         cantBullet = 12;  // Cantidad de balas por círculo
         angle = 0;        // Ángulo inicial
-        speed = 200f;     // Velocidad baja para un movimiento lento
+        speed = 300f;     // Velocidad baja para un movimiento lento
         maxShootingTime = 5.0f;
         bulletGenInterval = 0.5f;
         currentBullet = 0;
