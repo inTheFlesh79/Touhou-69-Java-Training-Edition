@@ -85,7 +85,7 @@ public class PantallaSesiones implements Screen {
         this.previousScreen = previousScreen;
 
         // assets
-        background = new Texture(Gdx.files.internal("previousRunsBG.png"));
+        background = new Texture(Gdx.files.internal("prevRunsBg.png"));
         pickSound = Gdx.audio.newSound(Gdx.files.internal("pickOption.ogg"));
         enterSound = Gdx.audio.newSound(Gdx.files.internal("enterSound.ogg"));
 
