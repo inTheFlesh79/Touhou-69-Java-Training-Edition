@@ -3,77 +3,76 @@ package puppy.code;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
-
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class PantallaFinal implements Screen {
 
-	private Touhou game;
-	private OrthographicCamera camera;
-	
-	public PantallaFinal() {
-		game = Touhou.getInstance();
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 1200, 800);
-	}
+    private Touhou game;
+    private Viewport viewport;
+    private Texture background;
+    private Music endingMusic;
 
-	@Override
-	public void render(float delta) {
-		ScreenUtils.clear(0, 0, 0.2f, 1);
+    public PantallaFinal() {
+        game = Touhou.getInstance();
+        viewport = game.getViewport(); // ✅ Use shared viewport
 
-		camera.update();
-		game.getBatch().setProjectionMatrix(camera.combined);
+        // Load background image
+        background = new Texture(Gdx.files.internal("gameEndingBg.png"));
 
-		game.getBatch().begin();
-		game.getFont().draw(game.getBatch(), "PANTALLA FINAL", 50, 750);
-		game.getFont().draw(game.getBatch(), "Pincha en cualquier lado para reiniciar ...", 50, 50);
-		game.getBatch().end();
+        // Load and play ending music
+        endingMusic = Gdx.audio.newMusic(Gdx.files.internal("Credits Theme - Eternal Dream.ogg"));
+        endingMusic.setLooping(true);
+        endingMusic.setVolume(0.7f);
+        endingMusic.play();
+    }
 
-		if (Gdx.input.isTouched() || Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
-			Screen ss = new PantallaJuego(1,3,0,6);
-			Touhou.getInstance().getMusicMng().resetMusicMng();
-			ss.resize(1200, 800);
-			game.setScreen(ss);
-			dispose();
-		}
-	}
- 
-	
-	@Override
-	public void show() {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void render(float delta) {
+        ScreenUtils.clear(0, 0, 0.2f, 1);
 
-	@Override
-	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		
-	}
+        // Update viewport and camera
+        viewport.apply();
+        game.getBatch().setProjectionMatrix(viewport.getCamera().combined);
 
-	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
+        game.getBatch().begin();
+        game.getBatch().draw(background, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
+        game.getBatch().end();
 
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
-	}
+        // Detect input to return to menu
+        if (Gdx.input.isTouched() || Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
+            Screen menuScreen = new PantallaMenu();
+            menuScreen.resize((int) viewport.getWorldWidth(), (int) viewport.getWorldHeight());
+            game.setScreen(menuScreen);
+            dispose();
+        }
+    }
 
-	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void show() {}
 
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-		
-	}
-   
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height, true);
+    }
+
+    @Override
+    public void pause() {}
+
+    @Override
+    public void resume() {}
+
+    @Override
+    public void hide() {}
+
+    @Override
+    public void dispose() {
+        if (background != null) background.dispose();
+        if (endingMusic != null) {
+            endingMusic.stop();
+            endingMusic.dispose();
+        }
+    }
 }

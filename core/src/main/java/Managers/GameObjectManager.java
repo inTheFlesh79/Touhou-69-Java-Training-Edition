@@ -97,7 +97,7 @@ public class GameObjectManager {
 							levelMng.getFairyIsShooting(), levelMng.getWaveFairiesBhp(), levelMng.getLvlId(), bulletMng, scrWidth, scrHeight);
 	    levelMng.changeCurrentWave();
 	    levelMng.areWavesOver();
-	    bossMng.createBoss(eFactory.craftBoss(levelMng.getLvlId(), scrWidth-360, scrHeight));
+	    bossMng.createBoss(eFactory.craftBoss(levelMng.getLvlId(), scrWidth-360, scrHeight), levelMng.getLvlId());
 	}
 	
 	/*
@@ -113,7 +113,7 @@ public class GameObjectManager {
 					bossMng.getBoss().dispose();
 					bossMng.destroyBoss();
 					bulletMng.clearReimuBullets();
-					reimu.addScore(1000);
+					reimu.addScore(5000);
 					break;
 				}
 			}
@@ -206,16 +206,16 @@ public class GameObjectManager {
 			switch (intentosFallidos) {
 				case 0: for (int i = 0; i < 2; i++) {reimu.oneUp();} // 2 lives
 						reimu.addDamage(30);
-						hardMode = bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						hardMode = bossMng.lowerBossHealthNSpeed(levelMng.getLvlId()+4, random.nextInt(4, 6));
 						System.out.println("failures = "+intentosFallidos);
 						break;
 				case 1: reimu.oneUp(); // 1 live
 						reimu.addDamage(20);
-						hardMode = bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						hardMode = bossMng.lowerBossHealthNSpeed(levelMng.getLvlId()+4, random.nextInt(4, 6));
 						System.out.println("failures = "+intentosFallidos);
 						break;
 				case 2: reimu.addDamage(10);
-						hardMode = bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						hardMode = bossMng.lowerBossHealthNSpeed(levelMng.getLvlId()+4, random.nextInt(4, 6));
 						System.out.println("failures = "+intentosFallidos);
 						break;
 				default:reimu.addDamage(5);
@@ -228,16 +228,16 @@ public class GameObjectManager {
 			switch (intentosFallidos) {
 				case 0: for (int i = 0; i < 3; i++) {reimu.oneUp();} // 3 lives
 						reimu.addDamage(40);
-						hardMode = bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						hardMode = bossMng.lowerBossHealthNSpeed(levelMng.getLvlId()+4, random.nextInt(4, 6));
 						System.out.println("failures = "+intentosFallidos);
 						break;
 				case 1: for (int i = 0; i < 2; i++) {reimu.oneUp();} // 2 lives
 						reimu.addDamage(30);
-						hardMode = bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						hardMode = bossMng.lowerBossHealthNSpeed(levelMng.getLvlId()+4, random.nextInt(4, 6));
 						System.out.println("failures = "+intentosFallidos);
 						break;
 				case 2: reimu.addDamage(15);
-						hardMode = bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						hardMode = bossMng.lowerBossHealthNSpeed(levelMng.getLvlId()+4, random.nextInt(4, 6));
 						System.out.println("failures = "+intentosFallidos);
 						break;
 				default:reimu.addDamage(10);
@@ -250,17 +250,17 @@ public class GameObjectManager {
 			switch (intentosFallidos) {
 				case 0: for (int i = 0; i < 4; i++) {reimu.oneUp();} // 4 lives
 						reimu.addDamage(50);
-						hardMode = bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						hardMode = bossMng.lowerBossHealthNSpeed(levelMng.getLvlId()+4, random.nextInt(4, 6));
 						System.out.println("failures = "+intentosFallidos);
 						break;
 				case 1: for (int i = 0; i < 3; i++) {reimu.oneUp();} // 3 lives
 						reimu.addDamage(40);
-						hardMode = bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						hardMode = bossMng.lowerBossHealthNSpeed(levelMng.getLvlId()+4, random.nextInt(4, 6));
 						System.out.println("failures = "+intentosFallidos);
 						break;
 				case 2: reimu.oneUp(); // 1 live
 						reimu.addDamage(20);
-						hardMode = bossMng.lowerBossHealthNSpeed(random.nextInt(4, 6), random.nextInt(4, 6));
+						hardMode = bossMng.lowerBossHealthNSpeed(levelMng.getLvlId()+4, random.nextInt(4, 6));
 						System.out.println("failures = "+intentosFallidos);
 						break;
 				default:reimu.addDamage(15);

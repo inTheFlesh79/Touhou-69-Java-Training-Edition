@@ -49,6 +49,7 @@ public class PantallaJuego implements Screen {
     private final float LVL_END_DURATION = 5f;
 
 	public PantallaJuego(int nivel, int vidas, int score, int power) {
+		Touhou.setNivel(nivel);
 	    game = Touhou.getInstance();
 	    batch = game.getBatch();
 	    screenCamera = game.getCamera();
@@ -130,30 +131,6 @@ public class PantallaJuego implements Screen {
 		    musicMng.pauseMusic();
 		    musicMng.playPause();
 		    game.setScreen(new PantallaPausa(game, this)); // pass "this" to resume later
-		}
-		
-		// OPCIONES DE DESARROLLADOR DEV (se eliminan)
-		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-			musicMng.stopFairiesMusic();
-			musicMng.stopBossMusic();
-			game.setScreen(new PantallaEjercicios(game, musicMng, this, false));
-			System.out.println("correctas en Pantalla Juego? = "+cantCorrectas);
-			gameMng.setFightBoss(true);
-			// ANTES DE SALIR CAMBIAR ESTADO DE CONTROL PARA NO REPETIR PANTALLA
-			gameMng.setExerciseDone(true);
-		}
-		/* DEV
-		if (Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
-			musicMng.stopFairiesMusic();
-			musicMng.stopBossMusic();
-			Screen pantallaDestino = new PantallaTutorial();
-			game.setScreen(new PantallaHint(game, pantallaDestino));
-		} */
-		// DEV
-		if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-			musicMng.stopFairiesMusic();
-			musicMng.stopBossMusic();
-			game.setScreen(new PantallaCodigo(game, this));
 		}
 		
 		// VERIFICAR SI ESTA LISTO PARA EJERCITAR
@@ -357,10 +334,10 @@ public class PantallaJuego implements Screen {
 	private String getLevelName(int lvl) {
 		// Provide real names for your levels here. Default fallback provided.
 		switch (lvl) {
-			case 1: return "MYSTIC FOREST";
-			case 2: return "SILVER CITY";
-			case 3: return "RUINED SHRINE";
-			case 4: return "FINAL ASCENT";
+			case 1: return "GREEN VOID";
+			case 2: return "SILVER CREEK";
+			case 3: return "MARBLE REALM";
+			case 4: return "THE PURPLE SIDE...";
 			default: return "UNKNOWN";
 		}
 	}

@@ -581,7 +581,14 @@ public class PantallaSesiones implements Screen {
                     if (selectedIndex >= startIndex + VISIBLE_ROWS) startIndex = selectedIndex - (VISIBLE_ROWS - 1);
                     clampStartIndex();
                 } else {
-                    enterSound.play(0.7f);
+                	if (!showingDetail && !sessions.isEmpty()) {
+                        enterSound.play(0.7f);
+                        selectedSession = sessions.get(selectedIndex);
+                        showingDetail = true;
+                        overlayAlpha = 0f;
+                    } else if (showingDetail) {
+                        // optional: could trigger something else if desired
+                    }
                 }
             }
         }

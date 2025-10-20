@@ -1,5 +1,8 @@
 package Managers;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
+
 import Enemies.Enemy;
 import Enemies.EnemyBullet;
 import Reimu.Bullet;
@@ -7,11 +10,14 @@ import Reimu.Drop;
 import Reimu.Reimu;
 
 public class CollisionManager {
+	private Sound col = Gdx.audio.newSound(Gdx.files.internal("col.ogg"));
 	
-	public CollisionManager () {}
+	public CollisionManager () {
+	}
 	
 	public boolean chkColEnemyVsBullet(Bullet b, Enemy e) {
 		if(b.getSpr().getBoundingRectangle().overlaps(e.getSpr().getBoundingRectangle())) {
+			col.play(0.7f);
             b.setDestroyed(true);
             e.setHealth(e.getHealth() - b.getBulletDmg());
             return true;

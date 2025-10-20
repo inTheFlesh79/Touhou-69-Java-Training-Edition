@@ -31,7 +31,7 @@ public class LevelTwo extends Level {
     
     private Vector2 spawnPointWave5;
     private Vector2 firstTarXYWave5;
-    private boolean shootsFirstW5 = false;
+    private boolean shootsFirstW5 = true;
     private float waveSpawnCooldown5 = 1.5f;
     private int bhpWave5 = 5;
     
@@ -89,13 +89,13 @@ public class LevelTwo extends Level {
         spawnPointWave3 = new Vector2(412, 1400);
         firstTarXYWave3 = new Vector2(412, 600);
 
-        spawnPointWave4 = new Vector2(920, 1400);
-        firstTarXYWave4 = new Vector2(48, 600);
+        spawnPointWave4 = new Vector2(300, 1400);
+        firstTarXYWave4 = new Vector2(108, 600);
         
-        spawnPointWave5 = new Vector2(448, 1400);
-        firstTarXYWave5 = new Vector2(870, 660);
+        spawnPointWave5 = new Vector2(780, 1400);
+        firstTarXYWave5 = new Vector2(830, 660);
         
-        spawnPointWave6 = new Vector2(scrWidth - 16, 1400);
+        spawnPointWave6 = new Vector2(400, 1400);
         firstTarXYWave6 = new Vector2(248, 870);
 
         // New waves 7–11 (simple layout, feel free to adjust)

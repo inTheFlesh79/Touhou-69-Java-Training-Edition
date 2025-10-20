@@ -34,10 +34,13 @@ public class BulletManager {
       	bhpTypes.add(new FastTargetedPattern()); // 5
       	bhpTypes.add(new HeptaSprayPattern()); // 6
       	bhpTypes.add(new SlowTargetedPattern()); //7
+      	bhpTypes.add(new PredictionShotPattern());
       	
       	tsBhpTypes.add(new TargetedCirclePattern());
       	tsBhpTypes.add(new RandomHexaSpiralPattern());
       	tsBhpTypes.add(new RotatingForkPattern());
+      	tsBhpTypes.add(new DualOrbitPattern());
+      	tsBhpTypes.add(new ConvergingSpiralPattern());
 	}
 	
 	public void enemyBulletsDrawer(SpriteBatch batch, float scrWidth, float scrHeight) {

@@ -108,7 +108,7 @@ public class Reimu {
              // Loop animation
             spr.setRegion(currentFrame);
 
-            float slowSpeed = speed * 0.43f; // Define the slow speed as half of the original speed
+            float slowSpeed = speed * 0.41f; // Define the slow speed as half of the original speed
 
          // Movement logic
 			 if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {

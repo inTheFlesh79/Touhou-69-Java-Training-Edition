@@ -27,6 +27,7 @@ public class Touhou extends Game {
     private static int categoriaActual = 1;
     private static int intentosRonda = 0;
     private static int rondasCompletadas = 0;
+    private static int nivel;
 
     private Touhou() {}
 
@@ -79,7 +80,9 @@ public class Touhou extends Game {
     public OrthographicCamera getCamera() { return camera; }
     public MusicManager getMusicMng() {return musicMng;}
     public int getHighScore() {return highScore;}
+    public static int getNivel() {return nivel;}
     
+    public static void setNivel(int n) {nivel = n;}
     public void setHighScore(int highScore) {this.highScore = highScore;}
     
     public static int getCategoria() {

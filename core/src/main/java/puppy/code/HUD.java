@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import Sessions.SessionDataManager;
+
 public class HUD {
     private final ShapeRenderer shapeRenderer;
     private final Touhou game;
@@ -98,7 +100,7 @@ public class HUD {
         float textX = hudX + 40;
         float y = hudHeight - 60;
 
-        font.draw(gameBatch, "HiScore: " + game.getHighScore(), textX, y);
+        font.draw(gameBatch, "HiScore: " + SessionDataManager.getInstance().getHighestScore(), textX, y);
         y -= 35;
         font.draw(gameBatch, "Score:    " + score, textX, y);
         y -= 70;

@@ -133,7 +133,7 @@ public class PantallaEjercicios implements Screen {
 	                    if (correctas < 4) {
 	                    	Touhou.setIntentosRonda(Touhou.getIntentosRonda() + 1);
 	                    }
-	                    game.setScreen(new PantallaResultados(preguntasRonda, 1, Touhou.getIntentosRonda(), musicMng, tempPJ, retryAndBuff));
+	                    game.setScreen(new PantallaResultados(preguntasRonda, Touhou.getNivel(), Touhou.getIntentosRonda(), musicMng, tempPJ, retryAndBuff));
 	                    dispose();
 	                }
 	            }

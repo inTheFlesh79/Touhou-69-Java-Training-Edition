@@ -74,13 +74,13 @@ public class DropManager {
 	
 	public Drop addExtraDrop(float x, float y) {
 		float chance = MathUtils.random();
-		if (chance < 0.6) { // ScoreDrop
+		if (chance < 0.65) { // ScoreDrop
         	return craftDrop(x, y+15, 1);
         }
-        else if (chance < 0.85) { // PowerDrop
+        else if (chance < 0.86) { // PowerDrop
         	return craftDrop(x, y+15, 2);
         }
-        else if (chance < 0.9){ // OneUpDrop
+        else if (chance < 0.92){ // OneUpDrop
         	return craftDrop(x, y+15, 3);
         }
         else { // ShieldDrop
@@ -120,12 +120,12 @@ public class DropManager {
 	            break;
 	        case 3: // OneUpDrop
 	            reimu.oneUp();
-	            reimu.addScore(100);
+	            reimu.addScore(750);
 	            oneUpDropSfx.play(1f);
 	            break;
 	        case 4: // PowerDrop
 	            reimu.addDamage(10);
-	            reimu.addScore(100); // play at full volume
+	            reimu.addScore(250); // play at full volume
 	            commonDropSfx.play(1f);  // ensure it's maxed
 	            break;
 	        default:

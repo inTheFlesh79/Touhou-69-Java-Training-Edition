@@ -12,7 +12,7 @@ public class SlowTargetedPattern extends BulletHellPattern implements PlayerTrac
         cantBullet = 1;
         angle = 0f;
         maxShootingTime = 6f;
-        bulletGenInterval = 0.3f;
+        bulletGenInterval = 0.15f;
         currentBullet = 0;
     }
 	
@@ -24,7 +24,7 @@ public class SlowTargetedPattern extends BulletHellPattern implements PlayerTrac
     @Override
     public void generateBulletInPattern(float x, float y, EnemyBullet bullet) {
         // pick a random speed between 80 and 100 for this bullet
-        float currentSpeed = MathUtils.random(150f, 180f);
+        float currentSpeed = MathUtils.random(280f, 390f);
 
         // calculate velocity towards last known Reimu position
         float dx = reimuX - x;

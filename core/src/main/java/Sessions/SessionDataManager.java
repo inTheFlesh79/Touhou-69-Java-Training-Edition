@@ -298,6 +298,23 @@ public class SessionDataManager {
         if (archive == null) loadArchive();
         return archive.sessions;
     }
+    
+    public int getHighestScore() {
+        int highest = 0;
+
+        if (archive.sessions == null || archive.sessions.isEmpty()) {
+            return highest; // no sessions → score 0
+        }
+
+        for (GameSessionData session : archive.sessions) {
+            if (session != null && session.getScore() > highest) {
+                highest = session.getScore();
+            }
+        }
+
+        return highest;
+    }
+
 
     /**
      * Load a saved session by gameId (returns null if not found).

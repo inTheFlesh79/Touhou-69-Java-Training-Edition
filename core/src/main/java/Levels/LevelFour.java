@@ -83,7 +83,7 @@ public class LevelFour extends Level {
     private Vector2 spawnPointWave13;
     private Vector2 firstTarXYWave13;
     private boolean shootsFirstW13 = true;
-    private float waveSpawnCooldown13 = 1f;
+    private float waveSpawnCooldown13 = 0.75f;
     private int bhpWave13 = 4;
 
     private Vector2 spawnPointWave14;
@@ -187,7 +187,7 @@ public class LevelFour extends Level {
         spawnPointWave6 = new Vector2(-600, 860);
         firstTarXYWave6 = new Vector2(412, 860);
 
-        spawnPointWave7 = new Vector2(scrWidth - 16, 1200);
+        spawnPointWave7 = new Vector2(400, 940);
         firstTarXYWave7 = new Vector2(120, 650);
         
         spawnPointWave8 = new Vector2(-600, 1200);
@@ -200,23 +200,23 @@ public class LevelFour extends Level {
         firstTarXYWave10 = new Vector2(412, 600);
 
         // NEW waves default positions (adjust as needed)
-        spawnPointWave11 = new Vector2(412, 1200);
+        spawnPointWave11 = new Vector2(300, 960);
         firstTarXYWave11 = new Vector2(200, 650);
 
-        spawnPointWave12 = new Vector2(700, 1008);
-        firstTarXYWave12 = new Vector2(412, 780);
+        spawnPointWave12 = new Vector2(700, 960);
+        firstTarXYWave12 = new Vector2(812, 780);
 
-        spawnPointWave13 = new Vector2(300, 1008);
+        spawnPointWave13 = new Vector2(300, 960);
         firstTarXYWave13 = new Vector2(440, 680);
 
-        spawnPointWave14 = new Vector2(920, 1008);
-        firstTarXYWave14 = new Vector2(720, 720);
+        spawnPointWave14 = new Vector2(920, 960);
+        firstTarXYWave14 = new Vector2(760, 720);
 
-        spawnPointWave15 = new Vector2(500, 1008);
+        spawnPointWave15 = new Vector2(120, 960);
         firstTarXYWave15 = new Vector2(360, 640);
 
-        spawnPointWave16 = new Vector2(48, 1008);
-        firstTarXYWave16 = new Vector2(300, 820);
+        spawnPointWave16 = new Vector2(920, 960);
+        firstTarXYWave16 = new Vector2(800, 820);
 
         spawnPointWave17 = new Vector2(1000, 700);
         firstTarXYWave17 = new Vector2(600, 700);
